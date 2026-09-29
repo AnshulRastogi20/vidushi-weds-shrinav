@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Replies · Vidushi & Shrinav</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/assets/art/monogram.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500&family=Alegreya+SC:wght@500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #F6EFE2; --paper-2: #EDE2CC; --ink: #2A1D1A; --soft: #6B564A; --line: #D8C8A8; --gold: #9A6A1E; --sindoor: #9E1F2E; --yes: #2F6B3A; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.5 "Alegreya", Georgia, serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { margin: 0; font: 400 44px/1.1 "Pinyon Script", cursive; text-align: center; }
+  .sub { text-align: center; color: var(--soft); margin: 4px 0 28px; }
+  .caps { font-family: "Alegreya SC", serif; letter-spacing: .18em; text-transform: lowercase; font-size: 13px; color: var(--gold); }
+  form.gate { max-width: 360px; margin: 10vh auto 0; display: grid; gap: 12px; }
+  input[type=password] { padding: 13px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; font: inherit; }
+  button { font: inherit; cursor: pointer; }
+  .btn { min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--gold); background: var(--gold); color: #fff; }
+  .btn.ghost { background: transparent; color: var(--gold); }
+  .err { color: var(--sindoor); text-align: center; min-height: 1.5em; margin: 0; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 0 0 18px; }
+  .bar label { display: flex; gap: 8px; align-items: center; color: var(--soft); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 26px; }
+  .card { background: #fff8ec; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .card h2 { margin: 0 0 8px; font: 400 30px/1.1 "Pinyon Script", cursive; }
+  .stat { display: flex; justify-content: space-between; border-top: 1px dashed var(--line); padding: 6px 0; }
+  .stat b { font-weight: 500; font-variant-numeric: tabular-nums; }
+  .wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff8ec; }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { position: sticky; top: 0; background: var(--paper-2); font-family: "Alegreya SC", serif; font-weight: 500; font-size: 13px; letter-spacing: .12em; text-transform: lowercase; color: var(--soft); }
+  td.num { font-variant-numeric: tabular-nums; text-align: center; }
+  .yes { color: var(--yes); font-weight: 500; } .no { color: var(--sindoor); }
+  .when { color: var(--soft); white-space: nowrap; font-size: 15px; }
+  .note { max-width: 320px; }
+  .empty { padding: 30px; text-align: center; color: var(--soft); }
+  a { color: var(--gold); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Replies</h1>
+  <p class="sub">Vidushi &amp; Shrinav · for the family only</p>
+
+  <form class="gate" id="gate">
+    <label class="caps" for="code">Family passcode</label>
+    <input id="code" type="password" autocomplete="current-password" required>
+    <button class="btn" type="submit">Show replies</button>
+    <p class="err" id="gate-err" role="alert"></p>
+  </form>
+
+  <section id="board" hidden>
+    <div class="bar">
+      <label><input type="checkbox" id="latest" checked> Latest reply per guest only</label>
+      <div>
+        <button class="btn ghost" id="refresh" type="button">Refresh</button>
+        <button class="btn" id="csv" type="button">Download CSV</button>
+      </div>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="wrap"><table>
+      <thead><tr><th>Received</th><th>Event</th><th>Name</th><th>Coming</th><th>Guests</th><th>Phone</th><th>Note</th><th>Invite link</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </section>
+</main>
+
+<script src="/events.js"></script>
+<script>
+(() => {
+  const W = window.WEDDING, $ = (s) => document.querySelector(s);
+  let rows = [];
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const title = (ev) => (window.EVENTS[ev]?.title || ev).replace(/ Ceremony$/, "");
+
+  async function load(code) {
+    const res = await fetch(`${W.supabaseUrl}/rest/v1/rpc/list_wedding_rsvps`, {
+      method: "POST", headers: { "Content-Type": "application/json", apikey: W.supabaseKey },
+      body: JSON.stringify({ p_passcode: code }),
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).message || "failed");
+    return res.json();
+  }
+
+  function view() {
+    let list = rows;
+    if ($("#latest").checked) {
+      const seen = new Set();
+      list = rows.filter((r) => { const k = r.event + "|" + r.name.trim().toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+    }
+    const byEvent = {};
+    list.forEach((r) => {
+      const e = (byEvent[r.event] ??= { yes: 0, heads: 0, no: 0 });
+      if (r.attending) { e.yes++; e.heads += r.guests; } else e.no++;
+    });
+    $("#cards").innerHTML = Object.entries(byEvent).map(([ev, s]) => `
+      <div class="card"><h2>${esc(title(ev))}</h2>
+        <div class="stat"><span>Guests coming</span><b>${s.heads}</b></div>
+        <div class="stat"><span>Replies: coming</span><b>${s.yes}</b></div>
+        <div class="stat"><span>Replies: can't make it</span><b>${s.no}</b></div>
+      </div>`).join("") || "";
+    $("#rows").innerHTML = list.length ? list.map((r) => `
+      <tr>
+        <td class="when">${new Date(r.created_at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}</td>
+        <td>${esc(title(r.event))}</td>
+        <td>${esc(r.name)}</td>
+        <td class="${r.attending ? "yes" : "no"}">${r.attending ? "Yes" : "No"}</td>
+        <td class="num">${r.attending ? r.guests : "-"}</td>
+        <td>${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>` : ""}</td>
+        <td class="note">${esc(r.message)}</td>
+        <td>${esc(r.invite_label)}</td>
+      </tr>`).join("") : `<tr><td class="empty" colspan="8">No replies yet.</td></tr>`;
+    return list;
+  }
+
+  async function open(code) {
+    rows = await load(code);
+    sessionStorage.setItem("rsvp-code", code);
+    $("#gate").hidden = true; $("#board").hidden = false;
+    view();
+  }
+
+  $("#gate").addEventListener("submit", async (e) => {
+    e.preventDefault(); $("#gate-err").textContent = "";
+    try { await open($("#code").value.trim()); }
+    catch { $("#gate-err").textContent = "That passcode didn't work. Check it and try again."; }
+  });
+  $("#latest").addEventListener("change", view);
+  $("#refresh").addEventListener("click", () => open(sessionStorage.getItem("rsvp-code")).catch(() => location.reload()));
+  $("#csv").addEventListener("click", () => {
+    const list = view();
+    const head = ["received", "event", "name", "coming", "guests", "phone", "note", "invite_link"];
+    const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const csv = [head.join(",")].concat(list.map((r) => [r.created_at, r.event, r.name, r.attending ? "yes" : "no", r.guests, r.phone, r.message, r.invite_label].map(q).join(","))).join("\n");
+    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" })), download: "rsvp-replies.csv" });
+    a.click();
+  });
+  const saved = sessionStorage.getItem("rsvp-code");
+  if (saved) open(saved).catch(() => sessionStorage.removeItem("rsvp-code"));
+})();
+</script>
+</body>
+</html>

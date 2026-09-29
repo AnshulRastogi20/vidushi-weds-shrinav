@@ -4,18 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vidushi weds Shrinav</title>
-<meta name="description" content="Wedding Ceremony - Saturday, 12th December 2026, 8 pm onwards - Royal Heritage, Country Inn & Suites, Ghaziabad">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Saturday, 12th December 2026 · 8 pm onwards · Royal Heritage, Country Inn & Suites, Ghaziabad">
 <meta name="theme-color" content="#F6EFE2">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Vidushi weds Shrinav">
 <meta property="og:description" content="Saturday, 12th December 2026 · 8 pm onwards · Ghaziabad">
-<meta property="og:image" content="assets/og.jpg">
+<meta property="og:image" content="https://rvishcametrue.us/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/art/monogram.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/art/monogram.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Alegreya+SC:wght@500&family=Pinyon+Script&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/styles.css">
+<link rel="preload" href="/assets/audio/theme.mp3" as="audio" type="audio/mpeg">
 </head>
 <body>
 
@@ -62,8 +66,9 @@
       <div class="art draw monogram" data-svg="monogram"></div>
       <h1 class="sr-only">Vidushi weds Shrinav</h1>
       <div class="art draw names" data-svg="names-script" aria-hidden="true"></div>
-      <p class="hero-date" aria-label="12 December 2026"><span>12</span><i></i><span>12</span><i></i><span>2026</span></p>
-      <p class="hero-place">Ghaziabad</p>
+      <p class="hero-event" data-bind="title" hidden></p>
+      <p class="hero-date" id="hero-date"></p>
+      <p class="hero-place" data-bind="heroPlace"></p>
     </div>
     <p class="cue" aria-hidden="true"><span>Scroll</span><i></i></p>
   </section>
@@ -85,38 +90,28 @@
       <div class="orn corner c-bl" aria-hidden="true"></div>
       <div class="orn corner c-br" aria-hidden="true"></div>
       <div class="frame-copy">
-        <p class="hosts" data-reveal>Smt. Daisy &amp; Sh. Shiva Prakash Vatsa</p>
-        <p class="req" data-reveal>request your gracious presence on the auspicious occasion of the wedding of their beloved granddaughter</p>
-        <h2 class="name" data-split>Vidushi Vatsa</h2>
-        <p class="parent" data-reveal>D/o Rachna &amp; Supriyam Vatsa</p>
+        <p class="hosts" data-reveal data-bind="hosts"></p>
+        <p class="req" data-reveal data-bind="request"></p>
+        <h2 class="name" data-split data-bind="brideName"></h2>
+        <p class="parent" data-reveal data-bind="brideParents"></p>
         <p class="with" data-reveal>with</p>
-        <h2 class="name" data-split>Shrinav Rastogi</h2>
-        <p class="parent" data-reveal>S/o Richa &amp; Naveen Rastogi</p>
+        <h2 class="name" data-split data-bind="groomName"></h2>
+        <p class="parent" data-reveal data-bind="groomParents"></p>
       </div>
     </div>
   </section>
 
   <section class="couple" id="couple">
-    <figure class="portrait p-bride">
-      <div class="arch"><img src="assets/photos/bride.jpg" alt="Vidushi" loading="lazy" decoding="async"></div>
-      <figcaption><span class="role">The bride</span><span class="who">Vidushi</span></figcaption>
-    </figure>
-    <figure class="portrait p-groom">
-      <div class="arch"><img src="assets/photos/groom.jpg" alt="Shrinav" loading="lazy" decoding="async"></div>
-      <figcaption><span class="role">The groom</span><span class="who">Shrinav</span></figcaption>
+    <figure class="portrait">
+      <div class="arch"><img id="couple-photo" alt="Vidushi and Shrinav" decoding="async"></div>
+      <figcaption><span class="who">Vidushi <i>&amp;</i> Shrinav</span></figcaption>
     </figure>
   </section>
 
   <section class="moments" id="moments">
     <div class="stage">
       <h2 class="moments-title">Before the pheras</h2>
-      <div class="deck">
-        <div class="ph"><img src="assets/photos/moment-1.jpg" alt="" loading="lazy" decoding="async"></div>
-        <div class="ph"><img src="assets/photos/moment-2.jpg" alt="" loading="lazy" decoding="async"></div>
-        <div class="ph"><img src="assets/photos/moment-3.jpg" alt="" loading="lazy" decoding="async"></div>
-        <div class="ph"><img src="assets/photos/moment-4.jpg" alt="" loading="lazy" decoding="async"></div>
-        <div class="ph"><img src="assets/photos/moment-5.jpg" alt="" loading="lazy" decoding="async"></div>
-      </div>
+      <div class="deck" id="deck"></div>
     </div>
   </section>
 
@@ -131,19 +126,19 @@
       <span class="ln">विघ्न हरण मंगल करन, गणनायक महाराज ।</span>
       <span class="ln">प्रथम निमंत्रण आपको, पूरण करियो काज ॥</span>
     </p>
-    <h2 class="sr-only">Wedding Ceremony</h2>
-    <div class="art draw foil ceremony-title" data-svg="wedding-ceremony" aria-hidden="true"></div>
+    <h2 class="sr-only" data-bind="title"></h2>
+    <div class="ceremony-title" id="ceremony-title" aria-hidden="true"></div>
     <div class="details">
       <div class="block" data-reveal>
         <p class="label">When</p>
-        <p class="big">Saturday, 12th December 2026</p>
-        <p>8 pm onwards</p>
+        <p class="big" data-bind="dateLine"></p>
+        <p data-bind="timeLine"></p>
       </div>
       <div class="orn divider small" aria-hidden="true"></div>
       <div class="block" data-reveal>
         <p class="label">Where</p>
-        <p class="big">Royal Heritage</p>
-        <p>Country Inn &amp; Suites, Ghaziabad</p>
+        <p class="big" data-bind="venue"></p>
+        <p data-bind="venueLine"></p>
       </div>
     </div>
     <div class="actions" data-reveal>
@@ -153,7 +148,7 @@
   </section>
 
   <section class="countdown" id="countdown">
-    <p class="label" id="count-label">Counting down to the wedding</p>
+    <p class="label" id="count-label">Counting down to the celebration</p>
     <div class="clock" id="clock" role="timer" aria-live="off">
       <div><b data-u="d">00</b><span>Days</span></div>
       <div><b data-u="h">00</b><span>Hours</span></div>
@@ -162,10 +157,52 @@
     </div>
   </section>
 
+  <section class="rsvp" id="rsvp">
+    <h2 class="rsvp-title">Will you join us?</h2>
+    <p class="rsvp-sub" id="rsvp-sub">Let the family know you're coming.</p>
+
+    <form class="rsvp-form" id="rsvp-form" novalidate>
+      <div class="field">
+        <label for="r-name">Your name</label>
+        <input id="r-name" name="name" type="text" autocomplete="name" maxlength="80" required>
+      </div>
+      <div class="field">
+        <label for="r-phone">Phone <span class="opt">optional</span></label>
+        <input id="r-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20">
+      </div>
+      <fieldset class="field choice">
+        <legend>Will you attend?</legend>
+        <label class="pill"><input type="radio" name="attending" value="yes" required><span>Yes, we'll be there</span></label>
+        <label class="pill"><input type="radio" name="attending" value="no"><span>Sorry, can't make it</span></label>
+      </fieldset>
+      <div class="field guests" id="guests-field" hidden>
+        <span class="glabel" id="g-label">Number of guests, including you</span>
+        <div class="stepper" role="group" aria-labelledby="g-label">
+          <button type="button" data-step="-1" aria-label="One fewer guest">−</button>
+          <output id="r-guests" aria-live="polite">1</output>
+          <button type="button" data-step="1" aria-label="One more guest">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="r-msg">A note for the couple <span class="opt">optional</span></label>
+        <textarea id="r-msg" name="message" rows="3" maxlength="500"></textarea>
+      </div>
+      <div class="hp" aria-hidden="true"><label>Leave empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <p class="form-error" id="rsvp-error" role="alert" hidden></p>
+      <button class="btn submit" type="submit" id="rsvp-submit">Send reply</button>
+    </form>
+
+    <div class="rsvp-done" id="rsvp-done" hidden tabindex="-1">
+      <p class="done-title" id="done-title"></p>
+      <p class="done-sub" id="done-sub"></p>
+      <button class="linkish" type="button" id="rsvp-change">Change my reply</button>
+    </div>
+  </section>
+
   <footer class="closing" id="closing">
     <div class="orn ornament" aria-hidden="true"></div>
     <p class="compl" data-reveal>Best compliments</p>
-    <p class="family" data-reveal>Vatsa Family</p>
+    <p class="family" data-reveal data-bind="family"></p>
     <div class="orn mono-small" aria-hidden="true"></div>
   </footer>
 
@@ -175,9 +212,10 @@
   <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
 </button>
 
+<script src="/events.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="main.js"></script>
+<script src="/main.js"></script>
 </body>
 </html>
