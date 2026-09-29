@@ -23,8 +23,8 @@ for slug, ev in events.items():
         continue
     desc = " · ".join(x for x in [ev["dateLine"], ev.get("timeLine"), ev.get("venue")] if x)
     html = index
-    html = re.sub(r"<title>.*?</title>", f"<title>{ev['title']} · Vidushi &amp; Shrinav</title>", html)
-    html = re.sub(r'(<meta property="og:title" content=")[^"]*', rf"\g<1>{ev['title']} · Vidushi &amp; Shrinav", html)
+    html = re.sub(r"<title>.*?</title>", f"<title>{ev['title']} · Shrinav &amp; Vidushi</title>", html)
+    html = re.sub(r'(<meta property="og:title" content=")[^"]*', rf"\g<1>{ev['title']} · Shrinav &amp; Vidushi", html)
     html = re.sub(r'(<meta property="og:description" content=")[^"]*', rf"\g<1>{desc}", html)
     html = re.sub(r'(<meta name="description" content=")[^"]*', rf"\g<1>{desc}", html)
     out.write_text(html, encoding="utf-8")

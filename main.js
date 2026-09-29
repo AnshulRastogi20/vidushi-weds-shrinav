@@ -1,4 +1,4 @@
-/* Vidushi weds Shrinav - motion + behaviour. Content comes from events.js. */
+/* Shrinav weds Vidushi - motion + behaviour. Content comes from events.js. */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
@@ -16,11 +16,11 @@
   const EVENT_START = ev.start ? new Date(ev.start) : null;
   const EVENT_END = ev.end ? new Date(ev.end) : null;
   root.dataset.theme = ev.theme;
-  if (!isWedding) document.title = `${ev.title} · Vidushi & Shrinav`;
+  if (!isWedding) document.title = `${ev.title} · Shrinav & Vidushi`;
 
   const text = {
     title: ev.title, heroPlace: ev.heroPlace, hosts: W.hosts, request: ev.request,
-    brideName: W.bride.name, brideParents: W.bride.parents, groomName: W.groom.name, groomParents: W.groom.parents,
+    firstName: W.first.name, firstParents: W.first.parents, secondName: W.second.name, secondParents: W.second.parents,
     dateLine: ev.dateLine, timeLine: ev.timeLine, venue: ev.venue, venueLine: ev.venueLine, family: W.family,
   };
   $$("[data-bind]").forEach((el) => {
@@ -298,7 +298,7 @@
   /* ---------- calendar ---------- */
   $("#calendar").addEventListener("click", () => {
     const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-    const title = `Vidushi & Shrinav - ${ev.title}`;
+    const title = `Shrinav & Vidushi - ${ev.title}`;
     const where = [ev.venue, ev.venueLine].filter(Boolean).join(", ");
     const details = "With best compliments, " + W.family + ". " + location.origin + location.pathname;
     const apple = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && "ontouchend" in document;
