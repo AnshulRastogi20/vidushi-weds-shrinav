@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Shrinav weds Vidushi</title>
+<title>#RViShcametrue · Shrinav weds Vidushi</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Saturday, 12th December 2026 · 8 pm onwards · Royal Heritage, Country Inn & Suites, Ghaziabad">
+<meta name="description" content="Shrinav weds Vidushi · Saturday, 12th December 2026 · Ghaziabad">
 <meta name="theme-color" content="#F6EFE2">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Shrinav weds Vidushi">
-<meta property="og:description" content="Saturday, 12th December 2026 · 8 pm onwards · Ghaziabad">
+<meta property="og:title" content="#RViShcametrue · Shrinav weds Vidushi">
+<meta property="og:description" content="Saturday, 12th December 2026 · Ghaziabad">
 <meta property="og:image" content="https://rvishcametrue.us/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -17,9 +17,9 @@
 <link rel="icon" href="/assets/art/monogram.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Alegreya+SC:wght@500&family=Pinyon+Script&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Alegreya+SC:wght@500&family=Pinyon+Script&family=Rozha+One&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
-<link rel="preload" href="/assets/audio/theme.mp3" as="audio" type="audio/mpeg">
+<link rel="stylesheet" href="/toon.css">
 </head>
 <body>
 
@@ -38,42 +38,69 @@
 <div class="sky" aria-hidden="true"><div class="stars"></div><div class="stars stars-b"></div><div class="horizon"></div></div>
 <div class="grain" aria-hidden="true"></div>
 
-<!-- Envelope gate: the tap also unlocks audio playback -->
-<div class="gate" id="gate">
-  <div class="env" id="env">
+<!-- 1. while everything loads -->
+<div class="preload" id="preload" role="status" aria-label="Loading the invitation">
+  <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+    <circle class="ring-bg" cx="60" cy="60" r="54"/>
+    <circle class="ring-fg" id="ring" cx="60" cy="60" r="54" pathLength="1"/>
+  </svg>
+  <span class="om" lang="sa">ॐ</span>
+</div>
+
+<!-- 2. the envelope, tied with a mauli thread -->
+<div class="gate" id="gate" hidden>
+  <div class="env">
     <div class="env-body">
       <div class="env-back"></div>
       <div class="env-fold env-left"></div>
       <div class="env-fold env-right"></div>
       <div class="env-fold env-bottom"></div>
+    </div>
+    <div class="env-flap">
       <div class="env-address">
         <span class="to">To,</span>
         <span class="guest" id="guest">our dear family &amp; friends</span>
       </div>
-      <p class="env-hint">Tap the seal to open</p>
     </div>
-    <div class="env-flap"></div>
-    <button class="seal" id="seal" type="button" aria-label="Open the invitation"><span class="seal-mono"></span></button>
+    <div class="thread th-l"></div>
+    <div class="thread th-r"></div>
+    <svg class="knot" viewBox="0 0 120 120" aria-hidden="true">
+      <path class="tail" d="M60 60 C52 76 44 88 34 104"/>
+      <path class="tail" d="M60 60 C68 76 76 88 86 104"/>
+      <circle class="tassel" cx="34" cy="106" r="5"/><circle class="tassel" cx="86" cy="106" r="5"/>
+      <path class="loop" d="M60 60 C46 40 22 44 26 58 C30 72 50 66 60 60 Z"/>
+      <path class="loop" d="M60 60 C74 40 98 44 94 58 C90 72 70 66 60 60 Z"/>
+      <circle class="knot-c" cx="60" cy="60" r="8"/>
+    </svg>
+    <button class="open-hit" id="open" type="button" aria-label="Open the invitation"></button>
+    <p class="env-hint" id="hint">Tap to open</p>
   </div>
+</div>
+
+<!-- the two of them, above everything until they jump into the hashtag -->
+<div class="cast" id="cast" aria-hidden="true">
+  <div class="actor a-groom" id="a-groom" data-toon="groom"></div>
+  <div class="actor a-bride" id="a-bride" data-toon="bride"></div>
 </div>
 
 <main id="main">
 
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" data-sky="paper">
     <div class="bell bell-l"><div class="bell-art"></div></div>
     <div class="bell bell-r"><div class="bell-art"></div></div>
     <div class="hero-inner">
-      <div class="art draw monogram" data-svg="monogram"></div>
-      <h1 class="sr-only">Shrinav weds Vidushi</h1>
+      <h1 class="tag" aria-label="#RViShcametrue">
+        <span class="tag-1" aria-hidden="true"><span class="tg tg-hash">#</span><span class="tg tg-r">R</span><span class="tg tg-vi" id="tg-vi">Vi</span><span class="tg tg-sh" id="tg-sh">Sh</span></span>
+        <span class="tag-2 tg" aria-hidden="true">cametrue</span>
+      </h1>
       <div class="art draw names" data-svg="names-script-groom" aria-hidden="true"></div>
-      <p class="hero-event" data-bind="title" hidden></p>
-      <p class="hero-date" id="hero-date"></p>
-      <p class="hero-place" data-bind="heroPlace"></p>
+      <p class="hero-date" aria-label="12 December 2026"><span>12</span><i></i><span>12</span><i></i><span>2026</span></p>
+      <p class="hero-place">Ghaziabad</p>
     </div>
     <p class="cue" aria-hidden="true"><span>Scroll</span><i></i></p>
   </section>
 
-  <section class="blessing" id="blessing">
+  <section class="blessing" id="blessing" data-sky="paper">
     <div class="art draw ganesha" data-svg="ganesha"></div>
     <p class="shloka" lang="sa">
       <span class="ln">॥ श्री गणेशाय नमः ॥</span>
@@ -83,7 +110,7 @@
     <div class="orn divider" aria-hidden="true"></div>
   </section>
 
-  <section class="invite" id="invite">
+  <section class="invite" id="invite" data-sky="paper">
     <div class="frame">
       <div class="orn corner c-tl" aria-hidden="true"></div>
       <div class="orn corner c-tr" aria-hidden="true"></div>
@@ -101,6 +128,8 @@
     </div>
   </section>
 
+  <div id="events"></div>
+
   <section class="couple" id="couple">
     <figure class="portrait">
       <div class="arch"><img id="couple-photo" alt="Shrinav and Vidushi" decoding="async"></div>
@@ -115,51 +144,9 @@
     </div>
   </section>
 
-  <section class="ceremony" id="ceremony">
-    <svg class="lights" viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true">
-      <path class="wire" d="M-10 6 Q100 70 200 22 T410 10"/>
-      <path class="wire" d="M-10 30 Q120 86 230 44 T410 34"/>
-      <g class="bulbs"></g>
-    </svg>
-    <p class="doha" lang="hi">
-      <span class="ln">॥ श्री गणेशाय नमः ॥</span>
-      <span class="ln">विघ्न हरण मंगल करन, गणनायक महाराज ।</span>
-      <span class="ln">प्रथम निमंत्रण आपको, पूरण करियो काज ॥</span>
-    </p>
-    <h2 class="sr-only" data-bind="title"></h2>
-    <div class="ceremony-title" id="ceremony-title" aria-hidden="true"></div>
-    <div class="details">
-      <div class="block" data-reveal>
-        <p class="label">When</p>
-        <p class="big" data-bind="dateLine"></p>
-        <p data-bind="timeLine"></p>
-      </div>
-      <div class="orn divider small" aria-hidden="true"></div>
-      <div class="block" data-reveal>
-        <p class="label">Where</p>
-        <p class="big" data-bind="venue"></p>
-        <p data-bind="venueLine"></p>
-      </div>
-    </div>
-    <div class="actions" data-reveal>
-      <a class="btn" id="directions" target="_blank" rel="noopener">Get directions</a>
-      <button class="btn ghost" id="calendar" type="button">Add to calendar</button>
-    </div>
-  </section>
-
-  <section class="countdown" id="countdown">
-    <p class="label" id="count-label">Counting down to the celebration</p>
-    <div class="clock" id="clock" role="timer" aria-live="off">
-      <div><b data-u="d">00</b><span>Days</span></div>
-      <div><b data-u="h">00</b><span>Hours</span></div>
-      <div><b data-u="m">00</b><span>Minutes</span></div>
-      <div><b data-u="s">00</b><span>Seconds</span></div>
-    </div>
-  </section>
-
   <section class="rsvp" id="rsvp">
     <h2 class="rsvp-title">Will you join us?</h2>
-    <p class="rsvp-sub" id="rsvp-sub">Let the family know you're coming.</p>
+    <p class="rsvp-sub">Let the family know you're coming.</p>
 
     <form class="rsvp-form" id="rsvp-form" novalidate>
       <div class="field">
@@ -170,11 +157,7 @@
         <label for="r-phone">Phone <span class="opt">optional</span></label>
         <input id="r-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20">
       </div>
-      <fieldset class="field choice">
-        <legend>Will you attend?</legend>
-        <label class="pill"><input type="radio" name="attending" value="yes" required><span>Yes, we'll be there</span></label>
-        <label class="pill"><input type="radio" name="attending" value="no"><span>Sorry, can't make it</span></label>
-      </fieldset>
+      <div id="replies"></div>
       <div class="field guests" id="guests-field" hidden>
         <span class="glabel" id="g-label">Number of guests, including you</span>
         <div class="stepper" role="group" aria-labelledby="g-label">
@@ -203,16 +186,58 @@
     <div class="orn ornament" aria-hidden="true"></div>
     <p class="compl" data-reveal>Best compliments</p>
     <p class="family" data-reveal data-bind="family"></p>
-    <div class="orn mono-small" aria-hidden="true"></div>
+    <p class="closing-tag" data-reveal>#RViShcametrue</p>
   </footer>
 
 </main>
+
+<template id="event-tpl">
+  <section class="event">
+    <svg class="lights" viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true">
+      <path class="wire" d="M-10 6 Q100 70 200 22 T410 10"/>
+      <path class="wire" d="M-10 30 Q120 86 230 44 T410 34"/>
+      <g class="bulbs"></g>
+    </svg>
+    <p class="doha" lang="hi" hidden>
+      <span class="ln">॥ श्री गणेशाय नमः ॥</span>
+      <span class="ln">विघ्न हरण मंगल करन, गणनायक महाराज ।</span>
+      <span class="ln">प्रथम निमंत्रण आपको, पूरण करियो काज ॥</span>
+    </p>
+    <h2 class="sr-only ev-heading"></h2>
+    <div class="ev-title" aria-hidden="true"></div>
+    <div class="details">
+      <div class="block" data-reveal>
+        <p class="label">When</p>
+        <p class="big ev-date"></p>
+        <p class="ev-time"></p>
+      </div>
+      <div class="orn divider small" aria-hidden="true"></div>
+      <div class="block" data-reveal>
+        <p class="label">Where</p>
+        <p class="big ev-venue"></p>
+        <p class="ev-venue-line"></p>
+      </div>
+    </div>
+    <div class="actions" data-reveal>
+      <a class="btn ev-maps" target="_blank" rel="noopener">Get directions</a>
+      <button class="btn ghost ev-cal" type="button">Add to calendar</button>
+    </div>
+    <div class="countdown" hidden>
+      <p class="label">Counting down to the wedding</p>
+      <div class="clock" role="timer" aria-live="off">
+        <div><b data-u="d">00</b><span>Days</span></div>
+        <div><b data-u="h">00</b><span>Hours</span></div>
+        <div><b data-u="m">00</b><span>Minutes</span></div>
+        <div><b data-u="s">00</b><span>Seconds</span></div>
+      </div>
+    </div>
+  </section>
+</template>
 
 <button class="music" id="music" type="button" aria-label="Pause music" aria-pressed="true" hidden>
   <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
 </button>
 
-<script src="/events.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>

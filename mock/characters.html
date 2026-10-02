@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shrinav & Vidushi · character mock</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/toon.css">
 <style>
   :root { --ink: #2B1A12; --bg: #F6B81F; }
   * { box-sizing: border-box; }
@@ -27,30 +28,12 @@
   .t1 { color: #17110C; }
   .t2 { color: #fff; }
 
-  .char { position: absolute; bottom: 80px; width: 390px; height: 780px; overflow: visible; }
+  .char { position: absolute; bottom: 80px; width: 390px; height: 780px; }
+  .char svg { width: 100%; height: 100%; display: block; }
   .boy { left: -34px; }
   .girl { right: -34px; }
   .shadow { position: absolute; bottom: 66px; width: 280px; height: 44px; border-radius: 50%; background: rgba(120, 70, 0, .28); filter: blur(4px); }
   .sh-boy { left: 22px; } .sh-girl { right: 22px; }
-
-  .char path, .char rect, .char circle, .char ellipse { stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
-  .nostroke { stroke: none !important; }
-  .char pattern * { stroke: none !important; }
-  .skin { fill: #E9B58E; } .skin2 { fill: #EDBE98; }
-  .hair { fill: #2A1B14; }
-  .beard { fill: #3B2A20; }
-  .white { fill: #fff; } .pupil { fill: #2B1A12; stroke: none !important; } .shine { fill: #fff; stroke: none !important; }
-  .kurta { fill: #F2EADA; } .pant { fill: #FBF8F2; }
-  .jacket { fill: url(#floral); }
-  .gold { fill: #D9A948; }
-  .rust { fill: url(#bandhani); }
-  .legging { fill: #F4E7CF; }
-  .jutti-b { fill: #6B3A1F; } .jutti-g { fill: #D9A948; }
-  .mouth { fill: #7A2B21; } .teeth { fill: #fff; stroke-width: 0 !important; }
-  .blush { fill: #E9876F; opacity: .45; stroke: none !important; }
-  .line { fill: none; }
-  .glass { fill: rgba(255, 255, 255, .22); stroke: #4A3B33 !important; stroke-width: 2.6 !important; }
-  .goldline { fill: none; stroke: #D9A948 !important; }
 
   .heart { position: absolute; left: 50%; top: 190px; width: 120px; margin-left: -60px; opacity: 0; }
 
@@ -82,158 +65,8 @@
   <div class="shadow sh-boy" id="sh-boy"></div>
   <div class="shadow sh-girl" id="sh-girl"></div>
 
-  <!-- ===== SHRINAV ===== -->
-  <svg class="char boy" id="boy" viewBox="0 0 200 400" aria-label="Shrinav">
-    <defs>
-      <pattern id="floral" width="12" height="12" patternUnits="userSpaceOnUse">
-        <rect width="12" height="12" fill="#35517E" stroke="none"/>
-        <circle cx="3" cy="3" r="1.1" fill="#F0A0A0" stroke="none"/>
-        <circle cx="9" cy="8.5" r="0.9" fill="#F2C46A" stroke="none"/>
-      </pattern>
-      <pattern id="bandhani" width="9" height="9" patternUnits="userSpaceOnUse">
-        <rect width="9" height="9" fill="#D04A2E" stroke="none"/>
-        <circle cx="2.2" cy="2.2" r="0.75" fill="#FBE3B8" stroke="none"/>
-        <circle cx="6.7" cy="6.7" r="0.75" fill="#FBE3B8" stroke="none"/>
-      </pattern>
-    </defs>
-    <g class="rig">
-      <g class="legL">
-        <rect class="pant" x="78" y="282" width="20" height="94" rx="9"/>
-        <path class="jutti-b" d="M90 372 C80 370 66 374 64 382 C62 390 92 392 98 386 C100 380 98 374 90 372 Z"/>
-        <path class="line" d="M64 382 C60 380 58 376 60 372" />
-      </g>
-      <g class="legR">
-        <rect class="pant" x="102" y="282" width="20" height="94" rx="9"/>
-        <path class="jutti-b" d="M110 372 C120 370 134 374 136 382 C138 390 108 392 102 386 C100 380 102 374 110 372 Z"/>
-        <path class="line" d="M136 382 C140 380 142 376 140 372" />
-      </g>
-      <g class="body">
-        <path class="kurta hem" d="M60 182 C60 170 78 164 100 164 C122 164 140 170 140 182 L147 302 C116 311 84 311 53 302 Z"/>
-        <rect class="skin" x="89" y="144" width="22" height="26" rx="6"/>
-        <path class="jacket" d="M60 182 C60 172 74 166 88 166 L100 178 L100 264 L57 264 Z"/>
-        <path class="jacket" d="M140 182 C140 172 126 166 112 166 L100 178 L100 264 L143 264 Z"/>
-        <path class="jacket" d="M86 158 L114 158 L113 171 L100 178 L87 171 Z"/>
-        <circle class="gold" cx="100" cy="192" r="2.8"/><circle class="gold" cx="100" cy="210" r="2.8"/>
-        <circle class="gold" cx="100" cy="228" r="2.8"/><circle class="gold" cx="100" cy="246" r="2.8"/>
-        <path class="line" d="M118 196 L132 194" />
-      </g>
-      <g class="armL">
-        <g transform="translate(62 180) rotate(9)">
-          <rect class="kurta" x="-12" y="-4" width="24" height="94" rx="12"/>
-          <circle class="skin" cx="0" cy="98" r="12"/>
-        </g>
-      </g>
-      <g class="armR">
-        <g transform="translate(138 180) rotate(-9)">
-          <rect class="kurta" x="-12" y="-4" width="24" height="94" rx="12"/>
-          <rect class="gold" x="-11" y="80" width="22" height="7" rx="2"/>
-          <circle class="skin" cx="0" cy="98" r="12"/>
-        </g>
-      </g>
-      <g class="head">
-        <ellipse class="skin" cx="53" cy="108" rx="9" ry="12"/>
-        <ellipse class="skin" cx="147" cy="108" rx="9" ry="12"/>
-        <ellipse class="skin" cx="100" cy="102" rx="48" ry="52"/>
-        <path class="beard" d="M52 108 C52 146 74 164 100 164 C126 164 148 146 148 108 C146 124 138 136 126 142 C118 134 82 134 74 142 C62 136 54 124 52 108 Z"/>
-        <path class="hair" d="M52 104 C44 70 60 40 96 36 C132 32 156 56 150 104 C146 88 140 78 132 72 C124 80 110 80 100 74 C88 82 72 84 60 86 C56 92 54 98 52 104 Z"/>
-        <path class="hair" d="M68 54 C76 22 122 14 140 42 C128 36 116 38 106 46 C96 40 80 44 68 54 Z"/>
-        <ellipse class="blush" cx="68" cy="120" rx="8" ry="4.5"/><ellipse class="blush" cx="132" cy="120" rx="8" ry="4.5"/>
-        <path class="line" d="M73 83 C80 77 90 76 96 79" stroke-width="5"/>
-        <path class="line" d="M104 79 C110 76 120 77 127 83" stroke-width="5"/>
-        <g class="eyes">
-          <ellipse class="white" cx="85" cy="102" rx="10" ry="11.5"/>
-          <ellipse class="white" cx="115" cy="102" rx="10" ry="11.5"/>
-          <g class="pupils">
-            <circle class="pupil" cx="86" cy="104" r="6.2"/><circle class="shine" cx="88" cy="101" r="2.2"/>
-            <circle class="pupil" cx="116" cy="104" r="6.2"/><circle class="shine" cx="118" cy="101" r="2.2"/>
-          </g>
-        </g>
-        <rect class="glass" x="71" y="89" width="28" height="25" rx="9"/>
-        <rect class="glass" x="101" y="89" width="28" height="25" rx="9"/>
-        <path class="line" d="M99 99 C100 96 100 96 101 99" stroke="#4A3B33" stroke-width="2.4"/>
-        <path class="line" d="M71 98 L55 103" stroke="#4A3B33" stroke-width="2.4"/>
-        <path class="line" d="M129 98 L145 103" stroke="#4A3B33" stroke-width="2.4"/>
-        <path class="line" d="M100 108 C96 117 97 121 104 120"/>
-        <path class="beard" d="M82 130 C90 122 110 122 118 130 C110 127 90 127 82 130 Z"/>
-        <path class="mouth" d="M86 133 C92 147 108 147 114 133 Z"/>
-        <path class="teeth" d="M88 134 L112 134 C110 139 90 139 88 134 Z"/>
-      </g>
-    </g>
-  </svg>
-
-  <!-- ===== VIDUSHI ===== -->
-  <svg class="char girl" id="girl" viewBox="0 0 200 400" aria-label="Vidushi">
-    <g class="rig">
-      <g class="legL">
-        <rect class="legging" x="80" y="286" width="18" height="90" rx="8"/>
-        <path class="jutti-g" d="M90 372 C80 370 68 374 66 382 C64 390 92 392 97 386 C99 380 97 374 90 372 Z"/>
-      </g>
-      <g class="legR">
-        <rect class="legging" x="102" y="286" width="18" height="90" rx="8"/>
-        <path class="jutti-g" d="M110 372 C120 370 132 374 134 382 C136 390 108 392 103 386 C101 380 103 374 110 372 Z"/>
-      </g>
-      <g class="hairback">
-        <ellipse class="hair nostroke" cx="100" cy="116" rx="58" ry="66"/>
-        <circle class="hair" cx="100" cy="46" r="26"/><circle class="hair" cx="74" cy="52" r="24"/><circle class="hair" cx="126" cy="52" r="24"/>
-        <circle class="hair" cx="54" cy="70" r="22"/><circle class="hair" cx="146" cy="70" r="22"/>
-        <circle class="hair" cx="44" cy="96" r="22"/><circle class="hair" cx="156" cy="96" r="22"/>
-        <circle class="hair" cx="40" cy="122" r="20"/><circle class="hair" cx="160" cy="122" r="20"/>
-        <circle class="hair" cx="44" cy="146" r="19"/><circle class="hair" cx="156" cy="146" r="19"/>
-        <circle class="hair" cx="54" cy="166" r="17"/><circle class="hair" cx="146" cy="166" r="17"/>
-        <ellipse class="hair nostroke" cx="100" cy="110" rx="52" ry="60"/>
-      </g>
-      <g class="body">
-        <rect class="skin2" x="90" y="146" width="20" height="26" rx="6"/>
-        <path class="rust hem" d="M64 182 C64 170 80 164 100 164 C120 164 136 170 136 182 L158 304 C126 316 74 316 42 304 Z"/>
-        <path class="goldline" d="M45 301 C76 313 124 313 155 301" stroke-width="7"/>
-        <path class="goldline" d="M88 166 L100 184 L112 166" stroke-width="4"/>
-        <path class="goldline" d="M100 184 C108 200 116 220 118 300" stroke-width="4"/>
-      </g>
-      <g class="armL">
-        <g transform="translate(66 182) rotate(10)">
-          <rect class="rust" x="-11" y="-4" width="22" height="90" rx="11"/>
-          <rect class="gold" x="-11" y="76" width="22" height="6" rx="2"/>
-          <circle class="skin2" cx="0" cy="94" r="11"/>
-          <rect class="gold" x="-10" y="84" width="20" height="3.5" rx="1.5"/>
-        </g>
-      </g>
-      <g class="armR">
-        <g transform="translate(134 182) rotate(-10)">
-          <rect class="rust" x="-11" y="-4" width="22" height="90" rx="11"/>
-          <rect class="gold" x="-11" y="76" width="22" height="6" rx="2"/>
-          <circle class="skin2" cx="0" cy="94" r="11"/>
-          <rect class="gold" x="-10" y="84" width="20" height="3.5" rx="1.5"/>
-        </g>
-      </g>
-      <g class="head">
-        <ellipse class="skin2" cx="100" cy="108" rx="44" ry="48"/>
-        <circle class="hair" cx="80" cy="66" r="13"/><circle class="hair" cx="98" cy="60" r="14"/>
-        <circle class="hair" cx="117" cy="64" r="13"/><circle class="hair" cx="133" cy="75" r="11"/>
-        <circle class="hair" cx="66" cy="77" r="11"/>
-        <path class="gold" d="M56 140 C52 146 52 152 56 154 L64 154 C68 152 68 146 64 140 Z"/>
-        <path class="gold" d="M136 140 C132 146 132 152 136 154 L144 154 C148 152 148 146 144 140 Z"/>
-        <ellipse class="blush" cx="72" cy="124" rx="8" ry="4.5"/><ellipse class="blush" cx="128" cy="124" rx="8" ry="4.5"/>
-        <path class="line" d="M74 90 C80 86 88 86 94 89" stroke-width="3.5"/>
-        <path class="line" d="M106 89 C112 86 120 86 126 90" stroke-width="3.5"/>
-        <circle cx="100" cy="88" r="3" fill="#B3202E" stroke="none"/>
-        <g class="eyes">
-          <ellipse class="white" cx="84" cy="108" rx="11" ry="13"/>
-          <ellipse class="white" cx="116" cy="108" rx="11" ry="13"/>
-          <g class="pupils">
-            <circle class="pupil" cx="85" cy="110" r="7.2"/><circle class="shine" cx="87.5" cy="106.5" r="2.6"/>
-            <circle class="pupil" cx="117" cy="110" r="7.2"/><circle class="shine" cx="119.5" cy="106.5" r="2.6"/>
-          </g>
-          <path class="line" d="M73 103 C77 95 91 94 95 100" stroke-width="3.6"/>
-          <path class="line" d="M105 100 C109 94 123 95 127 103" stroke-width="3.6"/>
-          <path class="line" d="M74 99 L70 93 M78 96 L76 90" stroke-width="2.6"/>
-          <path class="line" d="M126 99 L130 93 M122 96 L124 90" stroke-width="2.6"/>
-        </g>
-        <path class="line" d="M100 114 C97 121 98 124 103 124"/>
-        <path class="mouth" d="M88 131 C94 143 106 143 112 131 Z"/>
-        <path class="teeth" d="M90 132 L110 132 C108 136 92 136 90 132 Z"/>
-      </g>
-    </g>
-  </svg>
+  <div class="char boy" id="boy" data-toon="groom"></div>
+  <div class="char girl" id="girl" data-toon="bride"></div>
 
   <button class="replay" id="replay" type="button">Replay</button>
 </div></div>
@@ -335,7 +168,9 @@
   }
 
   document.getElementById("replay").addEventListener("click", play);
-  document.fonts.ready.then(play);
+  Promise.all([...document.querySelectorAll("[data-toon]")].map(async (el) => {
+    el.innerHTML = await (await fetch(`/assets/art/${el.dataset.toon}.svg`)).text();
+  })).then(() => document.fonts.ready).then(play);
 })();
 </script>
 </body>

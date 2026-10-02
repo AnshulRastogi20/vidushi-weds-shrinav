@@ -69,13 +69,14 @@
   </section>
 </main>
 
-<script src="/events.js"></script>
 <script>
 (() => {
-  const W = window.WEDDING, $ = (s) => document.querySelector(s);
+  const W = { supabaseUrl: "https://ddpubhkgcbcwncyeebzc.supabase.co", supabaseKey: "sb_publishable_Am-lHqCMq1ANCtyzlQidXg_9QJuhbNm" };
+  const $ = (s) => document.querySelector(s);
+  const NAMES = { wedding: "Wedding", engagement: "Engagement", haldi: "Haldi" };
   let rows = [];
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-  const title = (ev) => (window.EVENTS[ev]?.title || ev).replace(/ Ceremony$/, "");
+  const title = (ev) => NAMES[ev] || ev;
 
   async function load(code) {
     const res = await fetch(`${W.supabaseUrl}/rest/v1/rpc/list_wedding_rsvps`, {

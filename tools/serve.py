@@ -11,7 +11,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         path = self.path.split("?")[0]
-        if re.fullmatch(r"/[a-z-]+/?", path):
+        if re.fullmatch(r"/i/[a-z0-9]+/?", path):
+            self.path = "/index.html"
+        elif re.fullmatch(r"/[a-z-]+/?", path):
             name = path.strip("/")
             html = os.path.join(ROOT, f"{name}.html")
             self.path = f"/{name}.html" if os.path.exists(html) else "/index.html"

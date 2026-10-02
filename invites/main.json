@@ -1,0 +1,42 @@
+{
+ "common": {
+  "supabaseUrl": "https://ddpubhkgcbcwncyeebzc.supabase.co",
+  "supabaseKey": "sb_publishable_Am-lHqCMq1ANCtyzlQidXg_9QJuhbNm",
+  "hosts": "Smt. Richa & Sh. Naveen Rastogi",
+  "request": "request your gracious presence on the auspicious occasion of the wedding of their beloved son",
+  "first": {
+   "name": "Shrinav Rastogi",
+   "parents": ""
+  },
+  "second": {
+   "name": "Vidushi Vatsa",
+   "parents": "D/o Rachna & Supriyam Vatsa"
+  },
+  "family": "Rastogi Family",
+  "music": "/assets/audio/theme.mp3",
+  "couplePhoto": "/assets/photos/couple.jpg",
+  "moments": [
+   "/assets/photos/moment-1.jpg",
+   "/assets/photos/moment-2.jpg",
+   "/assets/photos/moment-3.jpg"
+  ]
+ },
+ "events": [
+  {
+   "key": "wedding",
+   "title": "Wedding Ceremony",
+   "short": "Wedding",
+   "titleArt": "wedding-ceremony",
+   "sky": "night",
+   "lights": "bulbs",
+   "start": "2026-12-12T20:00:00+05:30",
+   "end": "2026-12-13T02:00:00+05:30",
+   "dateLine": "Saturday, 12th December 2026",
+   "timeLine": "8 pm onwards",
+   "venue": "Royal Heritage",
+   "venueLine": "Country Inn & Suites, Ghaziabad",
+   "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",
+   "countdown": true
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+/* Cartoon Shrinav + Vidushi (assets/art/groom.svg, bride.svg). Shared by the site and mock/. */
+.toon { overflow: visible; }
+.toon path, .toon rect, .toon circle, .toon ellipse { stroke: #2B1A12; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.toon pattern *, .toon .nostroke { stroke: none !important; }
+.toon .skin { fill: #E5AE86; } .toon .skin2 { fill: #EDBE98; }
+.toon .hair { fill: #241812; }
+.toon .beard { fill: #57402F; }
+.toon .line.strand { stroke: #4B3A30; stroke-width: 1.6; }
+.toon .white { fill: #fff; }
+.toon .pupil { fill: #2B1A12; stroke: none !important; }
+.toon .shine { fill: #fff; stroke: none !important; }
+.toon .chikan { fill: url(#chikan); }
+.toon .blossom { fill: url(#blossom); }
+.toon .bandhani { fill: url(#bandhani); }
+.toon .pant { fill: #FBF8F2; } .toon .legging { fill: #F4E7CF; }
+.toon .btn { fill: #1F2126; stroke-width: 1.4; stroke: #9A9AA0; }
+.toon .gold { fill: #D9A948; }
+.toon .goldline { fill: none; stroke: #D9A948 !important; }
+.toon .shoe-b { fill: #6B3A1F; } .toon .shoe-g { fill: #D9A948; }
+.toon .mouth { fill: #7A2B21; } .toon .teeth { fill: #fff; stroke: none !important; }
+.toon .blush { fill: #E9876F; opacity: .45; stroke: none !important; }
+.toon .line { fill: none; }
+.toon .line.thin { stroke-width: 2; }
+.toon .glass { fill: rgba(150, 165, 205, .2); stroke: #8A8590 !important; stroke-width: 1.6 !important; }
+.toon .gframe { fill: none; stroke: #8A8590 !important; stroke-width: 1.8 !important; }

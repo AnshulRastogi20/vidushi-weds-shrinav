@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" class="toon" aria-label="Shrinav">
+  <defs>
+    <pattern id="blossom" width="26" height="26" patternUnits="userSpaceOnUse">
+      <rect width="26" height="26" fill="#3B3E46"/>
+      <path d="M0 21 C6 17 10 12 14 6 M9 13 C13 15 16 18 18 23 M14 6 C17 4 20 3 25 4" stroke="#C9A57A" stroke-width="1" fill="none"/>
+      <circle cx="14" cy="6" r="2.1" fill="#E8704C"/><circle cx="18" cy="23" r="1.9" fill="#F28A5E"/>
+      <circle cx="25" cy="4" r="1.5" fill="#E8704C"/><circle cx="4" cy="18" r="1.7" fill="#F3A07A"/>
+      <circle cx="10" cy="12" r="1.3" fill="#E35B45"/>
+    </pattern>
+    <pattern id="chikan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#F3ECDD"/>
+      <path d="M0 4 L4 0 M4 8 L8 4 M0 4 L4 8 M4 0 L8 4" stroke="#E2D8C4" stroke-width=".7" fill="none"/>
+    </pattern>
+  </defs>
+  <g class="rig">
+    <g class="legL">
+      <rect class="pant" x="78" y="290" width="20" height="86" rx="9"/>
+      <path class="shoe-b" d="M91 372 C80 370 68 374 66 382 C64 390 92 391 98 386 C100 380 98 374 91 372 Z"/>
+    </g>
+    <g class="legR">
+      <rect class="pant" x="102" y="290" width="20" height="86" rx="9"/>
+      <path class="shoe-b" d="M109 372 C120 370 132 374 134 382 C136 390 108 391 102 386 C100 380 102 374 109 372 Z"/>
+    </g>
+    <g class="body">
+      <path class="chikan hem" d="M60 182 C60 170 78 164 100 164 C122 164 140 170 140 182 L148 316 C120 322 84 320 52 312 Z"/>
+      <rect class="skin" x="89" y="146" width="22" height="24" rx="6"/>
+      <path class="blossom" d="M60 182 C60 172 74 166 88 166 L100 178 L100 266 L57 266 Z"/>
+      <path class="blossom" d="M140 182 C140 172 126 166 112 166 L100 178 L100 266 L143 266 Z"/>
+      <path class="blossom" d="M84 157 L116 157 L114 171 L100 178 L86 171 Z"/>
+      <circle class="btn" cx="100" cy="190" r="2.6"/><circle class="btn" cx="100" cy="207" r="2.6"/>
+      <circle class="btn" cx="100" cy="224" r="2.6"/><circle class="btn" cx="100" cy="241" r="2.6"/>
+      <circle class="btn" cx="100" cy="258" r="2.6"/>
+      <path class="line thin" d="M68 246 L86 244 M114 244 L132 246"/>
+    </g>
+    <g class="armL">
+      <g transform="translate(62 180) rotate(9)">
+        <rect class="chikan" x="-12" y="-4" width="24" height="94" rx="12"/>
+        <circle class="skin" cx="0" cy="98" r="12"/>
+      </g>
+    </g>
+    <g class="armR">
+      <g transform="translate(138 180) rotate(-9)">
+        <rect class="chikan" x="-12" y="-4" width="24" height="94" rx="12"/>
+        <rect x="-11" y="80" width="22" height="7" rx="2" fill="#2E2A28"/>
+        <circle cx="0" cy="83.5" r="4.6" fill="#D8D4CC"/>
+        <circle class="skin" cx="0" cy="98" r="12"/>
+      </g>
+    </g>
+    <g class="head">
+      <ellipse class="skin" cx="52" cy="110" rx="9" ry="12"/>
+      <ellipse class="skin" cx="148" cy="110" rx="9" ry="12"/>
+      <ellipse class="skin" cx="100" cy="105" rx="50" ry="54"/>
+      <path class="beard" d="M51 110 C52 152 76 168 100 168 C124 168 148 152 149 110 C147 128 139 140 128 146 C118 151 109 152 100 152 C91 152 82 151 72 146 C61 140 53 128 51 110 Z"/>
+      <path class="beard nostroke" d="M85 131 C84 139 87 146 92 150 L108 150 C113 146 116 139 115 131 C110 141 90 141 85 131 Z"/>
+      <path class="hair" d="M51 104 C43 68 64 40 100 38 C136 36 158 62 149 104 C147 92 143 84 137 79 C130 74 120 70 108 69 C92 68 76 73 64 81 C57 87 53 95 51 104 Z"/>
+      <path class="line strand" d="M66 66 C82 52 110 47 134 56 M80 60 C96 54 114 54 128 60"/>
+      <path class="hair" d="M51 102 L51 116 L55.5 115 L55.5 99 Z"/>
+      <path class="hair" d="M149 102 L149 116 L144.5 115 L144.5 99 Z"/>
+      <ellipse class="blush" cx="69" cy="122" rx="8" ry="4.5"/><ellipse class="blush" cx="131" cy="122" rx="8" ry="4.5"/>
+      <path class="line" d="M72 88 C79 83 89 83 96 85" stroke-width="5.5"/>
+      <path class="line" d="M104 85 C111 83 121 83 128 88" stroke-width="5.5"/>
+      <g class="eyes">
+        <ellipse class="white" cx="85" cy="103" rx="9" ry="8.5"/>
+        <ellipse class="white" cx="115" cy="103" rx="9" ry="8.5"/>
+        <g class="pupils">
+          <circle class="pupil" cx="86" cy="104" r="5.4"/><circle class="shine" cx="88" cy="102" r="1.8"/>
+          <circle class="pupil" cx="116" cy="104" r="5.4"/><circle class="shine" cx="118" cy="102" r="1.8"/>
+        </g>
+        <path class="line thin" d="M77 110 C82 113 89 113 93 110 M107 110 C111 113 118 113 123 110"/>
+      </g>
+      <rect class="glass" x="71" y="93" width="28" height="20" rx="6"/>
+      <rect class="glass" x="101" y="93" width="28" height="20" rx="6"/>
+      <path class="gframe" d="M99 101 C100 99 100 99 101 101 M71 99 L56 104 M129 99 L144 104"/>
+      <path class="line" d="M100 109 C96 117 97 121 104 120"/>
+      <path class="beard" d="M83 129 C91 123 109 123 117 129 C109 127 91 127 83 129 Z"/>
+      <path class="mouth" d="M87 132 C93 141 107 141 113 132 C107 135 93 135 87 132 Z"/>
+      <path class="teeth" d="M90 133.4 C96 136.4 104 136.4 110 133.4 C104 134.6 96 134.6 90 133.4 Z"/>
+    </g>
+  </g>
+</svg>
