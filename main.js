@@ -495,8 +495,12 @@
   async function loadAudio(url) {
     audio = new Audio(); audio.loop = true; audio.preload = "auto";
     audio.addEventListener("error", () => { audioOk = false; music.hidden = true; });
-    try { audio.src = URL.createObjectURL(await (await fetch(url)).blob()); } // fully buffered, so it starts on the tap
-    catch { audio.src = url; }
+    // stream it, and let the loader wait only until enough is buffered to start cleanly on the tap
+    audio.src = url;
+    // iPhones don't buffer before a tap, so never hold the loader for more than 2.5 s on the music
+    await Promise.race([wait(2500), new Promise((res) => {
+      audio.addEventListener("canplaythrough", res, { once: true }); audio.addEventListener("error", res, { once: true }); audio.load();
+    })]);
   }
 
   /* ================= boot: everything loads behind the ॐ ================= */
