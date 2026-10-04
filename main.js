@@ -187,7 +187,7 @@
   const FILTER_0 = "brightness(1) blur(0px) drop-shadow(0px 0px 0px rgba(255,205,120,0))";
 
   function merge() {
-    const groom = $("#a-groom"), bride = $("#a-bride"), vi = $("#tg-vi"), sh = $("#tg-sh");
+    const groom = $("#a-groom"), bride = $("#a-bride"), lgS = $("#lg-s"), lgV = $("#lg-v");
     const W = innerWidth, w = groom.getBoundingClientRect().width;
     // stand close enough that his right hand meets her left hand
     const gx = W / 2 - 0.425 * w - 0.27 * W, bx = W / 2 + 0.425 * w - 0.73 * W;
@@ -205,27 +205,27 @@
       .to(part(bride, "head"), { rotation: -6, svgOrigin: PIV.head, duration: 0.5, ease: "power2.out" }, 0.72)
       .to(part(groom, "pupils"), { x: 3, duration: 0.3 }, 0.72)
       .to(part(bride, "pupils"), { x: -3, duration: 0.3 }, 0.72)
-      // the room dims, a warm light rises behind them, the two letters wait above
+      // the room dims, a warm light rises behind them, the logo's S and V wait above as faint gold
       .call(() => placeHalo(groom, bride), null, 0.8)
       .to("#veil", { autoAlpha: 1, duration: 0.9, ease: "power2.out" }, 0.85)
       .fromTo("#halo", { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: "power2.out" }, 0.9)
-      .fromTo([vi, sh], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, 1.0)
+      .to(".lg-ghost", { opacity: 0.22, duration: 0.8, ease: "power2.out" }, 1.0)
       .to([groom, bride], { y: -innerHeight * 0.05, duration: 1.0, ease: "sine.inOut" }, 1.05)
       .to([groom, bride], { filter: "brightness(1.3) blur(0px) drop-shadow(0px 0px 16px rgba(255,205,120,0.9))", duration: 0.7, ease: "power1.in" }, 1.1)
       // they become light
-      .call(() => { dust(groom, sh, GROOM_LIGHT); dust(bride, vi, BRIDE_LIGHT); }, null, 1.75)
+      .call(() => { dust(groom, $("#tgt-s"), GROOM_LIGHT); dust(bride, $("#tgt-v"), BRIDE_LIGHT); }, null, 1.75)
       .to([groom, bride], { autoAlpha: 0, scale: 1.04, filter: "brightness(2.2) blur(10px) drop-shadow(0px 0px 30px rgba(255,215,140,1))", duration: 0.45, ease: "power2.in" }, 1.75)
       .to("#halo", { autoAlpha: 0, scale: 1.5, duration: 1.3, ease: "power2.out" }, 2.0)
-      // the letters fill from the bottom as the light arrives
-      .to(sh, { "--f": 1, duration: 0.95, ease: "power2.inOut" }, 2.3)
-      .to(vi, { "--f": 1, duration: 0.95, ease: "power2.inOut" }, 2.36)
-      .to([vi, sh], { filter: "drop-shadow(0px 0px 18px rgba(255,196,96,0.95))", duration: 0.35, ease: "power2.out" }, 3.15)
-      .to([vi, sh], { filter: "drop-shadow(0px 0px 0px rgba(255,196,96,0))", duration: 0.9, ease: "power2.inOut" }, 3.5)
-      .to([vi, sh], { "--so": 0, duration: 0.6 }, 3.3)
+      // Shrinav fills the S, Vidushi the V, bottom to top as the light arrives
+      .to(lgS, { clipPath: "inset(39% 0% 0% 0%)", duration: 0.95, ease: "power2.inOut" }, 2.3)
+      .to(lgV, { clipPath: "inset(38% 0% 0% 0%)", duration: 0.95, ease: "power2.inOut" }, 2.36)
+      .to([lgS, lgV], { filter: "drop-shadow(0px 0px 14px rgba(255,196,96,0.95))", duration: 0.35, ease: "power2.out" }, 3.15)
+      .to([lgS, lgV], { filter: "drop-shadow(0px 0px 0px rgba(255,196,96,0))", duration: 0.9, ease: "power2.inOut" }, 3.5)
+      .to(".lg-ghost", { opacity: 0, duration: 0.4 }, 3.25)
       .to("#veil", { autoAlpha: 0, duration: 1.2, ease: "power2.inOut" }, 3.2)
       .add(revealHero(), 3.15)
-      .call(unlock, null, 3.4)
-      .call(() => $("#cast").remove(), null, 3.6);
+      .call(() => $("#cast").remove(), null, 3.6)
+      .call(unlock, null, 5.3);
     return tl;
   }
   function placeHalo(groom, bride) {
@@ -313,15 +313,35 @@
   }
 
   /* ================= hero + scroll ================= */
+  const LOGO_HIDDEN = () => {
+    gsap.set(".lg-s, .lg-v", { clipPath: "inset(74% 0% 0% 0%)" });
+    gsap.set(".lg-hashtag", { clipPath: "inset(0% 72% 0% 0%)", autoAlpha: 0 });
+    gsap.set(".lg-ornament, .lg-el, .lg-wreath, .hero-date, .hero-place, .cue", { autoAlpha: 0 });
+  };
   function revealHero(instant) {
     const tl = gsap.timeline();
-    if (instant) { gsap.set(".tg, .names-text, .hero-date, .hero-place, .cue", { autoAlpha: 1 }); gsap.set(".tg-fill", { "--f": 1, "--so": 0 }); return tl; }
-    tl.fromTo(".tg-hash, .tg-r, .tag-2", { autoAlpha: 0, y: 14, filter: "blur(10px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.9, stagger: 0.1, ease: "power3.out" }, 0)
-      .call(releaseBalloons, null, 0.2)
-      .fromTo(".bell", { yPercent: -110 }, { yPercent: 0, duration: 1.3, ease: "back.out(1.4)", stagger: 0.12 }, 0.2)
-      .fromTo(".names-text", { autoAlpha: 0, y: 12, filter: "blur(6px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, 0.5)
-      .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 0.9)
-      .fromTo(".cue", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 1.5);
+    if (instant) {
+      gsap.set(".lg-s, .lg-v, .lg-hashtag", { clipPath: "inset(0% 0% 0% 0%)", autoAlpha: 1 });
+      gsap.set(".lg-ornament, .lg-el, .lg-wreath, .hero-date, .hero-place, .cue", { autoAlpha: 1 });
+      gsap.set(".lg-wreath", { "--a": "360deg" });
+      return tl;
+    }
+    tl // the hashtag writes itself left to right
+      .set(".lg-hashtag", { autoAlpha: 1 }, 0)
+      .to(".lg-hashtag", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.1, ease: "power1.inOut" }, 0)
+      .fromTo(".lg-ornament", { autoAlpha: 0, scale: 0.7, transformOrigin: "50% 27%" }, { autoAlpha: 1, scale: 1, duration: 0.8, ease: "back.out(1.6)" }, 0.5)
+      // the elephants walk in from both sides
+      .fromTo(".lg-el-l", { autoAlpha: 0, xPercent: -60 }, { autoAlpha: 1, xPercent: 0, duration: 1.5, ease: "power2.out" }, 0.7)
+      .fromTo(".lg-el-r", { autoAlpha: 0, xPercent: 60 }, { autoAlpha: 1, xPercent: 0, duration: 1.5, ease: "power2.out" }, 0.75)
+      .fromTo(".lg-el", { y: 0 }, { y: -6, duration: 0.25, yoyo: true, repeat: 5, ease: "sine.inOut" }, 0.7)
+      // then the gold ring draws round and the flowers bloom into place
+      .set(".lg-wreath", { autoAlpha: 1, "--a": "0deg" }, 1.9)
+      .to(".lg-wreath", { "--a": "380deg", duration: 1.6, ease: "power2.inOut" }, 1.9)
+      .fromTo(".lg-wreath", { scale: 0.97, filter: "blur(4px)" }, { scale: 1, filter: "blur(0px)", duration: 1.6, ease: "power2.out" }, 1.9)
+      .call(releaseBalloons, null, 2.6)
+      .fromTo(".bell", { yPercent: -110 }, { yPercent: 0, duration: 1.3, ease: "back.out(1.4)", stagger: 0.12 }, 2.4)
+      .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 3.2)
+      .fromTo(".cue", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 3.8);
     $$(".bell").forEach((b, i) => {
       gsap.fromTo(b, { rotation: i ? 2.2 : -2.2 }, { rotation: i ? -2.2 : 2.2, duration: 2.4 + i * 0.35, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.2, transformOrigin: "50% 0" });
     });
@@ -496,14 +516,14 @@
 
     const loadImg = (src) => { const i = new Image(); i.src = src; return i.decode(); };
     const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)),
-      ...[C.couplePhoto, ...C.moments].map((s) => track(loadImg(s)))];
+      ...[C.couplePhoto, ...C.moments, ...$$(".lg").map((i) => i.getAttribute("src"))].map((s) => track(loadImg(s)))];
     await Promise.race([Promise.all(work), wait(7000)]);
     await document.fonts.ready;
     const left = 1300 - (performance.now() - t0);
     if (left > 0) await wait(left);
 
     $$(".art.draw").forEach(prepDraw);
-    gsap.set(".tg, .names-text, .hero-date, .hero-place, .cue", { autoAlpha: 0 });
+    LOGO_HIDDEN();
     buildScroll();
     gsap.to("#preload", { autoAlpha: 0, duration: 0.45, onComplete: () => $("#preload").remove() });
     showGate();

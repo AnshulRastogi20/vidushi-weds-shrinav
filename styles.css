@@ -493,18 +493,23 @@ section { position: relative; }
   background-size: 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 100% 100%, 100% 100%;
 }
 
-/* ---------- hashtag screen: a frosted, slightly dark panel so the foil reads ---------- */
-.hero .hero-inner { width: auto; max-width: min(92vw, 760px); padding: 30px clamp(16px, 5vw, 48px); }
-/* a soft, edgeless smoky shade behind the text: blurred, feathered out, no box */
-.hero .hero-inner::before {
-  content: ""; position: absolute; inset: -16% -20% -30%; z-index: -1; pointer-events: none;
-  background: radial-gradient(closest-side at 50% 50%, rgba(52, 26, 12, .42), rgba(52, 26, 12, .3) 60%, rgba(52, 26, 12, 0) 100%);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
+
+
+/* ---------- the logo screen ---------- */
+.hero { padding: 6svh 12px 10svh; }
+.hero .bell { height: 22svh; }
+.logo { position: relative; width: min(94vw, 64svh, 620px); aspect-ratio: 1100 / 1226; }
+.lg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+.lg-ghost { opacity: 0; filter: blur(1px); }
+/* the monogram's box inside the logo (from the artwork): S fills, then V */
+.tgt { position: absolute; }
+.tgt-s { left: 32%; top: 41%; width: 20.5%; height: 30%; }
+.tgt-v { left: 52.5%; top: 40%; width: 20%; height: 30%; }
+.hero .hero-date { margin-top: 1.4svh; color: var(--fg-soft); }
+.hero .hero-place { color: var(--fg-soft); }
+/* the ring reveals round like a clock hand; --a is tweened from 0 to 380deg */
+.lg-wreath {
+  --a: 0deg;
+  -webkit-mask-image: conic-gradient(from 200deg at 50% 54%, #000 var(--a), transparent calc(var(--a) + 14deg));
+  mask-image: conic-gradient(from 200deg at 50% 54%, #000 var(--a), transparent calc(var(--a) + 14deg));
 }
-.hero .names-text, .hero .hero-date, .hero .hero-place { text-shadow: 0 1px 10px rgba(40, 18, 6, .55); }
-.hero .names-text { color: #FFF4E2; }
-.hero .hero-date { color: #FFF0D6; }
-.hero .hero-date i { background: #E2B35C; }
-.hero .hero-place { color: #F6E2C2; }
