@@ -22,6 +22,7 @@
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
     lenis.stop();
+    window.__lenis = lenis; // lets tests and the console scroll the page
   }
 
   let C, EVENTS, audio, audioOk = true;
@@ -363,11 +364,12 @@
     let prev = "paper", prevEl = $("#invite");
     $$(".event").forEach((sec, i) => {
       const next = sec.dataset.sky, via = VIA[`${prev}>${next}`];
+      // each card paints its own colours; the shared sky only changes across the gap between cards
       if (next !== prev) {
         if (via) {
-          skyTween(prev, via, prevEl, "bottom 85%", "bottom 35%");
-          skyTween(via, next, sec, "top 85%", "top 35%");
-        } else skyTween(prev, next, sec, "top 70%", "top 30%");
+          skyTween(prev, via, sec, "top 100%", "top 60%");
+          skyTween(via, next, sec, "top 60%", "top 20%");
+        } else skyTween(prev, next, sec, "top 95%", "top 25%");
       }
       // buttons, foil and form colours follow the event on screen
       ScrollTrigger.create({

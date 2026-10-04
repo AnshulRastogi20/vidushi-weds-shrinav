@@ -469,3 +469,42 @@ section { position: relative; }
 .event .divider { background: var(--foil-grad); }
 @media (min-width: 760px) { .ev-corner { width: 96px; height: 122px; } .k1, .k2 { top: 30px; } .k3, .k4 { bottom: 30px; } .k1, .k3 { left: 30px; } .k2, .k4 { right: 30px; } }
 .event .block .big { font-weight: 700; }
+
+/* ---------- each card owns its colours, so it never shows a half-blended sky ---------- */
+.event[data-sky="night"] { --ev1: #0D1030; --ev2: #241C47; --fg: #F6ECD8; --fg-soft: #C9BDA8; --gold: #E2B35C; --line: #E2B35C; }
+.event[data-sky="sun"] { --ev1: #F0A010; --ev2: #FFD45A; --fg: #8A0E45; --fg-soft: #A8245E; --gold: #B0125B; --line: #B0125B; }
+.event[data-sky="crimson"] { --ev1: #2B0408; --ev2: #7A0E1C; --fg: #FFF4E2; --fg-soft: #E9C9B9; --gold: #F1C76A; --line: #D9A948; }
+.event { color: var(--fg); }
+.ev-bg {
+  position: absolute; inset: 0; z-index: -2; pointer-events: none;
+  background: radial-gradient(130% 75% at 50% 45%, var(--ev2), var(--ev1) 78%);
+  /* soft top and bottom edges, so neighbouring cards meet through the sky instead of a hard line */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10vh, #000 calc(100% - 10vh), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 10vh, #000 calc(100% - 10vh), transparent 100%);
+}
+.event[data-sky="night"] .ev-bg {
+  background:
+    radial-gradient(1.3px 1.3px at 12% 18%, #fff8e6 60%, transparent), radial-gradient(1px 1px at 32% 8%, #fff 60%, transparent),
+    radial-gradient(1.4px 1.4px at 58% 22%, #ffeec8 60%, transparent), radial-gradient(1px 1px at 76% 12%, #fff 60%, transparent),
+    radial-gradient(1.2px 1.2px at 88% 30%, #fff8e6 60%, transparent), radial-gradient(1px 1px at 22% 40%, #fff 60%, transparent),
+    radial-gradient(1px 1px at 66% 44%, #fff 60%, transparent), radial-gradient(1.3px 1.3px at 45% 34%, #ffeec8 60%, transparent),
+    radial-gradient(60% 40% at 50% 100%, rgba(242, 169, 59, .32), rgba(242, 169, 59, 0)),
+    linear-gradient(180deg, #0D1030, #241C47);
+  background-size: 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 260px 300px, 100% 100%, 100% 100%;
+}
+
+/* ---------- hashtag screen: a frosted, slightly dark panel so the foil reads ---------- */
+.hero .hero-inner { width: auto; max-width: min(92vw, 760px); padding: 30px clamp(16px, 5vw, 48px); }
+/* a soft, edgeless smoky shade behind the text: blurred, feathered out, no box */
+.hero .hero-inner::before {
+  content: ""; position: absolute; inset: -16% -20% -30%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side at 50% 50%, rgba(52, 26, 12, .42), rgba(52, 26, 12, .3) 60%, rgba(52, 26, 12, 0) 100%);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
+}
+.hero .names-text, .hero .hero-date, .hero .hero-place { text-shadow: 0 1px 10px rgba(40, 18, 6, .55); }
+.hero .names-text { color: #FFF4E2; }
+.hero .hero-date { color: #FFF0D6; }
+.hero .hero-date i { background: #E2B35C; }
+.hero .hero-place { color: #F6E2C2; }
