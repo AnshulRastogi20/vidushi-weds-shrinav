@@ -17,7 +17,7 @@
 <link rel="icon" href="/assets/art/monogram.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;1,400&family=Alegreya+SC:wght@500&family=Pinyon+Script&family=Rozha+One&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <link rel="stylesheet" href="/toon.css">
 </head>
@@ -77,8 +77,11 @@
   </div>
 </div>
 
+<canvas class="dust" id="dust" aria-hidden="true"></canvas>
+
 <!-- the two of them, above everything until they jump into the hashtag -->
 <div class="cast" id="cast" aria-hidden="true">
+  <div class="halo" id="halo"></div>
   <div class="actor a-groom" id="a-groom" data-toon="groom"></div>
   <div class="actor a-bride" id="a-bride" data-toon="bride"></div>
 </div>
@@ -86,14 +89,16 @@
 <main id="main">
 
   <section class="hero" id="hero" data-sky="paper">
+    <div class="veil" id="veil" aria-hidden="true"></div>
+    <div class="balloons" id="balloons" aria-hidden="true"></div>
     <div class="bell bell-l"><div class="bell-art"></div></div>
     <div class="bell bell-r"><div class="bell-art"></div></div>
     <div class="hero-inner">
       <h1 class="tag" aria-label="#RViShcametrue">
-        <span class="tag-1" aria-hidden="true"><span class="tg tg-hash">#</span><span class="tg tg-r">R</span><span class="tg tg-vi" id="tg-vi">Vi</span><span class="tg tg-sh" id="tg-sh">Sh</span></span>
+        <span class="tag-1" aria-hidden="true"><span class="tg tg-hash">#</span><span class="tg tg-r">R</span><span class="tg tg-vi tg-fill" id="tg-vi" data-text="Vi">Vi</span><span class="tg tg-sh tg-fill" id="tg-sh" data-text="Sh">Sh</span></span>
         <span class="tag-2 tg" aria-hidden="true">cametrue</span>
       </h1>
-      <div class="art draw names" data-svg="names-script-groom" aria-hidden="true"></div>
+      <p class="names-text">Shrinav weds Vidushi</p>
       <p class="hero-date" aria-label="12 December 2026"><span>12</span><i></i><span>12</span><i></i><span>2026</span></p>
       <p class="hero-place">Ghaziabad</p>
     </div>

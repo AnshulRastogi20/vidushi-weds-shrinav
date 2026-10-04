@@ -194,51 +194,150 @@
       .to(".env-flap", { autoAlpha: 0, duration: 0.15 }, 1.15)
       .to(".env-body", { yPercent: 100, duration: 0.6, ease: "power3.in" }, 1.05)
       .call(() => $("#gate").remove(), null, 1.7)
-      .add(absorb(), 1.7);
+      .add(merge(), 1.6);
   }
 
-  /* the two of them jump into "Sh" and "Vi" of the hashtag */
-  function absorb() {
-    const pairs = [[$("#a-groom"), $("#tg-sh"), 360], [$("#a-bride"), $("#tg-vi"), -360]];
-    const tl = gsap.timeline({ onComplete: () => { $("#cast").remove(); } });
-    pairs.forEach(([a, target, spin], i) => {
-      const at = i * 0.12;
-      tl.call(() => {
-        const ar = a.getBoundingClientRect(), tr = target.getBoundingClientRect();
-        const dx = tr.left + tr.width / 2 - (ar.left + ar.width / 2);
-        const dy = tr.top + tr.height / 2 - (ar.top + ar.height / 2);
-        const sc = (tr.height * 1.1) / ar.height;
-        gsap.timeline()
-          .to(a, { y: -50, duration: 0.2, ease: "power2.out" })
-          .to(a, { x: `+=${dx}`, y: dy, scale: sc, rotation: spin, transformOrigin: "50% 50%", duration: 0.55, ease: "power2.in" })
-          .to(a, { autoAlpha: 0, duration: 0.1 }, "-=0.08")
-          .fromTo(target, { autoAlpha: 0, scale: 0.2 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "back.out(3)" }, "-=0.1")
-          .call(() => pop(tr, getComputedStyle(target).color), null, "<");
-      }, null, at);
-    });
-    tl.add(revealHero(), 0.95).call(unlock, null, 1.05);
+  /* ---- the merge: they meet, rise as light, and become "Sh" and "Vi" ---- */
+  const GROOM_LIGHT = ["#F2C46D", "#FFE2A0", "#7FA8D8", "#D9A948"];
+  const BRIDE_LIGHT = ["#F2C46D", "#FFE2A0", "#F09A82", "#D9A948"];
+  const FILTER_0 = "brightness(1) blur(0px) drop-shadow(0px 0px 0px rgba(255,205,120,0))";
+
+  function merge() {
+    const groom = $("#a-groom"), bride = $("#a-bride"), vi = $("#tg-vi"), sh = $("#tg-sh");
+    const W = innerWidth, w = groom.getBoundingClientRect().width;
+    // stand close enough that his right hand meets her left hand
+    const gx = W / 2 - 0.425 * w - 0.27 * W, bx = W / 2 + 0.425 * w - 0.73 * W;
+    let wg, wb;
+    gsap.set([groom, bride], { filter: FILTER_0 });
+    const tl = gsap.timeline();
+    tl.call(() => { wg = walkCycle(groom, 1); wb = walkCycle(bride, -1); }, null, 0)
+      .to(groom, { x: gx, duration: 0.6, ease: "power1.inOut" }, 0)
+      .to(bride, { x: bx, duration: 0.6, ease: "power1.inOut" }, 0)
+      .call(() => { wg.kill(); wb.kill(); settle(groom); settle(bride); }, null, 0.6)
+      // hands meet, one look at each other
+      .to(part(groom, "armR"), { rotation: -30, svgOrigin: PIV.armR, duration: 0.4, ease: "power2.inOut" }, 0.72)
+      .to(part(bride, "armL"), { rotation: 30, svgOrigin: PIV.armL, duration: 0.4, ease: "power2.inOut" }, 0.72)
+      .to(part(groom, "head"), { rotation: 6, svgOrigin: PIV.head, duration: 0.5, ease: "power2.out" }, 0.72)
+      .to(part(bride, "head"), { rotation: -6, svgOrigin: PIV.head, duration: 0.5, ease: "power2.out" }, 0.72)
+      .to(part(groom, "pupils"), { x: 3, duration: 0.3 }, 0.72)
+      .to(part(bride, "pupils"), { x: -3, duration: 0.3 }, 0.72)
+      // the room dims, a warm light rises behind them, the two letters wait above
+      .call(() => placeHalo(groom, bride), null, 0.8)
+      .to("#veil", { autoAlpha: 1, duration: 0.9, ease: "power2.out" }, 0.85)
+      .fromTo("#halo", { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: "power2.out" }, 0.9)
+      .fromTo([vi, sh], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, 1.0)
+      .to([groom, bride], { y: -innerHeight * 0.05, duration: 1.0, ease: "sine.inOut" }, 1.05)
+      .to([groom, bride], { filter: "brightness(1.3) blur(0px) drop-shadow(0px 0px 16px rgba(255,205,120,0.9))", duration: 0.7, ease: "power1.in" }, 1.1)
+      // they become light
+      .call(() => { dust(groom, sh, GROOM_LIGHT); dust(bride, vi, BRIDE_LIGHT); }, null, 1.75)
+      .to([groom, bride], { autoAlpha: 0, scale: 1.04, filter: "brightness(2.2) blur(10px) drop-shadow(0px 0px 30px rgba(255,215,140,1))", duration: 0.45, ease: "power2.in" }, 1.75)
+      .to("#halo", { autoAlpha: 0, scale: 1.5, duration: 1.3, ease: "power2.out" }, 2.0)
+      // the letters fill from the bottom as the light arrives
+      .to(sh, { "--f": 1, duration: 0.95, ease: "power2.inOut" }, 2.3)
+      .to(vi, { "--f": 1, duration: 0.95, ease: "power2.inOut" }, 2.36)
+      .to([vi, sh], { filter: "drop-shadow(0px 0px 18px rgba(255,196,96,0.95))", duration: 0.35, ease: "power2.out" }, 3.15)
+      .to([vi, sh], { filter: "drop-shadow(0px 0px 0px rgba(255,196,96,0))", duration: 0.9, ease: "power2.inOut" }, 3.5)
+      .to([vi, sh], { "--so": 0, duration: 0.6 }, 3.3)
+      .to("#veil", { autoAlpha: 0, duration: 1.2, ease: "power2.inOut" }, 3.2)
+      .add(revealHero(), 3.15)
+      .call(unlock, null, 3.4)
+      .call(() => $("#cast").remove(), null, 3.6);
     return tl;
   }
-  function pop(r, color) {
-    const d = document.createElement("div");
-    Object.assign(d.style, {
-      position: "fixed", left: `${r.left + r.width / 2}px`, top: `${r.top + r.height / 2}px`, width: "20px", height: "20px",
-      margin: "-10px 0 0 -10px", borderRadius: "50%", border: `3px solid ${color}`, zIndex: 65, pointerEvents: "none",
+  function placeHalo(groom, bride) {
+    const g = groom.getBoundingClientRect(), b = bride.getBoundingClientRect();
+    gsap.set("#halo", { left: (g.left + g.width / 2 + b.left + b.width / 2) / 2, top: g.top + g.height * 0.45, xPercent: -50, yPercent: -50 });
+  }
+
+  /* gold dust: each mote leaves the figure, arcs, and lands inside its letter */
+  const canvas = $("#dust"), ctx = canvas.getContext("2d");
+  let motes = [], running = false;
+  function dust(actor, target, colors) {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    if (canvas.width !== Math.round(innerWidth * dpr)) {
+      canvas.width = Math.round(innerWidth * dpr); canvas.height = Math.round(innerHeight * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    const a = actor.getBoundingClientRect(), t = target.getBoundingClientRect();
+    const n = innerWidth < 600 ? 90 : 140, rnd = (lo, hi) => lo + Math.random() * (hi - lo);
+    for (let i = 0; i < n; i++) {
+      const u = Math.random(); // where on the body: the head is narrower than the kurta
+      const sx = a.left + a.width / 2 + rnd(-1, 1) * (u < 0.4 ? 0.22 : 0.3) * a.width;
+      const sy = a.top + (0.06 + u * 0.86) * a.height;
+      const ex = t.left + rnd(0.08, 0.92) * t.width, ey = t.top + rnd(0.2, 0.9) * t.height;
+      motes.push({
+        sx, sy, ex, ey, x: sx, y: sy,
+        cx: (sx + ex) / 2 + rnd(-0.28, 0.28) * innerWidth, cy: Math.min(sy, ey) - rnd(0.06, 0.22) * innerHeight,
+        age: 0, delay: rnd(0, 0.4), dur: rnd(0.75, 1.15), r: rnd(0.8, 2.6), c: colors[i % colors.length],
+      });
+    }
+    if (!running) { running = true; gsap.ticker.add(drawDust); }
+  }
+  function drawDust() {
+    const dt = (gsap.ticker.deltaRatio() / 60) * gsap.globalTimeline.timeScale();
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    let pending = 0;
+    for (const m of motes) {
+      m.age += dt;
+      const p = Math.min(1, Math.max(0, (m.age - m.delay) / m.dur));
+      if (p < 1) pending++;
+      if (p <= 0 || p >= 1) continue;
+      const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2, k = 1 - e;
+      const x = k * k * m.sx + 2 * k * e * m.cx + e * e * m.ex, y = k * k * m.sy + 2 * k * e * m.cy + e * e * m.ey;
+      const alpha = p < 0.12 ? p / 0.12 : p > 0.85 ? (1 - p) / 0.15 : 1;
+      ctx.globalAlpha = alpha * 0.55;
+      ctx.strokeStyle = m.c; ctx.lineWidth = m.r * 0.9; ctx.lineCap = "round";
+      ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(x, y); ctx.stroke();
+      ctx.globalAlpha = alpha;
+      ctx.shadowColor = m.c; ctx.shadowBlur = 8;
+      ctx.fillStyle = m.c; ctx.beginPath(); ctx.arc(x, y, m.r, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      m.x = x; m.y = y;
+    }
+    if (!pending) { motes = []; running = false; gsap.ticker.remove(drawDust); ctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+
+  /* ---- balloons: a release when the hashtag lands, then two bunches stay ---- */
+  const BALLOONS = { gold: ["#F8DA8C", "#C48A28"], rust: ["#EE8A72", "#B3361F"], blue: ["#86AEDB", "#2C5A88"], ivory: ["#FFFBF0", "#DCCBA6"], blush: ["#F8CABF", "#D4877A"] };
+  $("svg defs").insertAdjacentHTML("beforeend", Object.entries(BALLOONS).map(([k, [hi, lo]]) =>
+    `<radialGradient id="bl-${k}" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="${hi}"/><stop offset=".55" stop-color="${lo}"/><stop offset="1" stop-color="${lo}" stop-opacity=".92"/></radialGradient>`).join(""));
+  const balloonSvg = (k) => `<svg viewBox="0 0 60 150" aria-hidden="true">
+      <path d="M30 4 C48 4 58 20 58 38 C58 60 42 76 30 80 C18 76 2 60 2 38 C2 20 12 4 30 4 Z" fill="url(#bl-${k})"/>
+      <ellipse cx="19" cy="23" rx="5" ry="10" fill="#fff" opacity=".5" transform="rotate(-24 19 23)"/>
+      <path d="M26.5 79 L33.5 79 L30 85 Z" fill="${BALLOONS[k][1]}"/>
+      <path d="M30 85 C25 100 35 112 30 126 C26 136 33 142 30 150" fill="none" stroke="#9A8A72" stroke-width="1.1"/></svg>`;
+  function releaseBalloons() {
+    const box = $("#balloons"), H = $("#hero").offsetHeight, keys = Object.keys(BALLOONS);
+    const n = innerWidth < 600 ? 12 : 18;
+    for (let i = 0; i < n; i++) {
+      const b = document.createElement("div"), size = gsap.utils.random(38, 78);
+      b.className = "balloon"; b.innerHTML = balloonSvg(keys[i % keys.length]);
+      Object.assign(b.style, { left: `${gsap.utils.random(2, 92)}%`, width: `${size}px`, opacity: size < 50 ? 0.75 : 1 });
+      box.appendChild(b);
+      const dur = gsap.utils.random(5.5, 8.5) * (size < 50 ? 1.25 : 1);
+      gsap.fromTo(b, { y: H + 40 }, { y: -size * 3 - 40, duration: dur, delay: gsap.utils.random(0, 1.4), ease: "none", onComplete: () => b.remove() });
+      gsap.fromTo($("svg", b), { x: -14, rotation: -5 }, { x: 14, rotation: 5, duration: gsap.utils.random(1.6, 2.4), yoyo: true, repeat: -1, ease: "sine.inOut" });
+    }
+    // two bunches stay tied at the bottom corners
+    [["bunch-l", ["rust", "gold", "ivory"]], ["bunch-r", ["blue", "blush", "gold"]]].forEach(([cls, ks]) => {
+      const bunch = document.createElement("div");
+      bunch.className = `bunch ${cls}`;
+      bunch.innerHTML = ks.map((k, i) => `<div class="tied" style="--r:${(i - 1) * 14}deg">${balloonSvg(k)}</div>`).join("");
+      box.appendChild(bunch);
+      gsap.from(bunch, { y: 200, autoAlpha: 0, duration: 1.6, ease: "power3.out", delay: 0.6 });
+      $$(".tied svg", bunch).forEach((t, i) => gsap.to(t, { rotation: i % 2 ? 4 : -4, y: -6, duration: 2 + i * 0.4, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 100%" }));
     });
-    document.body.appendChild(d);
-    gsap.fromTo(d, { scale: 0.3, opacity: 1 }, { scale: Math.max(r.width, r.height) / 9, opacity: 0, duration: 0.6, ease: "power2.out", onComplete: () => d.remove() });
   }
 
   /* ================= hero + scroll ================= */
   function revealHero(instant) {
     const tl = gsap.timeline();
-    if (instant) { gsap.set(".tg, .names, .hero-date, .hero-place, .cue", { autoAlpha: 1 }); drawTl($(".names"), 0).progress(1); return tl; }
-    tl.fromTo(".tg-hash, .tg-r, .tag-2", { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.09, ease: "back.out(2)" }, 0)
-      .fromTo(".bell", { yPercent: -110 }, { yPercent: 0, duration: 1.3, ease: "back.out(1.4)", stagger: 0.12 }, 0.1)
-      .set(".names", { autoAlpha: 1 }, 0.3)
-      .add(drawTl($(".names"), 1.8), 0.3)
-      .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 1.4)
-      .fromTo(".cue", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 2);
+    if (instant) { gsap.set(".tg, .names-text, .hero-date, .hero-place, .cue", { autoAlpha: 1 }); gsap.set(".tg-fill", { "--f": 1, "--so": 0 }); return tl; }
+    tl.fromTo(".tg-hash, .tg-r, .tag-2", { autoAlpha: 0, y: 14, filter: "blur(10px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.9, stagger: 0.1, ease: "power3.out" }, 0)
+      .call(releaseBalloons, null, 0.2)
+      .fromTo(".bell", { yPercent: -110 }, { yPercent: 0, duration: 1.3, ease: "back.out(1.4)", stagger: 0.12 }, 0.2)
+      .fromTo(".names-text", { autoAlpha: 0, y: 12, filter: "blur(6px)" }, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, 0.5)
+      .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 0.9)
+      .fromTo(".cue", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 1.5);
     $$(".bell").forEach((b, i) => {
       gsap.fromTo(b, { rotation: i ? 2.2 : -2.2 }, { rotation: i ? -2.2 : 2.2, duration: 2.4 + i * 0.35, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.2, transformOrigin: "50% 0" });
     });
@@ -474,7 +573,7 @@
     if (left > 0) await wait(left);
 
     $$(".art.draw").forEach(prepDraw);
-    gsap.set(".tg, .names, .hero-date, .hero-place, .cue", { autoAlpha: 0 });
+    gsap.set(".tg, .names-text, .hero-date, .hero-place, .cue", { autoAlpha: 0 });
     buildScroll();
     gsap.to("#preload", { autoAlpha: 0, duration: 0.45, onComplete: () => $("#preload").remove() });
     showGate();

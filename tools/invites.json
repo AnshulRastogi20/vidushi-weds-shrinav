@@ -1,24 +1,31 @@
 {
   "_readme": "Source of truth for every invitation link. NOT deployed (tools/ is in .vercelignore). Edit here, then run: python tools/build_invites.py",
-
   "common": {
     "supabaseUrl": "https://ddpubhkgcbcwncyeebzc.supabase.co",
     "supabaseKey": "sb_publishable_Am-lHqCMq1ANCtyzlQidXg_9QJuhbNm",
     "hosts": "Smt. Richa & Sh. Naveen Rastogi",
     "request": "request your gracious presence on the auspicious occasion of the wedding of their beloved son",
-    "first": { "name": "Shrinav Rastogi", "parents": "" },
-    "second": { "name": "Vidushi Vatsa", "parents": "D/o Rachna & Supriyam Vatsa" },
+    "first": {
+      "name": "Shrinav Rastogi",
+      "parents": ""
+    },
+    "second": {
+      "name": "Vidushi Vatsa",
+      "parents": "D/o Rachna & Supriyam Vatsa"
+    },
     "family": "Rastogi Family",
     "music": "/assets/audio/theme.mp3",
     "couplePhoto": "/assets/photos/couple.jpg",
-    "moments": ["/assets/photos/moment-1.jpg", "/assets/photos/moment-2.jpg", "/assets/photos/moment-3.jpg"]
+    "moments": [
+      "/assets/photos/moment-1.jpg",
+      "/assets/photos/moment-2.jpg",
+      "/assets/photos/moment-3.jpg"
+    ]
   },
-
   "events": {
     "wedding": {
       "title": "Wedding Ceremony",
       "short": "Wedding",
-      "titleArt": "wedding-ceremony",
       "sky": "night",
       "lights": "bulbs",
       "start": "2026-12-12T20:00:00+05:30",
@@ -57,10 +64,27 @@
       "mapsQuery": null
     }
   },
-
   "links": {
-    "main":   { "path": "/",          "events": ["wedding"] },
-    "ct1r4q": { "path": "/i/ct1r4q",  "events": ["wedding", "engagement"] },
-    "3oyocz": { "path": "/i/3oyocz",  "events": ["wedding", "engagement", "haldi"] }
+    "main": {
+      "path": "/",
+      "events": [
+        "wedding"
+      ]
+    },
+    "ct1r4q": {
+      "path": "/i/ct1r4q",
+      "events": [
+        "wedding",
+        "engagement"
+      ]
+    },
+    "3oyocz": {
+      "path": "/i/3oyocz",
+      "events": [
+        "wedding",
+        "engagement",
+        "haldi"
+      ]
+    }
   }
 }
