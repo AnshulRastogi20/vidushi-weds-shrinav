@@ -16,7 +16,7 @@
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
   let lenis = null;
-  if (!reduced && window.Lenis) {
+  if (!reduced && window.Lenis && matchMedia("(hover: hover) and (pointer: fine)").matches) {
     lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
@@ -144,12 +144,14 @@
         onComplete: () => { w.kill(); settle(a); idles.push(gsap.to(part(a, "body"), { scaleY: 1.015, svgOrigin: PIV.body, duration: 1.2, yoyo: true, repeat: -1, ease: "sine.inOut" })); },
       });
     });
-    const open = () => openEnvelope();
-    $("#open").addEventListener("click", open, { once: true });
+    let opened = false;
+    const open = (e) => { if (opened) return; opened = true; e?.preventDefault?.(); openEnvelope(); };
+    ["pointerup", "touchend", "click"].forEach((t) => $("#open").addEventListener(t, open));
   }
 
   function openEnvelope() {
     playMusic(); // inside the tap, so phones allow sound
+    setTimeout(() => { $("#gate")?.remove(); $("#cast")?.remove(); revealHero(true); unlock(); }, 9000);
     const groom = $("#a-groom"), bride = $("#a-bride");
     walks.forEach((w) => w.kill()); idles.forEach((t) => t.kill());
     gsap.killTweensOf([groom, bride]);
@@ -349,7 +351,9 @@
     ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom top", onUpdate: (s) => { const v = gsap.utils.clamp(-9, 9, s.getVelocity() / 260); kick.forEach((k, i) => k(i ? -v : v)); } });
     return tl;
   }
+  let unlocked = false;
   function unlock() {
+    if (unlocked) return; unlocked = true;
     root.classList.remove("is-locked");
     lenis?.start();
     ScrollTrigger.refresh();
@@ -517,7 +521,7 @@
     const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)),
       ...[C.couplePhoto, ...C.moments, ...$$(".lg").map((i) => i.getAttribute("src"))].map((s) => track(loadImg(s)))];
     await Promise.race([Promise.all(work), wait(7000)]);
-    await document.fonts.ready;
+    await Promise.race([document.fonts.ready, wait(2000)]);
     const left = 1300 - (performance.now() - t0);
     if (left > 0) await wait(left);
 
