@@ -33,7 +33,7 @@
   "rewrites": [
     {
       "source": "/i/:code",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ]
 }
