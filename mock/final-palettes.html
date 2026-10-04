@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final palettes · #RViShcametrue</title>
+<link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold-foil: linear-gradient(100deg, #7A5A1E 0%, #BF953F 16%, #FCF6BA 32%, #B38728 48%, #FBF5B7 64%, #AA771C 82%, #7A5A1E 100%);
+    --pink-foil: linear-gradient(100deg, #6A0830 0%, #B0125B 18%, #F06A9E 34%, #9C0F4E 50%, #E0457B 66%, #7A0B3D 84%, #6A0830 100%);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0E0C0B; color: #EDE6DA; font-family: Calibri, "Carlito", system-ui, sans-serif; }
+  header { padding: 30px 16px 10px; text-align: center; }
+  header h1 { margin: 0; font-size: 30px; }
+  header p { margin: 8px auto 0; max-width: 640px; color: #A79E91; }
+
+  .row { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(300px, 340px)); justify-content: center; padding: 22px 16px; }
+  .opt h2 { margin: 0 0 10px; font-size: 18px; letter-spacing: .12em; text-transform: uppercase; }
+  .opt h2 small { display: block; margin-top: 2px; font-size: 14px; letter-spacing: 0; text-transform: none; color: #A79E91; }
+
+  .phone {
+    position: relative; aspect-ratio: 9 / 15.5; border-radius: 18px; overflow: hidden; isolation: isolate;
+    background: radial-gradient(120% 80% at 50% 35%, var(--bg2), var(--bg1) 72%);
+    color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .night { background: linear-gradient(180deg, #0D1030, #241C47); }
+  .phone::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; opacity: var(--tex, .1);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><g fill='none' stroke='%23E8C77A' stroke-width='.8'><path d='M22 2 L42 22 L22 42 L2 22 Z'/><circle cx='22' cy='22' r='6'/></g></svg>");
+  }
+  .phone::after { content: ""; position: absolute; inset: 12px; z-index: -1; border-radius: 10px; border: 1px solid var(--rule); box-shadow: inset 0 0 0 5px transparent, inset 0 0 0 6px var(--rule); }
+  .stars { position: absolute; inset: 0; z-index: -1; background-image:
+    radial-gradient(1.3px 1.3px at 12% 18%, #fff8e6 60%, transparent), radial-gradient(1px 1px at 32% 8%, #fff 60%, transparent),
+    radial-gradient(1.4px 1.4px at 58% 22%, #ffeec8 60%, transparent), radial-gradient(1px 1px at 76% 12%, #fff 60%, transparent),
+    radial-gradient(1.2px 1.2px at 88% 30%, #fff8e6 60%, transparent), radial-gradient(1px 1px at 22% 40%, #fff 60%, transparent),
+    radial-gradient(1px 1px at 66% 44%, #fff 60%, transparent), radial-gradient(1.3px 1.3px at 45% 34%, #ffeec8 60%, transparent);
+    background-size: 160px 190px; }
+  .horizon { position: absolute; left: -30%; right: -30%; bottom: -25%; height: 55%; z-index: -1; background: radial-gradient(closest-side, rgba(242,169,59,.38), rgba(242,169,59,0)); }
+  .corner { position: absolute; width: 56px; height: 72px; background: var(--metal); -webkit-mask: url("/assets/art/corner.svg") center / contain no-repeat; mask: url("/assets/art/corner.svg") center / contain no-repeat; }
+  .c1 { top: 20px; left: 20px; } .c2 { top: 20px; right: 20px; transform: scaleX(-1); }
+  .c3 { bottom: 20px; left: 20px; transform: scaleY(-1); } .c4 { bottom: 20px; right: 20px; transform: scale(-1, -1); }
+  .foil { background: var(--metal); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 4s ease-in-out infinite alternate; }
+  @keyframes shine { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+  .tag { font-weight: 700; font-size: 18px; }
+  .title { margin-top: 14px; font-weight: 700; font-size: 38px; line-height: 1.05; }
+  .label { margin-top: 18px; font-size: 11px; letter-spacing: .34em; color: var(--accent); }
+  .big { margin-top: 4px; font-weight: 700; font-size: 18px; }
+  .soft { color: var(--soft); font-size: 15px; }
+  .divider { width: 150px; height: 14px; margin: 16px auto 0; background: var(--metal); -webkit-mask: url("/assets/art/divider.svg") center / contain no-repeat; mask: url("/assets/art/divider.svg") center / contain no-repeat; }
+  .btns { display: flex; gap: 8px; margin-top: 22px; }
+  .btn { padding: 10px 16px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .14em; }
+  .btn.solid { background: var(--metal); color: var(--btnInk); box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+  .btn.ghost { border: 1px solid var(--accent); color: var(--accent); }
+  .pills { display: flex; gap: 8px; margin-top: 14px; }
+  .pill { padding: 9px 14px; border-radius: 10px; font-size: 13px; border: 1px solid var(--rule); }
+  .pill.on { background: var(--metal); color: var(--btnInk); border-color: transparent; font-weight: 700; }
+  .sw { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; font-size: 12px; color: #A79E91; }
+  .sw i { display: block; height: 30px; border-radius: 6px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,.08); }
+  .sw b { display: block; color: #EDE6DA; }
+
+  .journey { max-width: 1100px; margin: 10px auto 60px; padding: 0 16px; }
+  .journey h2 { font-size: 18px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 6px; }
+  .journey p { margin: 0 0 12px; color: #A79E91; }
+  .strip { height: 90px; border-radius: 14px; background: linear-gradient(90deg, #F6EFE2 0%, #EFE5D2 10%, #5A1220 20%, #2B0408 30%, #7A0E1C 38%, #0D1030 55%, #241C47 63%, #5B2E5A 75%, #F29E5C 84%, #FFD45A 92%, #F0A010 100%); }
+  .marks { display: grid; grid-template-columns: 10% 10% 18% 25% 21% 16%; font-size: 13px; color: #CFC6B8; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Your three event looks</h1>
+  <p>Wedding in deep red velvet, Engagement in the indigo night from your screenshot, Haldi in turmeric with rani-pink type. Nothing on the site has changed yet.</p>
+</header>
+
+<section class="row">
+  <div class="opt">
+    <h2>Wedding<small>Sindoor Velvet · gold foil</small></h2>
+    <div class="phone" style="--bg1:#2B0408;--bg2:#7A0E1C;--ink:#FFF4E2;--soft:#E9C9B9;--accent:#F1C76A;--rule:rgba(232,199,122,.5);--metal:var(--gold-foil);--btnInk:#1A1206">
+      <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+      <div class="tag foil">#RViShcametrue</div>
+      <div class="title foil">Wedding Ceremony</div>
+      <div class="label">WHEN</div><div class="big">Saturday, 12th December 2026</div><div class="soft">8 pm onwards</div>
+      <div class="divider"></div>
+      <div class="label">WHERE</div><div class="big">Royal Heritage</div><div class="soft">Country Inn &amp; Suites, Ghaziabad</div>
+      <div class="btns"><span class="btn solid">GET DIRECTIONS</span><span class="btn ghost">ADD TO CALENDAR</span></div>
+      <div class="pills"><span class="pill on">Attending</span><span class="pill">Can't make it</span></div>
+    </div>
+    <div class="sw"><div><i style="background:#2B0408"></i><b>Oxblood</b>#2B0408</div><div><i style="background:#7A0E1C"></i><b>Crimson</b>#7A0E1C</div><div><i style="background:var(--gold-foil)"></i><b>Foil gold</b>#D4A845</div><div><i style="background:#FFF4E2"></i><b>Ivory</b>#FFF4E2</div><div><i style="background:#E9C9B9"></i><b>Blush</b>#E9C9B9</div></div>
+  </div>
+
+  <div class="opt">
+    <h2>Engagement<small>Indigo night · gold foil · stars</small></h2>
+    <div class="phone night" style="--ink:#F6ECD8;--soft:#C9BDA8;--accent:#E2B35C;--rule:rgba(226,179,92,.4);--metal:var(--gold-foil);--btnInk:#1A1206;--tex:.06">
+      <div class="stars"></div><div class="horizon"></div>
+      <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+      <div class="tag foil">#RViShcametrue</div>
+      <div class="title foil">Engagement Ceremony</div>
+      <div class="label">WHEN</div><div class="big">Date to be announced</div>
+      <div class="divider"></div>
+      <div class="label">WHERE</div><div class="big">Venue to be announced</div>
+      <div class="btns"><span class="btn solid">GET DIRECTIONS</span><span class="btn ghost">ADD TO CALENDAR</span></div>
+      <div class="pills"><span class="pill on">Attending</span><span class="pill">Can't make it</span></div>
+    </div>
+    <div class="sw"><div><i style="background:#0D1030"></i><b>Midnight</b>#0D1030</div><div><i style="background:#241C47"></i><b>Indigo</b>#241C47</div><div><i style="background:var(--gold-foil)"></i><b>Foil gold</b>#D4A845</div><div><i style="background:#F6ECD8"></i><b>Ivory</b>#F6ECD8</div><div><i style="background:#F2A93B"></i><b>Horizon glow</b>#F2A93B</div></div>
+  </div>
+
+  <div class="opt">
+    <h2>Haldi<small>Turmeric · rani-pink type and foil</small></h2>
+    <div class="phone" style="--bg1:#F0A010;--bg2:#FFD45A;--ink:#8A0E45;--soft:#A8245E;--accent:#B0125B;--rule:rgba(176,18,91,.4);--metal:var(--pink-foil);--btnInk:#FFF0F5;--tex:.14">
+      <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+      <div class="tag foil">#RViShcametrue</div>
+      <div class="title foil">Haldi Ceremony</div>
+      <div class="label">WHEN</div><div class="big">Date to be announced</div>
+      <div class="divider"></div>
+      <div class="label">WHERE</div><div class="big">Venue to be announced</div>
+      <div class="btns"><span class="btn solid">GET DIRECTIONS</span><span class="btn ghost">ADD TO CALENDAR</span></div>
+      <div class="pills"><span class="pill on">Attending</span><span class="pill">Can't make it</span></div>
+    </div>
+    <div class="sw"><div><i style="background:#FFD45A"></i><b>Turmeric</b>#FFD45A</div><div><i style="background:#F0A010"></i><b>Marigold</b>#F0A010</div><div><i style="background:var(--pink-foil)"></i><b>Pink foil</b>#B0125B</div><div><i style="background:#8A0E45"></i><b>Rani text</b>#8A0E45</div><div><i style="background:#E0457B"></i><b>Rose</b>#E0457B</div></div>
+  </div>
+</section>
+
+<section class="journey">
+  <h2>How the page changes as you scroll</h2>
+  <p>On the all-events link the background travels through these, so no two events ever blend into a muddy middle.</p>
+  <div class="strip"></div>
+  <div class="marks"><span>Envelope + hashtag (ivory)</span><span>Sunset</span><span>Wedding (red velvet)</span><span>Engagement (indigo night)</span><span>Dawn</span><span>Haldi (turmeric)</span></div>
+</section>
+</body>
+</html>
