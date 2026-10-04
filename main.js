@@ -381,7 +381,7 @@
   function buildSky() {
     gsap.set(root, STATES.paper);
     root.dataset.mood = "paper";
-    let prev = "paper", prevEl = $("#invite");
+    let prev = "paper";
     $$(".event").forEach((sec, i) => {
       const next = sec.dataset.sky, via = VIA[`${prev}>${next}`];
       // each card paints its own colours; the shared sky only changes across the gap between cards
@@ -397,7 +397,7 @@
         onEnter: () => (root.dataset.mood = next),
         onLeaveBack: () => (root.dataset.mood = i ? $$(".event")[i - 1].dataset.sky : "paper"),
       });
-      prev = next; prevEl = sec;
+      prev = next;
     });
   }
 
@@ -406,11 +406,6 @@
       .add(drawTl($(".ganesha"), 1.6))
       .from("#blessing .ln", { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.22, ease: "power2.out" }, 0.6)
       .from("#blessing .divider", { scaleX: 0, duration: 1.1, ease: "power2.inOut" }, 1.2);
-    gsap.timeline({ scrollTrigger: { trigger: ".frame", start: "top 78%" } })
-      .from(".frame", { autoAlpha: 0, scale: 0.97, duration: 1.1, ease: "power2.out" })
-      .from(".corner", { autoAlpha: 0, scale: 0.6, duration: 1.2, stagger: 0.1, ease: "power3.out" }, 0.2);
-    $$(".frame [data-reveal]:not([hidden])").forEach((el) => gsap.from(el, { autoAlpha: 0, y: 16, duration: 0.9, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 88%" } }));
-    $$(".name").forEach((n) => gsap.from($$(".ch", n), { yPercent: 60, autoAlpha: 0, rotation: 4, duration: 0.9, ease: "power3.out", stagger: 0.035, scrollTrigger: { trigger: n, start: "top 86%" } }));
 
     $$(".event").forEach((sec) => {
       if (!$(".doha", sec).hidden) gsap.from($$(".doha .ln", sec), { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.2, ease: "power2.out", scrollTrigger: { trigger: $(".doha", sec), start: "top 80%" } });
