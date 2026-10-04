@@ -23,25 +23,10 @@
  },
  "events": [
   {
-   "key": "wedding",
-   "title": "Wedding Ceremony",
-   "short": "Wedding",
-   "sky": "night",
-   "lights": "bulbs",
-   "start": "2026-12-12T20:00:00+05:30",
-   "end": "2026-12-13T02:00:00+05:30",
-   "dateLine": "Saturday, 12th December 2026",
-   "timeLine": "8 pm onwards",
-   "venue": "Royal Heritage",
-   "venueLine": "Country Inn & Suites, Ghaziabad",
-   "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",
-   "countdown": true
-  },
-  {
    "key": "engagement",
    "title": "Engagement Ceremony",
    "short": "Engagement",
-   "sky": "rose",
+   "sky": "night",
    "lights": "bulbs",
    "start": null,
    "end": null,
@@ -64,6 +49,21 @@
    "venue": "Venue to be announced",
    "venueLine": "",
    "mapsQuery": null
+  },
+  {
+   "key": "wedding",
+   "title": "Wedding Ceremony",
+   "short": "Wedding",
+   "sky": "crimson",
+   "lights": "bulbs",
+   "start": "2026-12-12T20:00:00+05:30",
+   "end": "2026-12-13T02:00:00+05:30",
+   "dateLine": "Saturday, 12th December 2026",
+   "timeLine": "8 pm onwards",
+   "venue": "Royal Heritage",
+   "venueLine": "Country Inn & Suites, Ghaziabad",
+   "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",
+   "countdown": true
   }
  ]
 }

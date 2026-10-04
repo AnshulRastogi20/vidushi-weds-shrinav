@@ -1,4 +1,4 @@
-/* #RViShcametrue - Shrinav weds Vidushi. Content comes from /invites/<link>.json (built by tools/build_invites.py). */
+/* #RViShCameTrue - Shrinav weds Vidushi. Content comes from /invites/<link>.json (built by tools/build_invites.py). */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
@@ -60,7 +60,6 @@
       if (ev.start) cal.addEventListener("click", () => addToCalendar(ev)); else cal.hidden = true;
       if (!ev.mapsQuery && !ev.start) $(".actions", sec).hidden = true;
       if (ev.countdown && ev.start) { $(".countdown", sec).hidden = false; startClock(sec, ev); }
-      addLights($(".lights", sec), ev.lights);
       $("#events").appendChild(sec);
     });
 
@@ -69,22 +68,6 @@
     if (!C.moments.length) $("#moments").hidden = true;
     $$(".arch img, .ph img").forEach((img) => img.addEventListener("error", () => img.parentElement.classList.add("is-empty"), { once: true }));
 
-    buildRsvp();
-  }
-
-  function addLights(svg, kind) {
-    const g = $(".bulbs", svg), flower = kind === "marigold";
-    $$(".wire", svg).forEach((wire, wi) => {
-      const len = wire.getTotalLength(), n = flower ? 16 : 22;
-      for (let i = 1; i < n; i++) {
-        const pt = wire.getPointAtLength((len * i) / n);
-        const c = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-        c.setAttribute("cx", pt.x.toFixed(1)); c.setAttribute("cy", (pt.y + (flower ? 3 : 2.2)).toFixed(1));
-        c.setAttribute("rx", flower ? 3.2 : 1.1); c.setAttribute("ry", flower ? 3.6 : 2.4);
-        c.setAttribute("class", "bulb"); c.dataset.i = i;
-        g.appendChild(c);
-      }
-    });
   }
 
   /* ================= art ================= */
@@ -198,8 +181,8 @@
   }
 
   /* ---- the merge: they meet, rise as light, and become "Sh" and "Vi" ---- */
-  const GROOM_LIGHT = ["#F2C46D", "#FFE2A0", "#7FA8D8", "#D9A948"];
-  const BRIDE_LIGHT = ["#F2C46D", "#FFE2A0", "#F09A82", "#D9A948"];
+  const GROOM_LIGHT = ["#E9C46A", "#FCF6BA", "#7FAE68", "#C9A04B"];
+  const BRIDE_LIGHT = ["#E9C46A", "#FCF6BA", "#F08AA4", "#C9A04B"];
   const FILTER_0 = "brightness(1) blur(0px) drop-shadow(0px 0px 0px rgba(255,205,120,0))";
 
   function merge() {
@@ -297,7 +280,7 @@
   }
 
   /* ---- balloons: a release when the hashtag lands, then two bunches stay ---- */
-  const BALLOONS = { gold: ["#F8DA8C", "#C48A28"], rust: ["#EE8A72", "#B3361F"], blue: ["#86AEDB", "#2C5A88"], ivory: ["#FFFBF0", "#DCCBA6"], blush: ["#F8CABF", "#D4877A"] };
+  const BALLOONS = { gold: ["#F8DA8C", "#C48A28"], peony: ["#F7B0C2", "#D8456B"], coral: ["#F9B59A", "#E0674A"], ivory: ["#FFFBF0", "#DCCBA6"], leaf: ["#B9D69E", "#5E8C4A"] };
   $("svg defs").insertAdjacentHTML("beforeend", Object.entries(BALLOONS).map(([k, [hi, lo]]) =>
     `<radialGradient id="bl-${k}" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="${hi}"/><stop offset=".55" stop-color="${lo}"/><stop offset="1" stop-color="${lo}" stop-opacity=".92"/></radialGradient>`).join(""));
   const balloonSvg = (k) => `<svg viewBox="0 0 60 150" aria-hidden="true">
@@ -318,7 +301,7 @@
       gsap.fromTo($("svg", b), { x: -14, rotation: -5 }, { x: 14, rotation: 5, duration: gsap.utils.random(1.6, 2.4), yoyo: true, repeat: -1, ease: "sine.inOut" });
     }
     // two bunches stay tied at the bottom corners
-    [["bunch-l", ["rust", "gold", "ivory"]], ["bunch-r", ["blue", "blush", "gold"]]].forEach(([cls, ks]) => {
+    [["bunch-l", ["peony", "gold", "ivory"]], ["bunch-r", ["leaf", "coral", "gold"]]].forEach(([cls, ks]) => {
       const bunch = document.createElement("div");
       bunch.className = `bunch ${cls}`;
       bunch.innerHTML = ks.map((k, i) => `<div class="tied" style="--r:${(i - 1) * 14}deg">${balloonSvg(k)}</div>`).join("");
@@ -352,13 +335,20 @@
   }
 
   const STATES = {
-    paper: { "--sky-top": "#F6EFE2", "--sky-bot": "#EFE5D2", "--fg": "#2A1D1A", "--fg-soft": "#6B564A", "--line": "#2A1D1A", "--gold": "#9A6A1E", "--stars": 0, "--horizon": 0, "--grain": 0.5 },
+    paper: { "--sky-top": "#F7F2E8", "--sky-bot": "#EFE7D6", "--fg": "#4A3426", "--fg-soft": "#7A6552", "--line": "#B8892E", "--gold": "#9A6A1E", "--stars": 0, "--horizon": 0, "--grain": 0.5 },
     dusk: { "--sky-top": "#4A3561", "--sky-bot": "#D98A6A", "--fg": "#FFF3E4", "--fg-soft": "#F2D9C6", "--line": "#F6D596", "--gold": "#F6D596", "--stars": 0.25, "--horizon": 0.6, "--grain": 0.25 },
+    ember: { "--sky-top": "#5A1220", "--sky-bot": "#C8654E", "--fg": "#FFF1E4", "--fg-soft": "#F2D2C2", "--line": "#F1C76A", "--gold": "#F1C76A", "--stars": 0.15, "--horizon": 0.5, "--grain": 0.25 },
+    // wedding: Sindoor Velvet
+    crimson: { "--sky-top": "#2B0408", "--sky-bot": "#7A0E1C", "--fg": "#FFF4E2", "--fg-soft": "#E9C9B9", "--line": "#D9A948", "--gold": "#F1C76A", "--stars": 0.35, "--horizon": 0.6, "--grain": 0.14 },
+    // engagement: indigo night
     night: { "--sky-top": "#0D1030", "--sky-bot": "#241C47", "--fg": "#F6ECD8", "--fg-soft": "#C9BDA8", "--line": "#E2B35C", "--gold": "#E2B35C", "--stars": 1, "--horizon": 1, "--grain": 0.12 },
-    rose: { "--sky-top": "#2E1433", "--sky-bot": "#9A3F5E", "--fg": "#FCEEE8", "--fg-soft": "#EBC9CF", "--line": "#F2C46D", "--gold": "#F2C46D", "--stars": 0.45, "--horizon": 0.7, "--grain": 0.15 },
-    sun: { "--sky-top": "#FFE79A", "--sky-bot": "#F6B347", "--fg": "#2A1A08", "--fg-soft": "#5E3E14", "--line": "#5A300A", "--gold": "#8F520A", "--stars": 0, "--horizon": 0.9, "--grain": 0.3 },
+    dawn: { "--sky-top": "#5B2E5A", "--sky-bot": "#F29E5C", "--fg": "#FFF0E6", "--fg-soft": "#F6D3C4", "--line": "#F6C27A", "--gold": "#F6C27A", "--stars": 0.2, "--horizon": 0.9, "--grain": 0.2 },
+    // haldi: turmeric with rani-pink type
+    sun: { "--sky-top": "#FFD45A", "--sky-bot": "#F0A010", "--fg": "#8A0E45", "--fg-soft": "#A8245E", "--line": "#B0125B", "--gold": "#B0125B", "--stars": 0, "--horizon": 0.9, "--grain": 0.3 },
   };
-  const BAR = { paper: "#F6EFE2", dusk: "#4A3561", night: "#0D1030", rose: "#2E1433", sun: "#FFE79A" };
+  const BAR = { paper: "#F6EFE2", dusk: "#4A3561", ember: "#5A1220", crimson: "#2B0408", night: "#0D1030", dawn: "#5B2E5A", sun: "#FFD45A" };
+  // passing straight between some pairs goes through mud; route them through a sunset or a dawn
+  const VIA = { "paper>crimson": "ember", "paper>night": "dusk", "night>sun": "dawn", "sun>crimson": "ember", "crimson>sun": "ember" };
   const meta = $('meta[name="theme-color"]');
 
   function skyTween(from, to, trigger, start, end) {
@@ -369,15 +359,23 @@
   }
   function buildSky() {
     gsap.set(root, STATES.paper);
-    let prev = "paper";
-    $$(".event").forEach((sec) => {
-      const next = sec.dataset.sky;
-      if (next === prev) return;
-      if (prev === "paper" && next === "night") {
-        skyTween("paper", "dusk", "#invite", "bottom 85%", "bottom 30%");
-        skyTween("dusk", "night", sec, "top 85%", "top 35%");
-      } else skyTween(prev, next, sec, "top 70%", "top 30%");
-      prev = next;
+    root.dataset.mood = "paper";
+    let prev = "paper", prevEl = $("#invite");
+    $$(".event").forEach((sec, i) => {
+      const next = sec.dataset.sky, via = VIA[`${prev}>${next}`];
+      if (next !== prev) {
+        if (via) {
+          skyTween(prev, via, prevEl, "bottom 85%", "bottom 35%");
+          skyTween(via, next, sec, "top 85%", "top 35%");
+        } else skyTween(prev, next, sec, "top 70%", "top 30%");
+      }
+      // buttons, foil and form colours follow the event on screen
+      ScrollTrigger.create({
+        trigger: sec, start: "top 50%",
+        onEnter: () => (root.dataset.mood = next),
+        onLeaveBack: () => (root.dataset.mood = i ? $$(".event")[i - 1].dataset.sky : "paper"),
+      });
+      prev = next; prevEl = sec;
     });
   }
 
@@ -393,12 +391,6 @@
     $$(".name").forEach((n) => gsap.from($$(".ch", n), { yPercent: 60, autoAlpha: 0, rotation: 4, duration: 0.9, ease: "power3.out", stagger: 0.035, scrollTrigger: { trigger: n, start: "top 86%" } }));
 
     $$(".event").forEach((sec) => {
-      const bulbs = $$(".bulb", sec).sort((a, b) => a.dataset.i - b.dataset.i);
-      ScrollTrigger.create({
-        trigger: sec, start: "top 45%",
-        onEnter: () => bulbs.forEach((b, i) => gsap.delayedCall(i * 0.03 + Math.random() * 0.15, () => b.classList.add("on"))),
-        onLeaveBack: () => bulbs.forEach((b) => b.classList.remove("on")),
-      });
       if (!$(".doha", sec).hidden) gsap.from($$(".doha .ln", sec), { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.2, ease: "power2.out", scrollTrigger: { trigger: $(".doha", sec), start: "top 80%" } });
       const title = $(".ev-title", sec);
       ScrollTrigger.create({ trigger: title, start: "top 82%", once: true, onEnter: () => (title._draw ? drawTl(title, 2.2) : gsap.from(title, { autoAlpha: 0, y: 20, duration: 1.2, ease: "power2.out" })) });
@@ -428,7 +420,6 @@
       mtl.fromTo(".moments-title", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.1);
     }
     buildSky();
-    gsap.from(".rsvp > :not([hidden])", { autoAlpha: 0, y: 20, duration: 0.9, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: "#rsvp", start: "top 80%" } });
     gsap.from(".ornament", { autoAlpha: 0, scale: 0.7, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".ornament", start: "top 90%" } });
     $$("#closing [data-reveal]").forEach((el) => gsap.from(el, { autoAlpha: 0, y: 18, duration: 1, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 92%" } }));
   }
@@ -451,7 +442,7 @@
     const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
     const start = new Date(ev.start), end = new Date(ev.end || ev.start);
     const title = `Shrinav & Vidushi - ${ev.title}`, where = [ev.venue, ev.venueLine].filter(Boolean).join(", ");
-    const details = `#RViShcametrue · With best compliments, ${C.family}. ${location.origin}${location.pathname}`;
+    const details = `#RViShCameTrue · With best compliments, ${C.family}. ${location.origin}${location.pathname}`;
     if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && "ontouchend" in document) {
       const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//rvishcametrue//EN", "BEGIN:VEVENT", `UID:${ev.key}@rvishcametrue.us`,
         `DTSTAMP:${z(new Date())}`, `DTSTART:${z(start)}`, `DTEND:${z(end)}`, `SUMMARY:${title}`, `LOCATION:${where}`, `DESCRIPTION:${details}`,
@@ -462,69 +453,6 @@
       Object.entries({ action: "TEMPLATE", text: title, dates: `${z(start)}/${z(end)}`, location: where, details }).forEach(([k, v]) => u.searchParams.set(k, v));
       window.open(u.toString(), "_blank", "noopener");
     }
-  }
-
-  /* ================= RSVP: one reply per event on this link ================= */
-  function buildRsvp() {
-    const form = $("#rsvp-form"), done = $("#rsvp-done"), err = $("#rsvp-error");
-    const guestsField = $("#guests-field"), out = $("#r-guests"), submit = $("#rsvp-submit");
-    const store = `rsvp:${linkId}`, single = EVENTS.length === 1;
-    $("#replies").innerHTML = EVENTS.map((ev) => `
-      <fieldset class="field ev-reply">
-        <legend class="ev-name">${single ? "Will you attend?" : ev.short}</legend>
-        <div class="choice">
-          <label class="pill"><input type="radio" name="att-${ev.key}" value="yes"><span>${single ? "Yes, we'll be there" : "Attending"}</span></label>
-          <label class="pill"><input type="radio" name="att-${ev.key}" value="no"><span>${single ? "Sorry, can't make it" : "Can't make it"}</span></label>
-        </div>
-      </fieldset>`).join("");
-    let guests = 1;
-    const setGuests = (n) => { guests = Math.max(1, Math.min(15, n)); out.textContent = guests; };
-    if (guest) $("#r-name").value = guest;
-    form.addEventListener("change", () => {
-      guestsField.hidden = !EVENTS.some((ev) => new FormData(form).get(`att-${ev.key}`) === "yes");
-      ScrollTrigger.refresh();
-    });
-    $$(".stepper button").forEach((b) => b.addEventListener("click", () => setGuests(guests + Number(b.dataset.step))));
-
-    const listOf = (names) => names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
-    function showDone(r) {
-      const first = r.name.trim().split(/\s+/)[0];
-      const yes = EVENTS.filter((ev) => r.replies[ev.key]).map((ev) => ev.short);
-      $("#done-title").textContent = yes.length ? `Thank you, ${first}!` : `Thank you, ${first}.`;
-      $("#done-sub").textContent = yes.length
-        ? `We've noted ${r.guests} ${r.guests > 1 ? "guests" : "guest"} for the ${listOf(yes)}.`
-        : "We'll miss you. Your blessings mean a lot to the family.";
-      form.hidden = true; done.hidden = false; ScrollTrigger.refresh();
-    }
-    try { const saved = JSON.parse(localStorage.getItem(store) || "null"); if (saved?.replies) showDone(saved); } catch {}
-    $("#rsvp-change").addEventListener("click", () => { done.hidden = true; form.hidden = false; ScrollTrigger.refresh(); $("#r-name").focus(); });
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault(); err.hidden = true;
-      const fd = new FormData(form), name = (fd.get("name") || "").toString().trim();
-      if (!name) { err.textContent = "Please add your name so the family knows who replied."; err.hidden = false; $("#r-name").focus(); return; }
-      const missing = EVENTS.find((ev) => !fd.get(`att-${ev.key}`));
-      if (missing) { err.textContent = single ? "Please choose whether you'll attend." : `Please choose yes or no for the ${missing.short}.`; err.hidden = false; return; }
-      const replies = Object.fromEntries(EVENTS.map((ev) => [ev.key, fd.get(`att-${ev.key}`) === "yes"]));
-      const anyYes = Object.values(replies).some(Boolean);
-      const reply = { name, replies, guests: anyYes ? guests : 0 };
-      if (fd.get("website")) { showDone(reply); return; } // a bot filled the hidden field
-      submit.disabled = true; submit.textContent = "Sending…";
-      try {
-        await Promise.all(EVENTS.map(async (ev) => {
-          const res = await fetch(`${C.supabaseUrl}/rest/v1/rpc/submit_wedding_rsvp`, {
-            method: "POST", headers: { "Content-Type": "application/json", apikey: C.supabaseKey },
-            body: JSON.stringify({ p_event: ev.key, p_name: name, p_phone: (fd.get("phone") || "").toString(), p_attending: replies[ev.key],
-              p_guests: replies[ev.key] ? guests : 0, p_message: (fd.get("message") || "").toString(), p_invite_label: guest || null }),
-          });
-          if (!res.ok) throw new Error(await res.text());
-        }));
-        try { localStorage.setItem(store, JSON.stringify(reply)); } catch {}
-        showDone(reply); done.focus({ preventScroll: true });
-      } catch {
-        err.textContent = "Your reply didn't send. Check your connection and try again."; err.hidden = false;
-      } finally { submit.disabled = false; submit.textContent = "Send reply"; }
-    });
   }
 
   /* ================= music ================= */
