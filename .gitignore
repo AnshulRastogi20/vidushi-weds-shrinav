@@ -3,3 +3,6 @@ tools/*.png
 photos-raw/
 
 .vercel
+CLAUDE.local.md
+AGENTS.local.md
+node_modules/
