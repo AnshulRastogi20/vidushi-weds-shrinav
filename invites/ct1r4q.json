@@ -15,10 +15,16 @@
   "family": "Rastogi Family",
   "music": "/assets/audio/achutam-keshavam.mp3",
   "couplePhoto": "/assets/photos/couple.jpg",
-  "moments": [
-   "/assets/photos/moment-1.jpg",
-   "/assets/photos/moment-2.jpg",
-   "/assets/photos/moment-3.jpg"
+  "rsvp": [
+   "Praveen & Alka",
+   "Vipin & Lalita",
+   "Aashish & Kavita"
+  ],
+  "wbcf": [
+   "Pranay",
+   "Aditi & Anshul",
+   "Aradhya",
+   "Rastogi Family & Friends"
   ]
  },
  "events": [

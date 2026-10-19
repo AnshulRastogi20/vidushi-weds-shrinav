@@ -58,14 +58,16 @@
       if (ev.mapsQuery) maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ev.mapsQuery); else maps.hidden = true;
       if (!ev.mapsQuery) $(".actions", sec).hidden = true;
       if (ev.countdown && ev.start) { $(".countdown", sec).hidden = false; startClock(sec, ev); }
-      if (!reduced && SCENE_ART[ev.key]) sec.insertAdjacentHTML("beforeend", SCENE_ART[ev.key]);
+      // each event's scene plays first, then its details follow
+      if (!reduced && SCENE_ART[ev.key]) $(".ev-tag", sec).insertAdjacentHTML("beforebegin", SCENE_ART[ev.key]);
       $("#events").appendChild(sec);
     });
 
     $("#couple-photo").src = C.couplePhoto;
-    $("#deck").innerHTML = C.moments.map((src) => `<figure class="ph"><img src="${src}" alt="" decoding="async"></figure>`).join("");
-    if (!C.moments.length) $("#moments").hidden = true;
-    $$(".arch img, .ph img").forEach((img) => img.addEventListener("error", () => img.parentElement.classList.add("is-empty"), { once: true }));
+    // the closing: who to reply to, and with best compliments from
+    const names = (id, list) => { const ul = $("#" + id); if (list && list.length) ul.innerHTML = list.map((n) => `<li>${n}</li>`).join(""); else ul.closest(".sign-col").hidden = true; };
+    names("rsvp", C.rsvp); names("wbcf", C.wbcf);
+    $$(".arch img").forEach((img) => img.addEventListener("error", () => img.parentElement.classList.add("is-empty"), { once: true }));
 
   }
 
@@ -365,24 +367,6 @@
     gsap.from(portrait, { autoAlpha: 0, y: 60, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: portrait, start: "top 85%" } });
     gsap.fromTo("#couple-photo", { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: portrait, start: "top bottom", end: "bottom top", scrub: true } });
 
-    // the moments: a reel of arches that slides across as you scroll; the one in the middle comes forward
-    const prints = $$(".ph");
-    if (prints.length) {
-      const deck = $("#deck"), reel = { p: 0 };
-      const render = () => {
-        const n = prints.length, step = prints[0].offsetWidth + parseFloat(getComputedStyle(deck).columnGap || 0), pos = reel.p * (n - 1);
-        gsap.set(deck, { x: -pos * step });
-        prints.forEach((el, i) => {
-          const d = i - pos, ad = Math.min(Math.abs(d), 1);
-          gsap.set(el, { scale: 1 - 0.16 * ad, rotationY: gsap.utils.clamp(-30, 30, -d * 22), opacity: 1 - 0.5 * ad, z: -120 * ad });
-          gsap.set(el.firstElementChild, { xPercent: gsap.utils.clamp(-6, 6, d * 6) });
-        });
-      };
-      gsap.timeline({ scrollTrigger: { trigger: "#moments", start: "top top", end: () => "+=" + innerHeight * (0.35 + 0.5 * (prints.length - 1)), pin: ".stage", scrub: 0.6, invalidateOnRefresh: true, onRefresh: render } })
-        .fromTo(".moments-title", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.15 }, 0)
-        .fromTo(reel, { p: 0 }, { p: 1, duration: 1, ease: "power1.inOut", onUpdate: render, immediateRender: false }, 0.1);
-      render();
-    }
     buildSky();
     gsap.from(".ornament", { autoAlpha: 0, scale: 0.7, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".ornament", start: "top 90%" } });
     $$("#closing [data-reveal]").forEach((el) => gsap.from(el, { autoAlpha: 0, y: 18, duration: 1, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 92%" } }));
@@ -498,12 +482,17 @@
     const ph = pins.photo;
     if (ph) {
       const p = world.photo(), arch = $(".arch"), photo = $("#couple-photo");
-      put(p.approach, floor, Math.max(floor + innerHeight * 0.3, ph.start));
+      // they wait at the sides while the wedding details are read, and come together as the photo arrives
+      const pFrom = Math.max(floor, ph.start - innerHeight * 0.6), cap = $(".portrait figcaption");
+      // their names step aside while they stand in front of the arch, and return with the real photo
+      p.approach.fromTo(cap, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.4, immediateRender: false }, 0);
+      put(p.approach, pFrom, Math.max(pFrom + innerHeight * 0.3, ph.start));
       const fin = gsap.timeline({ paused: true });
       const field = dustField([body("groom"), body("bride")], [arch, arch], [GROOM_LIGHT, BRIDE_LIGHT], innerWidth < 600 ? 80 : 130);
       fin.add(p.act.paused(false), 0)
         .fromTo(field, { p: 0 }, { p: 1, duration: 1.3, ease: "none", immediateRender: false, onUpdate: field.render }, 0.3)
-        .fromTo(photo, { autoAlpha: 0, filter: "brightness(1.6) blur(10px)" }, { autoAlpha: 1, filter: "brightness(1) blur(0px)", duration: 0.8, immediateRender: false }, 0.9);
+        .fromTo(photo, { autoAlpha: 0, filter: "brightness(1.6) blur(10px)" }, { autoAlpha: 1, filter: "brightness(1) blur(0px)", duration: 0.8, immediateRender: false }, 0.9)
+        .fromTo(cap, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, immediateRender: false }, 1.3);
       put(fin, ph.start, ph.end);
     }
     master = tl;
@@ -587,7 +576,7 @@
 
     const loadImg = (src) => { const i = new Image(); i.src = src; return i.decode(); };
     const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)), track(Promise.race([worldReady, wait(8000)]).then((w) => (world = w || null))),
-      ...[C.couplePhoto, ...C.moments, ...$$(".lg").map((i) => i.getAttribute("src"))].map((s) => track(loadImg(s)))];
+      ...[C.couplePhoto, ...$$(".lg").map((i) => i.getAttribute("src"))].map((s) => track(loadImg(s)))];
     await Promise.race([Promise.all(work), wait(7000)]);
     await Promise.race([document.fonts.ready, wait(2000)]);
     const left = 1300 - (performance.now() - t0);

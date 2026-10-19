@@ -86,6 +86,8 @@
       c.rgb = mix(c.rgb, gold * c.a * 1.15, rim * 0.9);
       c *= keep;
       c.rgb += gold * glow * c.a * 0.45;
+      // premultiplied colour may never be brighter than its alpha: Chrome clips it, Safari (every iPhone) shows garbage
+      c.rgb = min(c.rgb, vec3(c.a));
       gl_FragColor = c * alpha;
     }`;
   const PLATE = `precision mediump float;
@@ -113,6 +115,7 @@
       float la = line * ls * (1.0 - fs * 0.9) * side;
       vec4 o = vec4(col * fs, fs) + vec4(gold * la, la) * (1.0 - fs);
       float edge = smoothstep(0.0, 0.3, (p.y - max(rect.y, 0.0)) / scr.y);
+      o.rgb = min(o.rgb, vec3(o.a));
       gl_FragColor = o * edge * pa;
     }`;
   function program(fs) {
@@ -361,10 +364,7 @@
       morph(t.act, "jai2", 5.8, 0.6);
       play(t.act, "jai2", 6.4, 6.4);
       hold(t.act, 13);
-      // from the mandap, hand in hand, toward the photograph
-      setOut(t.leave, 0.4, 2.6);
-      morph(t.leave, "finale", 0, 2);
-      t.leave.to(S, { zoom: L.park === 1 ? 1 : 0.92, duration: 3, ease: "power2.inOut" }, 0);
+      setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
       return t;
     },
   };
@@ -413,7 +413,9 @@
     // after the wedding: they glow and turn to gold (scroll-driven)
     photo() {
       const approach = gsap.timeline({ paused: true }), act = gsap.timeline({ paused: true });
-      approach.to(S, { glow: 0.25, duration: 1 }, 0);
+      // hand in hand in the middle as the photo arrives
+      morph(approach, "finale", 0, 1.6);
+      approach.to(S, { zoom: L.park === 1 ? 1 : 0.92, duration: 1.6, ease: "power2.inOut" }, 0).to(S, { glow: 0.25, duration: 0.6 }, 1.2);
       act.to(S, { glow: 0.9, duration: 0.4 }, 0).to(S, { dis: 1, duration: 1.2, ease: "power1.in" }, 0.3).to(S, { glow: 0, duration: 0.3 }, 1.3).to({}, { duration: 0.6 }, 1.6);
       return { approach, act };
     },
