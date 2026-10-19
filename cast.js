@@ -15,7 +15,7 @@
 
   const BASE = "/assets/cast/";
   // browsers keep /assets for a week: bump this whenever a clip, still or plate is re-exported, so everyone gets the new one
-  const V = "?v=20261019c";
+  const V = "?v=20261019d";
   // in the order they load. A clip falls back to its first and last key pose until (or unless) its video is ready
   const CLIPS = {
     meet: { from: "park", to: "meet" },
