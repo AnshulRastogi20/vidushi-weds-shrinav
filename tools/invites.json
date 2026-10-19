@@ -77,20 +77,22 @@
         "wedding"
       ]
     },
-    "ct1r4q": {
-      "path": "/i/ct1r4q",
+    "celebrate": {
+      "path": "/celebrate",
       "events": [
         "engagement",
         "wedding"
-      ]
+      ],
+      "was": "/i/ct1r4q"
     },
-    "3oyocz": {
-      "path": "/i/3oyocz",
+    "family": {
+      "path": "/family",
       "events": [
         "engagement",
         "haldi",
         "wedding"
-      ]
+      ],
+      "was": "/i/3oyocz"
     }
   }
 }

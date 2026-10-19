@@ -6,9 +6,12 @@
   const root = document.documentElement;
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  // "/" is the wedding-only link; "/i/<code>" links carry more events.
-  const m = location.pathname.match(/^\/i\/([a-z0-9]+)\/?$/);
-  const linkId = m ? m[1] : "main";
+  // "/" is the wedding-only link; "/celebrate", "/family" carry more events (see tools/invites.json).
+  // The first links sent out were /i/<code>: they still open the same invites.
+  const OLD_LINKS = { ct1r4q: "celebrate", "3oyocz": "family" };
+  const path = location.pathname.replace(/\/+$/, "");
+  const old = path.match(/^\/i\/([a-z0-9]+)$/), slug = path.match(/^\/([a-z-]+)$/);
+  const linkId = old ? OLD_LINKS[old[1]] || "main" : slug ? slug[1] : "main";
   const guest = (new URLSearchParams(location.search).get("to") || "").trim().slice(0, 60);
   if (guest) $("#guest").textContent = guest;
   if (matchMedia("(hover: hover) and (pointer: fine)").matches) $("#hint").textContent = "Click to open";

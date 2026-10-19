@@ -2,14 +2,14 @@
 
 Static site, no build step. Plain HTML/CSS/JS + GSAP. Mobile first (most guests open it from WhatsApp on a phone), must also work on laptops with mouse wheel.
 
-- Live: https://shrinav-weds-vidushi.vercel.app (custom domain rvishcametrue.us once its DNS points to Vercel)
+- Live: https://rvishcametrue.us (also https://shrinav-weds-vidushi.vercel.app). Vercel deploys every push to `master`.
 - Stack: GSAP 3.12.5 + ScrollTrigger (cdnjs), Lenis (unpkg, desktop only), plain WebGL for the characters (`cast.js`), Google Fonts (Carlito, Tiro Devanagari Hindi). No npm dependencies.
 
 ## Run it
 ```bash
 python tools/serve.py          # http://127.0.0.1:5173  (also prints a LAN URL for a phone on the same Wi-Fi)
 ```
-Use this server, not a plain static server: it also routes `/i/<code>` to `index.html` the way Vercel does.
+Use this server, not a plain static server: it also routes `/celebrate`, `/family` (and old `/i/<code>` links) to `index.html` the way Vercel does.
 
 ## What happens on the page (in order)
 1. ॐ preloader while fonts, art, logo layers, photos and music load (capped so it never hangs).
@@ -46,10 +46,12 @@ python tools/build_invites.py
 | Link | Shows |
 |---|---|
 | `/` | Wedding only |
-| `/i/ct1r4q` | Engagement + Wedding |
-| `/i/3oyocz` | Engagement + Haldi + Wedding |
+| `/celebrate` | Engagement + Wedding |
+| `/family` | Engagement + Haldi + Wedding |
 
-Each link loads only its own `invites/<id>.json`, so a guest's browser never receives events their link doesn't include. Unknown codes fall back to `/`. Event order on the page = order in the link's `events` array. Add `?to=Sharma%20Family` to any link to personalise the envelope.
+The first links sent out (`/i/ct1r4q`, `/i/3oyocz`) still work: `OLD_LINKS` in main.js maps them to `celebrate` and `family`. A new link = a new entry in `links` (its key is the path) and a rebuild; Vercel's `/:slug` rewrite already serves it.
+
+Each link loads only its own `invites/<id>.json`, so a guest's browser never receives events their link doesn't include (the names are readable, so a guest could guess another link). Unknown names fall back to `/`. Event order on the page = order in the link's `events` array. Add `?to=Sharma%20Family` to any link to personalise the envelope.
 
 ## Locked decisions (do not undo without the owner asking)
 - **Never redraw or retype the logo or hashtag.** The hero animates the real logo layers only. Hashtag spelling: `#RViShCameTrue`.
@@ -91,4 +93,3 @@ The production project and domain belong to the owner. Anyone else deploys to th
 ## Open items
 - Engagement (11 Dec, 7 pm, Majestic) and Haldi (12 Dec, 11 am, Crystal) are set; their end times (11 pm, 2 pm) are estimates. "Add to calendar" was removed on request.
 - Reported: not working on an iPhone (device/app not yet identified). Investigate in Safari / WhatsApp in-app browser first.
-- rvishcametrue.us DNS (Namecheap) not yet pointed at Vercel.

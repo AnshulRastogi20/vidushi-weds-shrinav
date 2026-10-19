@@ -1,4 +1,5 @@
-"""Local preview with the same routing as Vercel: /haldi, /mehndi, /guests -> their pages.
+"""Local preview with the same routing as Vercel: /celebrate, /family (any /<name> without its own page) -> index.html,
+/guests -> guests.html, old /i/<code> links -> index.html.
 Binds 0.0.0.0 so a phone on the same Wi-Fi can open it. Usage: python tools/serve.py [port]"""
 import http.server, os, re, socket, sys
 

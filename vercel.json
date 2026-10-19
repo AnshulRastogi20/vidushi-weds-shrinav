@@ -34,6 +34,10 @@
     {
       "source": "/i/:code",
       "destination": "/"
+    },
+    {
+      "source": "/:slug([a-z-]+)",
+      "destination": "/"
     }
   ]
 }
