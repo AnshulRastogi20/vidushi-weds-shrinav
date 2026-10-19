@@ -20,6 +20,9 @@
     idle: { loop: true, from: "park", to: "park" },
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
+    "haldi-act": { from: "haldi-a", to: "haldi-b" },
+    jaimala: { from: "jai-a", to: "jai-b" },
+    phera: { from: "phera-a", to: "phera-a" },
   };
   const STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-b", "phera-a", "finale"];
   const PLATES = ["engagement", "haldi", "wedding"];
@@ -328,10 +331,10 @@
       setIn(t.approach, "haldi", 1.1, 2.9);
       morph(t.approach, "haldi-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
-      caption(t.act, 0, 6.4, "हल्दी", "A touch of turmeric", "haldi");
-      t.act.to(S, { zoom: L.cover * 1.03, duration: 7, ease: "none" }, 0);
-      morph(t.act, "haldi-b", 2.2, 1.6);
-      hold(t.act, 7);
+      // he smears the haldi on her cheek, she gets him back, and they both crack up
+      caption(t.act, 0, 7.6, "हल्दी", "A touch of turmeric", "haldi");
+      play(t.act, "haldi-act", 0.3, 7.4);
+      hold(t.act, 8);
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
       return t;
     },
@@ -340,12 +343,13 @@
       setIn(t.approach, "wedding", 1.1, 2.9);
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
-      caption(t.act, 0, 6.4, "जयमाला", "The garland exchange", "wedding");
-      morph(t.act, "jai-b", 2.6, 1.6);
-      caption(t.act, 7, 10.6, "फेरे", "Around the sacred fire", "wedding");
-      morph(t.act, "phera-a", 7.4, 1.8);
-      t.act.to(S, { zoom: L.cover * 1.04, duration: 11, ease: "none" }, 0);
-      hold(t.act, 11);
+      // the garlands, then the sash is tied and they go once round the fire
+      caption(t.act, 0, 6.2, "जयमाला", "The garland exchange", "wedding");
+      play(t.act, "jaimala", 0.3, 6);
+      morph(t.act, "phera-a", 6.5, 1.1);
+      caption(t.act, 7.2, 14.6, "फेरे", "Around the sacred fire", "wedding");
+      play(t.act, "phera", 7.7, 7);
+      hold(t.act, 15);
       // from the mandap, hand in hand, toward the photograph
       setOut(t.leave, 0.4, 2.6);
       morph(t.leave, "finale", 0, 2);
