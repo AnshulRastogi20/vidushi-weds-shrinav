@@ -3,7 +3,7 @@
 Static site, no build step. Plain HTML/CSS/JS + GSAP. Mobile first (most guests open it from WhatsApp on a phone), must also work on laptops with mouse wheel.
 
 - Live: https://shrinav-weds-vidushi.vercel.app (custom domain rvishcametrue.us once its DNS points to Vercel)
-- Stack: GSAP 3.12.5 + ScrollTrigger (cdnjs), Lenis (unpkg, desktop only), Google Fonts (Carlito, Tiro Devanagari Hindi). No npm dependencies.
+- Stack: GSAP 3.12.5 + ScrollTrigger (cdnjs), Lenis (unpkg, desktop only), plain WebGL for the characters (`cast.js`), Google Fonts (Carlito, Tiro Devanagari Hindi). No npm dependencies.
 
 ## Run it
 ```bash
@@ -13,16 +13,21 @@ Use this server, not a plain static server: it also routes `/i/<code>` to `index
 
 ## What happens on the page (in order)
 1. ॐ preloader while fonts, art, logo layers, photos and music load (capped so it never hangs).
-2. Envelope tied with a mauli thread. Two cartoon characters (Shrinav, Vidushi) walk in.
-3. Tap: they pull the thread, the envelope opens (<2s), music starts (the tap is what unlocks audio).
-4. They hold hands, glow, dissolve into gold dust: his dust fills the **S**, hers the **V** of the couple's logo monogram. Then the logo assembles: hashtag writes, ornament, elephants walk in, gold ring draws round, flowers bloom. Balloons rise.
-5. Ganesh blessing, then one full-screen framed card per event: Engagement (indigo night) -> Haldi (turmeric, rani-pink type) -> Wedding (red velvet + countdown). Then couple photo, photo stack, closing.
+2. Envelope tied with a mauli thread. The couple (AI-animated, `cast.js`) shimmer in on either side of it.
+3. Tap: the thread falls, the envelope opens (<2s), music starts (the tap is what unlocks audio).
+4. They walk to each other and take hands (the `meet` clip), glow and dissolve into gold (all of them at once): his dust fills the **S**, hers the **V** of the logo. The logo assembles: hashtag, ornament, elephants, gold ring, flowers, balloons.
+5. The gold comes back out of the S and V and they stand near the bottom corners, alive (the looping `idle` clip). From here they live *inside* the page: the canvas sits behind the text and in front of the card colours.
+6. Everything after this is one scroll-driven script (`buildMaster` in main.js): timeline time = scroll position, so scrolling up rewinds it exactly and manual scroll and auto-scroll behave the same. The page also drifts down on its own (auto-scroll button under the music button; any touch pauses it for 6 s).
+7. Ganesh blessing, then per event: the card's text, then as it ends they come to the middle and the set (an AI-painted plate) draws itself in gold pencil and fills with colour; the stage pins while they act; then they go back to the sides as the next card arrives. Engagement = walk in, ring box, rings exchanged (real clips); Haldi = before / haldi on each other's cheeks; Wedding = jaimala, garlands on, the phera with the gathbandhan at the fire. Haldi and wedding are key poses joined by a gold shimmer until their clips are made (see AI pipeline).
+8. From the mandap they walk hand in hand to the middle and dissolve into gold that lands in the photo arch; the real couple photo appears. Then photo stack, closing.
 
 ## Files
 | Path | What it is |
 |---|---|
 | `index.html` | Page skeleton + `<template id="event-tpl">` for event cards |
-| `main.js` | All behaviour: boot/preload, envelope, character rig + walk/merge, logo assembly, sky colour states, event cards, countdown, calendar, music |
+| `main.js` | Boot/preload, envelope, merge, logo assembly, sky colour states, event cards, the scroll-driven master timeline, auto-scroll, countdown, music |
+| `cast.js` | The couple and the sets: plays the keyed clips / key poses / set plates in one shared 9:16 frame on `#world` (WebGL), and every scene's choreography. Exposes `window.World` |
+| `assets/cast/` | `<clip>.mp4` (colour left half, matte right half) + `<clip>.json`, `still/*.webp` key poses, `plate/*.webp` sets (+ `-lines` pencil, `-amb` blur). Built by `tools/ai/` |
 | `styles.css` | Page styles. `toon.css` = character styles |
 | `assets/art/` | Card ornaments (SVG, lifted from the printed card PDF by `tools/extract_art.py`) + rigged characters `groom.svg`, `bride.svg` |
 | `assets/logo/` | The couple's real logo split into transparent layers (`tools/split_logo.py`): wreath, ornament, hashtag, mono-s, mono-v, elephant-l/r. Stacked they recreate the exact logo |
@@ -56,10 +61,23 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 - Mobile touch: Lenis smooth scroll runs only on `(hover: hover) and (pointer: fine)`; phones use native scrolling. Envelope flap/thread/knot have `pointer-events: none` so only `#open` takes the tap. Every `svh` size has a `vh` fallback before it.
 
 ## Characters
-`assets/art/groom.svg`, `bride.svg` are rigged: groups `rig`, `body`, `head`, `armL`, `armR`, `legL`, `legR`, `eyes`, `pupils`, `hem`. Pivot points live in `PIV` in main.js (200x400 drawing space). Animate parts with GSAP `svgOrigin`. Shrinav's look follows his photo (side-swept hair, rimless glasses, groomed beard, charcoal Nehru jacket with coral blossoms over a cream chikan kurta).
+- The live characters are the AI-animated couple in `cast.js`, from the locked character sheets in `tools/ai/ref/locked/` (approved by the owner). She is on the LEFT, he is on the RIGHT in every frame. The old 3D build (`world3d.js`) and the flat SVGs in `assets/art/` are retired.
+- Do not change their looks or outfits without the owner approving a draft.
+- Every scene is three paused timelines (`approach`, `act`, `leave`) that main.js places on the master timeline by scroll position. Only use tweens (and `fromTo`/`set`) on the state object `S`, never one-off state changes, or scrolling back will not undo them. `play()` scrubs a clip by tween progress; `morph()` turns one pose/clip into another through the gold shimmer.
+- Vanishing is a dissolve in the cast shader (`S.dis`), fine gold grain rising from the feet, so everything goes at once.
+- Layering: `#world` canvas is z-index -1 after the intro. Page colours (sky, card backgrounds, the photo section) must stay below -1; text stays above.
+
+## AI pipeline (characters)
+Key in `.env` (`GEMINI_API_KEY`, Google AI Studio, prepaid). Never print it; `.env` is git-excluded and in `.vercelignore`.
+- `tools/ai/gemini.py image|video ...`: Gemini 3 Pro Image stills, Veo 3.1 clips (start + end frame; `lastFrame` is honoured about 8 frames before the clip ends, so exports trim to the best match).
+- Key poses on flat green: `tools/ai/out/k/*-green.png` (park, meet, eng-a/b, haldi-a/b, jai-a/b, phera-a, finale, enter) + plates (`eng-plate`, `haldi-plate`, `wed-plate`). Prompts in `tools/ai/prompts/frames/`.
+- Clips: `tools/ai/clips.sh <name...>` (start/end pose per clip inside; prompts in `tools/ai/prompts/clips/` + `common.txt`). Veo allows ~4 jobs at once.
+- Export: `python3 tools/ai/cast_export.py <clip> --end k/<end-pose>.png` (key, trim, H.264 side-by-side alpha) and `python3 tools/ai/cast_stills.py` (stills + plates). Needs ffmpeg (Homebrew).
+- Done: meet, idle, eng-approach, eng-act. Still to make (credits ran out): in, namaste, eng-leave, haldi-approach, haldi-act, haldi-leave, wed-approach, jaimala, bridge, phera, finale. Add each to `CLIPS` in cast.js and swap the matching `morph()` for `play()`.
 
 ## Testing tips
 - Slow motion: in the console run `gsap.globalTimeline.timeScale(0.1)` before tapping. Freeze: `timeScale(0.00001)`.
+- WebGL needs a GPU: the gstack headless browser has none. Test with real Chrome (headless "new" + `--use-angle=metal`) via puppeteer-core, or on a phone.
 - Desktop scrolling from scripts: `window.__lenis.scrollTo(el, { immediate: true })` (plain `window.scrollTo` is fought by Lenis).
 - Real touch test: puppeteer `page.touchscreen.tap()` and touchStart/Move/End swipes with an iPhone/Pixel profile.
 
@@ -71,6 +89,6 @@ npx vercel deploy --prod --yes
 The production project and domain belong to the owner. Anyone else deploys to their own Vercel account.
 
 ## Open items
-- Engagement and Haldi dates/venues are still "to be announced".
+- Engagement (11 Dec, 7 pm, Majestic) and Haldi (12 Dec, 11 am, Crystal) are set; their end times (11 pm, 2 pm) are estimates. "Add to calendar" was removed on request.
 - Reported: not working on an iPhone (device/app not yet identified). Investigate in Safari / WhatsApp in-app browser first.
 - rvishcametrue.us DNS (Namecheap) not yet pointed at Vercel.

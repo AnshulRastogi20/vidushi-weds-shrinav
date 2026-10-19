@@ -3,3 +3,9 @@ photos-raw/
 README.md
 .gitignore
 mock/
+.env
+.env.local
+.gstack/
+CLAUDE.md
+CLAUDE.local.md
+AGENT_SETUP.md

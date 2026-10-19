@@ -2,15 +2,15 @@
  "common": {
   "supabaseUrl": "https://ddpubhkgcbcwncyeebzc.supabase.co",
   "supabaseKey": "sb_publishable_Am-lHqCMq1ANCtyzlQidXg_9QJuhbNm",
-  "hosts": "Smt. Richa & Sh. Naveen Rastogi",
+  "hosts": "Smt. Richa & Shri Naveen Rastogi",
   "request": "request your gracious presence on the auspicious occasion of the wedding of their beloved son",
   "first": {
    "name": "Shrinav Rastogi",
-   "parents": ""
+   "parents": "S/o Smt. Richa & Shri Naveen Rastogi"
   },
   "second": {
    "name": "Vidushi Vatsa",
-   "parents": "D/o Rachna & Supriyam Vatsa"
+   "parents": "D/o Smt. Rachna & Shri Supriyam Vatsa"
   },
   "family": "Rastogi Family",
   "music": "/assets/audio/achutam-keshavam.mp3",
@@ -28,13 +28,13 @@
    "short": "Engagement",
    "sky": "night",
    "lights": "bulbs",
-   "start": null,
-   "end": null,
-   "dateLine": "Date to be announced",
-   "timeLine": "",
-   "venue": "Venue to be announced",
-   "venueLine": "",
-   "mapsQuery": null
+   "start": "2026-12-11T19:00:00+05:30",
+   "end": "2026-12-11T23:00:00+05:30",
+   "dateLine": "Friday, 11th December 2026",
+   "timeLine": "7 pm onwards",
+   "venue": "Majestic",
+   "venueLine": "Country Inn & Suites, Ghaziabad",
+   "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad"
   },
   {
    "key": "haldi",
@@ -42,13 +42,13 @@
    "short": "Haldi",
    "sky": "sun",
    "lights": "marigold",
-   "start": null,
-   "end": null,
-   "dateLine": "Date to be announced",
-   "timeLine": "",
-   "venue": "Venue to be announced",
-   "venueLine": "",
-   "mapsQuery": null
+   "start": "2026-12-12T11:00:00+05:30",
+   "end": "2026-12-12T14:00:00+05:30",
+   "dateLine": "Saturday, 12th December 2026",
+   "timeLine": "11 am onwards",
+   "venue": "Crystal",
+   "venueLine": "Country Inn & Suites, Ghaziabad",
+   "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad"
   },
   {
    "key": "wedding",

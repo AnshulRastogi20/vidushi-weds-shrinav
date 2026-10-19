@@ -49,7 +49,6 @@
       sec.id = `ev-${ev.key}`;
       sec.dataset.sky = ev.sky;
       $(".ev-heading", sec).textContent = ev.title;
-      $(".doha", sec).hidden = ev.key !== "wedding";
       const title = $(".ev-title", sec);
       if (ev.titleArt) { title.classList.add("art", "draw", "foil"); title.dataset.svg = ev.titleArt; }
       else title.innerHTML = `<p class="title-text">${ev.title}</p>`;
@@ -57,10 +56,9 @@
       fill(".ev-date", ev.dateLine); fill(".ev-time", ev.timeLine); fill(".ev-venue", ev.venue); fill(".ev-venue-line", ev.venueLine);
       const maps = $(".ev-maps", sec);
       if (ev.mapsQuery) maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ev.mapsQuery); else maps.hidden = true;
-      const cal = $(".ev-cal", sec);
-      if (ev.start) cal.addEventListener("click", () => addToCalendar(ev)); else cal.hidden = true;
-      if (!ev.mapsQuery && !ev.start) $(".actions", sec).hidden = true;
+      if (!ev.mapsQuery) $(".actions", sec).hidden = true;
       if (ev.countdown && ev.start) { $(".countdown", sec).hidden = false; startClock(sec, ev); }
+      if (!reduced && SCENE_ART[ev.key]) sec.insertAdjacentHTML("beforeend", SCENE_ART[ev.key]);
       $("#events").appendChild(sec);
     });
 
@@ -96,54 +94,24 @@
       .to(paths, { strokeOpacity: 0, duration: 0.8 }, "<+0.4");
   }
 
-  /* ================= characters ================= */
-  // pivots in each character's 200x400 drawing space
-  const PIV = { legL: "88 290", legR: "112 290", armL: "64 182", armR: "136 182", head: "100 150", body: "100 300", rig: "100 390" };
-  const part = (actor, name) => $(`.${name}`, actor);
-
-  function walkCycle(a, dir) {
-    const L = part(a, "legL"), R = part(a, "legR"), aL = part(a, "armL"), aR = part(a, "armR");
-    const rig = part(a, "rig"), head = part(a, "head"), hem = part(a, "hem");
-    gsap.set(L, { svgOrigin: PIV.legL }); gsap.set(R, { svgOrigin: PIV.legR });
-    gsap.set(aL, { svgOrigin: PIV.armL }); gsap.set(aR, { svgOrigin: PIV.armR });
-    gsap.set(head, { svgOrigin: PIV.head }); gsap.set(hem, { svgOrigin: PIV.body }); gsap.set(rig, { svgOrigin: PIV.rig });
-    const d = { ease: "sine.inOut", duration: 0.22 };
-    return gsap.timeline({ repeat: -1 })
-      .to(L, { ...d, rotation: 16 * dir, y: -9 }, 0).to(R, { ...d, rotation: -8 * dir, y: 0 }, 0)
-      .to([aL, aR], { ...d, rotation: -18 * dir }, 0).to(rig, { ...d, y: -8 }, 0)
-      .to(head, { ...d, rotation: 3 * dir }, 0).to(hem, { ...d, skewX: -3 * dir }, 0)
-      .to(L, { ...d, rotation: -8 * dir, y: 0 }, 0.22).to(R, { ...d, rotation: 16 * dir, y: -9 }, 0.22)
-      .to([aL, aR], { ...d, rotation: 18 * dir }, 0.22).to(rig, { ...d, y: 0 }, 0.22)
-      .to(head, { ...d, rotation: -3 * dir }, 0.22).to(hem, { ...d, skewX: 3 * dir }, 0.22);
-  }
-  function settle(a) {
-    const parts = ["legL", "legR", "armL", "armR", "head", "hem"].map((n) => part(a, n));
-    return gsap.timeline()
-      .to(parts, { rotation: 0, y: 0, skewX: 0, duration: 0.25, ease: "power2.out" }, 0)
-      .to(part(a, "rig"), { y: 0, scaleY: 0.94, scaleX: 1.04, duration: 0.1, ease: "power2.out" }, 0)
-      .to(part(a, "rig"), { scaleY: 1, scaleX: 1, duration: 0.45, ease: "elastic.out(1.2, 0.4)" }, 0.1);
-  }
+  /* ================= the couple: animated clips and key poses, drawn by cast.js on the #world layer ================= */
+  let world = null;
+  const worldReady = new Promise((res) => {
+    if (window.World) return res(window.World);
+    addEventListener("world:ready", () => res(window.World), { once: true });
+    addEventListener("world:fail", () => res(null), { once: true });
+  });
+  // something with a getBoundingClientRect, so the 2D dust can fly to and from them
+  const body = (who) => ({ getBoundingClientRect: () => world.rect(who) });
 
   /* ================= the envelope ================= */
-  let walks = [], idles = [];
   function showGate() {
-    const gate = $("#gate");
-    gate.hidden = false;
-    const groom = $("#a-groom"), bride = $("#a-bride");
-    gsap.set([groom, bride], { xPercent: -50 });
+    $("#gate").hidden = false;
     if (reduced) return;
     gsap.from(".env", { autoAlpha: 0, scale: 1.04, duration: 0.5, ease: "power2.out" });
     gsap.from([".thread", ".knot"], { autoAlpha: 0, duration: 0.4, delay: 0.2 });
     gsap.from("#hint", { autoAlpha: 0, duration: 0.6, delay: 1.3 });
-    // they walk in from the two edges and wait by the thread
-    [[groom, -1], [bride, 1]].forEach(([a, side], i) => {
-      const w = walkCycle(a, -side);
-      walks.push(w);
-      gsap.fromTo(a, { x: side * innerWidth * 0.6 }, {
-        x: 0, duration: 1.25, ease: "power1.out", delay: 0.15 + i * 0.12,
-        onComplete: () => { w.kill(); settle(a); idles.push(gsap.to(part(a, "body"), { scaleY: 1.015, svgOrigin: PIV.body, duration: 1.2, yoyo: true, repeat: -1, ease: "sine.inOut" })); },
-      });
-    });
+    world?.gateIn(); // they walk in from the two edges and wait by the thread
     let opened = false;
     const open = (e) => { if (opened) return; opened = true; e?.preventDefault?.(); openEnvelope(); };
     ["pointerup", "touchend", "click"].forEach((t) => $("#open").addEventListener(t, open));
@@ -151,30 +119,16 @@
 
   function openEnvelope() {
     playMusic(); // inside the tap, so phones allow sound
-    setTimeout(() => { $("#gate")?.remove(); $("#cast")?.remove(); revealHero(true); unlock(); }, 9000);
-    const groom = $("#a-groom"), bride = $("#a-bride");
-    walks.forEach((w) => w.kill()); idles.forEach((t) => t.kill());
-    gsap.killTweensOf([groom, bride]);
-    gsap.set([groom, bride], { x: 0 });
-    $$(".rig > g, .rig", $("#cast")).forEach((g) => gsap.set(g, { rotation: 0, y: 0, skewX: 0, scale: 1 }));
-    if (reduced) { $("#gate").remove(); $("#cast").remove(); revealHero(true); unlock(); return; }
-
-    const gR = part(groom, "armR"), bL = part(bride, "armL");
+    askTilt();
+    setTimeout(() => { $("#gate")?.remove(); castReturn(); revealHero(true); unlock(); }, 11000);
+    if (reduced) { $("#gate").remove(); world?.hide(); revealHero(true); unlock(); return; }
     const tl = gsap.timeline();
     tl.to("#hint", { autoAlpha: 0, duration: 0.15 }, 0)
-      // reach for the thread
-      .to(gR, { rotation: -98, svgOrigin: PIV.armR, duration: 0.3, ease: "back.out(1.6)" }, 0)
-      .to(bL, { rotation: 98, svgOrigin: PIV.armL, duration: 0.3, ease: "back.out(1.6)" }, 0.03)
-      .to([part(groom, "rig"), part(bride, "rig")], { y: -12, svgOrigin: PIV.rig, duration: 0.15, yoyo: true, repeat: 1, ease: "power2.out" }, 0)
-      // and pull it apart
-      .to(groom, { x: -36, duration: 0.38, ease: "power2.in" }, 0.33)
-      .to(bride, { x: 36, duration: 0.38, ease: "power2.in" }, 0.33)
-      .to(part(groom, "rig"), { rotation: -7, svgOrigin: PIV.rig, duration: 0.3 }, 0.33)
-      .to(part(bride, "rig"), { rotation: 7, svgOrigin: PIV.rig, duration: 0.3 }, 0.33)
+      // they take the thread and pull it apart
+      .add(world ? world.pullThread() : gsap.timeline(), 0)
       .to(".th-l, .th-r", { scaleX: 0, duration: 0.38, ease: "power2.in" }, 0.4)
       .to(".knot", { scale: 1.25, duration: 0.1, ease: "power2.out" }, 0.42)
       .to(".knot", { y: innerHeight * 0.6, rotation: 140, autoAlpha: 0, duration: 0.55, ease: "power2.in" }, 0.52)
-      .to([gR, bL, part(groom, "rig"), part(bride, "rig")], { rotation: 0, duration: 0.3, ease: "power2.out" }, 0.8)
       // the envelope opens
       .to(".env-flap", { rotationX: 180, duration: 0.55, ease: "power2.inOut" }, 0.75)
       .to(".env-flap", { autoAlpha: 0, duration: 0.15 }, 1.15)
@@ -186,52 +140,38 @@
   /* ---- the merge: they meet, rise as light, and become "Sh" and "Vi" ---- */
   const GROOM_LIGHT = ["#E9C46A", "#FCF6BA", "#7FAE68", "#C9A04B"];
   const BRIDE_LIGHT = ["#E9C46A", "#FCF6BA", "#F08AA4", "#C9A04B"];
-  const FILTER_0 = "brightness(1) blur(0px) drop-shadow(0px 0px 0px rgba(255,205,120,0))";
 
   function merge() {
-    const groom = $("#a-groom"), bride = $("#a-bride"), lgS = $("#lg-s"), lgV = $("#lg-v");
-    const W = innerWidth, w = groom.getBoundingClientRect().width;
-    // stand close enough that his right hand meets her left hand
-    const gx = W / 2 - 0.425 * w - 0.27 * W, bx = W / 2 + 0.425 * w - 0.73 * W;
-    let wg, wb;
-    gsap.set([groom, bride], { filter: FILTER_0 });
+    const lgS = $("#lg-s"), lgV = $("#lg-v");
     const tl = gsap.timeline();
-    tl.call(() => { wg = walkCycle(groom, 1); wb = walkCycle(bride, -1); }, null, 0)
-      .to(groom, { x: gx, duration: 0.6, ease: "power1.inOut" }, 0)
-      .to(bride, { x: bx, duration: 0.6, ease: "power1.inOut" }, 0)
-      .call(() => { wg.kill(); wb.kill(); settle(groom); settle(bride); }, null, 0.6)
-      // hands meet, one look at each other
-      .to(part(groom, "armR"), { rotation: -30, svgOrigin: PIV.armR, duration: 0.4, ease: "power2.inOut" }, 0.72)
-      .to(part(bride, "armL"), { rotation: 30, svgOrigin: PIV.armL, duration: 0.4, ease: "power2.inOut" }, 0.72)
-      .to(part(groom, "head"), { rotation: 6, svgOrigin: PIV.head, duration: 0.5, ease: "power2.out" }, 0.72)
-      .to(part(bride, "head"), { rotation: -6, svgOrigin: PIV.head, duration: 0.5, ease: "power2.out" }, 0.72)
-      .to(part(groom, "pupils"), { x: 3, duration: 0.3 }, 0.72)
-      .to(part(bride, "pupils"), { x: -3, duration: 0.3 }, 0.72)
-      // the room dims, a warm light rises behind them, the logo's S and V wait above as faint gold
-      .call(() => placeHalo(groom, bride), null, 0.8)
-      .to("#veil", { autoAlpha: 1, duration: 0.9, ease: "power2.out" }, 0.85)
-      .fromTo("#halo", { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: "power2.out" }, 0.9)
-      .to(".lg-ghost", { opacity: 0.22, duration: 0.8, ease: "power2.out" }, 1.0)
-      .to([groom, bride], { y: -innerHeight * 0.05, duration: 1.0, ease: "sine.inOut" }, 1.05)
-      .to([groom, bride], { filter: "brightness(1.3) blur(0px) drop-shadow(0px 0px 16px rgba(255,205,120,0.9))", duration: 0.7, ease: "power1.in" }, 1.1)
+    // they walk to each other first (a real clip), so everything after waits for them
+    const o = world ? 1.6 : 0;
+    if (world) tl.add(world.meet(), 0);
+    // the room dims, a warm light rises behind them, the logo's S and V wait above as faint gold
+    tl.call(placeHalo, null, o + 0.8)
+      .to("#veil", { autoAlpha: 1, duration: 0.9, ease: "power2.out" }, o + 0.85)
+      .fromTo("#halo", { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: "power2.out" }, o + 0.9)
+      .to(".lg-ghost", { opacity: 0.22, duration: 0.8, ease: "power2.out" }, o + 1.0)
       // they become light
-      .call(() => { dust(groom, $("#tgt-s"), GROOM_LIGHT); dust(bride, $("#tgt-v"), BRIDE_LIGHT); }, null, 1.75)
-      .to([groom, bride], { autoAlpha: 0, scale: 1.04, filter: "brightness(2.2) blur(10px) drop-shadow(0px 0px 30px rgba(255,215,140,1))", duration: 0.45, ease: "power2.in" }, 1.75)
-      .to("#halo", { autoAlpha: 0, scale: 1.5, duration: 1.3, ease: "power2.out" }, 2.0)
+      .call(() => { if (world) { dust(body("groom"), $("#tgt-s"), GROOM_LIGHT); dust(body("bride"), $("#tgt-v"), BRIDE_LIGHT); } }, null, o + 1.75)
+      .add(world ? world.vanish() : gsap.timeline(), o + 1.75)
+      .to("#halo", { autoAlpha: 0, scale: 1.5, duration: 1.3, ease: "power2.out" }, o + 2.0)
       // Shrinav fills the S, Vidushi the V, bottom to top as the light arrives
-      .to(lgS, { clipPath: "inset(39% 0% 0% 0%)", duration: 0.95, ease: "power2.inOut" }, 2.3)
-      .to(lgV, { clipPath: "inset(38% 0% 0% 0%)", duration: 0.95, ease: "power2.inOut" }, 2.36)
-      .to([lgS, lgV], { filter: "drop-shadow(0px 0px 14px rgba(255,196,96,0.95))", duration: 0.35, ease: "power2.out" }, 3.15)
-      .to([lgS, lgV], { filter: "drop-shadow(0px 0px 0px rgba(255,196,96,0))", duration: 0.9, ease: "power2.inOut" }, 3.5)
-      .to(".lg-ghost", { opacity: 0, duration: 0.4 }, 3.25)
-      .to("#veil", { autoAlpha: 0, duration: 1.2, ease: "power2.inOut" }, 3.2)
-      .add(revealHero(), 3.15)
-      .call(() => $("#cast").remove(), null, 3.6)
-      .call(unlock, null, 5.3);
+      .to(lgS, { clipPath: "inset(39% 0% 0% 0%)", duration: 0.95, ease: "power2.inOut" }, o + 2.3)
+      .to(lgV, { clipPath: "inset(38% 0% 0% 0%)", duration: 0.95, ease: "power2.inOut" }, o + 2.36)
+      .to([lgS, lgV], { filter: "drop-shadow(0px 0px 14px rgba(255,196,96,0.95))", duration: 0.35, ease: "power2.out" }, o + 3.15)
+      .to([lgS, lgV], { filter: "drop-shadow(0px 0px 0px rgba(255,196,96,0))", duration: 0.9, ease: "power2.inOut" }, o + 3.5)
+      .to(".lg-ghost", { opacity: 0, duration: 0.4 }, o + 3.25)
+      .to("#veil", { autoAlpha: 0, duration: 1.2, ease: "power2.inOut" }, o + 3.2)
+      .add(revealHero(), o + 3.15)
+      .call(castReturn, null, o + 4.9)
+      .call(unlock, null, o + 5.3)
+      .call(() => { if (!reduced) { autoBtn.hidden = false; setAuto(true); } }, null, o + 8.3);
     return tl;
   }
-  function placeHalo(groom, bride) {
-    const g = groom.getBoundingClientRect(), b = bride.getBoundingClientRect();
+  function placeHalo() {
+    if (!world) return;
+    const g = world.rect("groom"), b = world.rect("bride");
     gsap.set("#halo", { left: (g.left + g.width / 2 + b.left + b.width / 2) / 2, top: g.top + g.height * 0.45, xPercent: -50, yPercent: -50 });
   }
 
@@ -406,13 +346,13 @@
   }
 
   function buildScroll() {
+    buildStory();
     gsap.timeline({ scrollTrigger: { trigger: "#blessing", start: "top 72%" } })
       .add(drawTl($(".ganesha"), 1.6))
       .from("#blessing .ln", { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.22, ease: "power2.out" }, 0.6)
       .from("#blessing .divider", { scaleX: 0, duration: 1.1, ease: "power2.inOut" }, 1.2);
 
     $$(".event").forEach((sec) => {
-      if (!$(".doha", sec).hidden) gsap.from($$(".doha .ln", sec), { autoAlpha: 0, y: 14, duration: 0.9, stagger: 0.2, ease: "power2.out", scrollTrigger: { trigger: $(".doha", sec), start: "top 80%" } });
       const title = $(".ev-title", sec);
       ScrollTrigger.create({ trigger: title, start: "top 82%", once: true, onEnter: () => (title._draw ? drawTl(title, 2.2) : gsap.from(title, { autoAlpha: 0, y: 20, duration: 1.2, ease: "power2.out" })) });
       $$("[data-reveal]:not([hidden])", sec).forEach((el) => gsap.from(el, { autoAlpha: 0, y: 18, duration: 1, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 90%" } }));
@@ -445,7 +385,148 @@
     $$("#closing [data-reveal]").forEach((el) => gsap.from(el, { autoAlpha: 0, y: 18, duration: 1, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 92%" } }));
   }
 
-  /* ================= countdown + calendar ================= */
+  /* ================= the story ================= */
+  // After the logo they come back out of the S and V and stay until the photo. Each event card ends in a
+  // stage: when it fills the screen the page holds still and they act the event out in 3D. Meanwhile the
+  // page drifts down on its own; any touch hands control to the guest, and it carries on after a pause.
+  const SCENE_ART = Object.fromEntries(["engagement", "haldi", "wedding"].map((k) => [k, `<div class="ev-stage" data-scene="${k}" aria-hidden="true"></div>`]));
+
+  let castBack = false;
+  function castReturn() {
+    if (castBack || reduced || !world) return;
+    castBack = true;
+    world.park(); world.hide();
+    const field = dustField([$("#tgt-s"), $("#tgt-v")], [body("groom"), body("bride")], [GROOM_LIGHT, BRIDE_LIGHT], innerWidth < 600 ? 70 : 110);
+    gsap.timeline()
+      .to(field, { p: 1, duration: 1.4, ease: "none", onUpdate: field.render, onComplete: field.clear }, 0)
+      .add(world.comeBack(), 0)
+      // from here they live inside the page: behind its text, in front of its colours, moved only by scroll
+      .call(() => { world.behindPage(true); buildMaster(); }, null, 3.6);
+  }
+
+  /* gold dust you can drive: motes travel from one set of boxes to another as p goes 0 -> 1 */
+  function dustField(from, to, colors, n) {
+    const rnd = (lo, hi) => lo + Math.random() * (hi - lo);
+    const motes = [];
+    from.forEach((_, k) => {
+      for (let i = 0; i < n; i++) motes.push({ k, u0: rnd(0.15, 0.85), v0: rnd(0.1, 0.9), u1: rnd(0.2, 0.8), v1: rnd(0.08, 0.95),
+        bx: rnd(-0.25, 0.25), by: rnd(0.05, 0.2), d: rnd(0, 0.35), dur: rnd(0.45, 0.65), r: rnd(0.8, 2.4), c: colors[k][i % colors[k].length] });
+    });
+    const f = { p: 0 };
+    f.clear = () => ctx.clearRect(0, 0, innerWidth, innerHeight);
+    f.render = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      if (canvas.width !== Math.round(innerWidth * dpr)) { canvas.width = Math.round(innerWidth * dpr); canvas.height = Math.round(innerHeight * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+      f.clear();
+      if (f.p <= 0 || f.p >= 1) return;
+      const A = from.map((el) => el.getBoundingClientRect()), Z = to.map((el) => el.getBoundingClientRect());
+      for (const m of motes) {
+        const q = Math.min(1, Math.max(0, (f.p - m.d) / m.dur));
+        if (q <= 0 || q >= 1) continue;
+        const a = A[m.k], z = Z[Math.min(m.k, Z.length - 1)];
+        const sx = a.left + m.u0 * a.width, sy = a.top + m.v0 * a.height, ex = z.left + m.u1 * z.width, ey = z.top + m.v1 * z.height;
+        const cx = (sx + ex) / 2 + m.bx * innerWidth, cy = Math.min(sy, ey) - m.by * innerHeight;
+        const e = q < 0.5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2, k = 1 - e;
+        const x = k * k * sx + 2 * k * e * cx + e * e * ex, y = k * k * sy + 2 * k * e * cy + e * e * ey;
+        ctx.globalAlpha = q < 0.15 ? q / 0.15 : q > 0.85 ? (1 - q) / 0.15 : 1;
+        ctx.shadowColor = m.c; ctx.shadowBlur = 8; ctx.fillStyle = m.c;
+        ctx.beginPath(); ctx.arc(x, y, m.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+    };
+    return f;
+  }
+
+  /* ---- the page drifts on its own; a touch hands over to the guest, and it carries on after a pause ---- */
+  const auto = { on: false, idleUntil: 0, y: -1, set: -1 };
+  const autoBtn = $("#auto");
+  const scrollNow = () => (lenis ? lenis.scroll : scrollY);
+  function setAuto(on) {
+    auto.on = on; auto.y = -1; auto.idleUntil = 0;
+    autoBtn.setAttribute("aria-pressed", String(on));
+    autoBtn.setAttribute("aria-label", on ? "Stop scrolling by itself" : "Scroll by itself");
+  }
+  autoBtn.addEventListener("click", () => setAuto(!auto.on));
+  // only actual scrolling hands over (a tap does not), and the drift picks up again a second after it stops,
+  // including after a phone's momentum glide: any scroll we didn't make ourselves counts as the guest's
+  const hold = () => { auto.idleUntil = performance.now() + 1000; auto.y = -1; };
+  ["wheel", "touchmove"].forEach((t) => addEventListener(t, hold, { passive: true }));
+  addEventListener("keydown", (e) => { if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(e.key)) hold(); });
+  addEventListener("scroll", () => { if (auto.set < 0 || Math.abs(scrollNow() - auto.set) > 3) hold(); }, { passive: true });
+  gsap.ticker.add((time, dtMs) => {
+    if (!auto.on || performance.now() < auto.idleUntil || !unlocked) return;
+    const max = document.documentElement.scrollHeight - innerHeight, now = scrollNow();
+    if (now >= max - 1) { setAuto(false); return; }
+    if (auto.y < 0 || Math.abs(now - auto.y) > 4) auto.y = now;
+    // a little quicker while a stage holds the screen, so the clips play at about their real speed
+    const onStage = pins.some(({ st }) => now >= st.start && now < st.end);
+    auto.y = Math.min(max, auto.y + innerHeight * (onStage ? 0.16 : 0.1) * (dtMs / 1000));
+    auto.set = Math.round(auto.y);
+    if (lenis) lenis.scrollTo(auto.y, { immediate: true, force: true }); else scrollTo(0, auto.y);
+  });
+
+  /* ---- one script for the whole page: every movement is tied to a scroll position, so it runs backwards too ---- */
+  const STAGE_SCREENS = { engagement: 1.3, haldi: 0.9, wedding: 1.6 };
+  const pins = [];
+  let master = null, builtFor = "";
+  function buildMaster() {
+    if (!world || !castBack) return;
+    const key = `${innerWidth}x${innerHeight}`;
+    if (master && key === builtFor) return;
+    builtFor = key;
+    master?.st?.kill(); if (master) { gsap.killTweensOf(master); master.kill(); }
+    world.layout(); world.resetPose();
+    gsap.set("#couple-photo", { autoAlpha: 0 });
+    const K = 0.01, top = (el) => el.getBoundingClientRect().top + scrollNow();
+    const tl = gsap.timeline({ paused: true });
+    // place a paused sub-timeline so it runs exactly between two scroll positions
+    const put = (sub, from, to) => { const span = Math.max(0.05, (to - from) * K); sub.timeScale(sub.duration() / span).paused(false); tl.add(sub, Math.max(0, from * K)); };
+    let floor = 0;
+    const bl = $("#blessing");
+    if (bl) { const t0 = top(bl); put(world.namaste(), t0 - innerHeight * 0.6, t0 + bl.offsetHeight * 0.55); floor = t0 + bl.offsetHeight * 0.55; }
+    pins.forEach(({ name, st }) => {
+      const s = world.scene(name), aFrom = Math.max(floor, st.start - innerHeight * 0.65);
+      put(s.approach, aFrom, st.start);
+      put(s.act, st.start, st.end);
+      put(s.leave, st.end, st.end + innerHeight * 0.6);
+      floor = st.end + innerHeight * 0.6;
+    });
+    // they walk to the middle, glow, and become the photograph
+    const ph = pins.photo;
+    if (ph) {
+      const p = world.photo(), arch = $(".arch"), photo = $("#couple-photo");
+      put(p.approach, floor, Math.max(floor + innerHeight * 0.3, ph.start));
+      const fin = gsap.timeline({ paused: true });
+      const field = dustField([body("groom"), body("bride")], [arch, arch], [GROOM_LIGHT, BRIDE_LIGHT], innerWidth < 600 ? 80 : 130);
+      fin.add(p.act.paused(false), 0)
+        .fromTo(field, { p: 0 }, { p: 1, duration: 2.6, ease: "none", immediateRender: false, onUpdate: field.render }, 1.0)
+        .fromTo(photo, { autoAlpha: 0, filter: "brightness(1.8) blur(14px)" }, { autoAlpha: 1, filter: "brightness(1) blur(0px)", duration: 1.6, immediateRender: false }, 2.4);
+      put(fin, ph.start, ph.end);
+    }
+    master = tl;
+    // timeline time = scroll position: down plays it, up rewinds it, and a fling just eases there
+    tl.time(scrollNow() * K);
+    master.st = ScrollTrigger.create({ start: 0, end: "max", onUpdate: (st) => gsap.to(tl, { time: st.scroll() * K, duration: lenis ? 0.35 : 0.5, ease: "power3.out", overwrite: true }) });
+  }
+  ScrollTrigger.addEventListener("refresh", () => { if (castBack && master) requestAnimationFrame(buildMaster); });
+
+  // on phones the scenery can lean with the phone (iOS asks once, on the envelope tap)
+  function askTilt() {
+    const D = window.DeviceOrientationEvent;
+    if (D && typeof D.requestPermission === "function") D.requestPermission().catch(() => {});
+  }
+
+  // each event card ends in a stage that holds the screen while they act it out
+  function buildStory() {
+    if (reduced || !world) { $$(".ev-stage").forEach((el) => el.remove()); return; }
+    $$(".ev-stage").forEach((el) => {
+      const name = el.dataset.scene;
+      pins.push({ name, st: ScrollTrigger.create({ trigger: el, start: "top top", end: () => "+=" + innerHeight * STAGE_SCREENS[name], pin: true, pinSpacing: true }) });
+    });
+    pins.photo = ScrollTrigger.create({ trigger: "#couple", start: "top top", end: () => "+=" + innerHeight * 1.3, pin: true, pinSpacing: true });
+  }
+
+  /* ================= countdown ================= */
   function startClock(sec, ev) {
     const start = new Date(ev.start), end = new Date(ev.end || ev.start);
     const cells = Object.fromEntries($$(".clock b", sec).map((b) => [b.dataset.u, b]));
@@ -458,22 +539,6 @@
       cells.m.textContent = pad(Math.floor((s % 3600) / 60)); cells.s.textContent = pad(s % 60);
     };
     tick(); setInterval(tick, 1000);
-  }
-  function addToCalendar(ev) {
-    const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-    const start = new Date(ev.start), end = new Date(ev.end || ev.start);
-    const title = `Shrinav & Vidushi - ${ev.title}`, where = [ev.venue, ev.venueLine].filter(Boolean).join(", ");
-    const details = `#RViShCameTrue · With best compliments, ${C.family}. ${location.origin}${location.pathname}`;
-    if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent) && "ontouchend" in document) {
-      const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//rvishcametrue//EN", "BEGIN:VEVENT", `UID:${ev.key}@rvishcametrue.us`,
-        `DTSTAMP:${z(new Date())}`, `DTSTART:${z(start)}`, `DTEND:${z(end)}`, `SUMMARY:${title}`, `LOCATION:${where}`, `DESCRIPTION:${details}`,
-        "END:VEVENT", "END:VCALENDAR"].join("\r\n");
-      location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
-    } else {
-      const u = new URL("https://calendar.google.com/calendar/render");
-      Object.entries({ action: "TEMPLATE", text: title, dates: `${z(start)}/${z(end)}`, location: where, details }).forEach(([k, v]) => u.searchParams.set(k, v));
-      window.open(u.toString(), "_blank", "noopener");
-    }
   }
 
   /* ================= music ================= */
@@ -518,7 +583,7 @@
     build(data);
 
     const loadImg = (src) => { const i = new Image(); i.src = src; return i.decode(); };
-    const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)),
+    const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)), track(Promise.race([worldReady, wait(8000)]).then((w) => (world = w || null))),
       ...[C.couplePhoto, ...C.moments, ...$$(".lg").map((i) => i.getAttribute("src"))].map((s) => track(loadImg(s)))];
     await Promise.race([Promise.all(work), wait(7000)]);
     await Promise.race([document.fonts.ready, wait(2000)]);

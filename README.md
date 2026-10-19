@@ -1,4 +1,4 @@
-# Vidushi weds Shrinav · rvishcametrue.us
+# Shrinav weds Vidushi · rvishcametrue.us
 
 Static invitation site, no build step. Hosted on Vercel, RSVPs in Supabase (PersonalWebsite project).
 

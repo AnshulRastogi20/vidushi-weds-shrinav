@@ -11,70 +11,155 @@
       <rect width="8" height="8" fill="#F3ECDD"/>
       <path d="M0 4 L4 0 M4 8 L8 4 M0 4 L4 8 M4 0 L8 4" stroke="#E2D8C4" stroke-width=".7" fill="none"/>
     </pattern>
+    <!-- soft volume: light from upper left -->
+    <radialGradient id="gr-skin" cx=".42" cy=".36" r=".72">
+      <stop offset="0" stop-color="#F0C29C"/><stop offset=".55" stop-color="#DDA27A"/><stop offset="1" stop-color="#B97C57"/>
+    </radialGradient>
+    <radialGradient id="gr-ear" cx=".6" cy=".45" r=".7">
+      <stop offset="0" stop-color="#E2A983"/><stop offset="1" stop-color="#B57653"/>
+    </radialGradient>
+    <linearGradient id="gr-neck" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#A86C4B"/><stop offset=".55" stop-color="#D49B74"/>
+    </linearGradient>
+    <linearGradient id="gr-hair" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3A2A21"/><stop offset=".45" stop-color="#1E1511"/><stop offset="1" stop-color="#120C09"/>
+    </linearGradient>
+    <linearGradient id="gr-fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2A1E17" stop-opacity=".8"/><stop offset="1" stop-color="#6B4E3D" stop-opacity=".25"/>
+    </linearGradient>
+    <linearGradient id="gr-beard" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A2A1F" stop-opacity=".16"/><stop offset=".45" stop-color="#33241A" stop-opacity=".5"/><stop offset="1" stop-color="#241810" stop-opacity=".82"/>
+    </linearGradient>
+    <pattern id="gr-stubble" width="3.2" height="3.2" patternUnits="userSpaceOnUse">
+      <circle cx=".8" cy=".9" r=".45" fill="#1E140D"/><circle cx="2.4" cy="2.3" r=".4" fill="#1E140D"/><circle cx="2.2" cy=".5" r=".3" fill="#1E140D"/>
+    </pattern>
+    <linearGradient id="gr-lens" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".34"/><stop offset=".45" stop-color="#DCE6F2" stop-opacity=".1"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".22"/>
+    </linearGradient>
+    <linearGradient id="gr-shade-x" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset=".3" stop-color="#000" stop-opacity="0"/>
+      <stop offset=".72" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".3"/>
+    </linearGradient>
+    <linearGradient id="gr-shade-arm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/>
+    </linearGradient>
+    <radialGradient id="gr-hand" cx=".4" cy=".35" r=".7">
+      <stop offset="0" stop-color="#EDBD96"/><stop offset="1" stop-color="#BF845F"/>
+    </radialGradient>
+    <radialGradient id="gr-glow"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gr-blush"><stop offset="0" stop-color="#E5806A" stop-opacity=".5"/><stop offset="1" stop-color="#E5806A" stop-opacity="0"/></radialGradient>
+    <clipPath id="gr-eyeclip">
+      <path d="M73.5 102 C76.5 94.5 91.5 94.5 95 101.5 C91 107 78 107.5 73.5 102 Z"/>
+      <path d="M126.5 102 C123.5 94.5 108.5 94.5 105 101.5 C109 107 122 107.5 126.5 102 Z"/>
+    </clipPath>
   </defs>
   <g class="rig">
     <g class="legL">
       <rect class="pant" x="78" y="290" width="20" height="86" rx="9"/>
+      <rect class="nostroke" x="78" y="290" width="20" height="86" rx="9" style="fill:url(#gr-shade-arm)"/>
       <path class="shoe-b" d="M91 372 C80 370 68 374 66 382 C64 390 92 391 98 386 C100 380 98 374 91 372 Z"/>
+      <path class="nostroke" d="M74 377 C78 375 84 375 88 377" style="fill:none;stroke:#fff !important;stroke-opacity:.35;stroke-width:2"/>
     </g>
     <g class="legR">
       <rect class="pant" x="102" y="290" width="20" height="86" rx="9"/>
+      <rect class="nostroke" x="102" y="290" width="20" height="86" rx="9" style="fill:url(#gr-shade-arm)"/>
       <path class="shoe-b" d="M109 372 C120 370 132 374 134 382 C136 390 108 391 102 386 C100 380 102 374 109 372 Z"/>
+      <path class="nostroke" d="M112 377 C116 375 122 375 126 377" style="fill:none;stroke:#fff !important;stroke-opacity:.35;stroke-width:2"/>
     </g>
     <g class="body">
-      <path class="chikan hem" d="M60 182 C60 170 78 164 100 164 C122 164 140 170 140 182 L148 316 C120 322 84 320 52 312 Z"/>
-      <rect class="skin" x="89" y="146" width="22" height="24" rx="6"/>
-      <path class="blossom" d="M60 182 C60 172 74 166 88 166 L100 178 L100 266 L57 266 Z"/>
-      <path class="blossom" d="M140 182 C140 172 126 166 112 166 L100 178 L100 266 L143 266 Z"/>
-      <path class="blossom" d="M84 157 L116 157 L114 171 L100 178 L86 171 Z"/>
+      <path class="chikan hem" d="M58 182 C58 170 77 163 100 163 C123 163 142 170 142 182 L150 316 C121 322 83 320 50 312 Z"/>
+      <path class="nostroke" d="M58 182 C58 170 77 163 100 163 C123 163 142 170 142 182 L150 316 C121 322 83 320 50 312 Z" style="fill:url(#gr-shade-x)"/>
+      <rect class="skin" x="87" y="144" width="26" height="26" rx="7" style="fill:url(#gr-neck)"/>
+      <path class="blossom" d="M58 182 C58 172 73 165 88 165 L100 178 L100 268 L55 268 Z"/>
+      <path class="blossom" d="M142 182 C142 172 127 165 112 165 L100 178 L100 268 L145 268 Z"/>
+      <path class="nostroke" d="M58 182 C58 172 73 165 88 165 L100 178 L100 268 L55 268 Z M142 182 C142 172 127 165 112 165 L100 178 L100 268 L145 268 Z" style="fill:url(#gr-shade-x)"/>
+      <path class="blossom" d="M83 156 L117 156 L115 171 L100 178 L85 171 Z"/>
+      <path class="nostroke" d="M84 158 L116 158" style="fill:none;stroke:#fff !important;stroke-opacity:.18;stroke-width:1.4"/>
       <circle class="btn" cx="100" cy="190" r="2.6"/><circle class="btn" cx="100" cy="207" r="2.6"/>
       <circle class="btn" cx="100" cy="224" r="2.6"/><circle class="btn" cx="100" cy="241" r="2.6"/>
       <circle class="btn" cx="100" cy="258" r="2.6"/>
-      <path class="line thin" d="M68 246 L86 244 M114 244 L132 246"/>
+      <path class="line thin" d="M67 246 L86 244 M114 244 L133 246"/>
     </g>
     <g class="armL">
       <g transform="translate(62 180) rotate(9)">
         <rect class="chikan" x="-12" y="-4" width="24" height="94" rx="12"/>
-        <circle class="skin" cx="0" cy="98" r="12"/>
+        <rect class="nostroke" x="-12" y="-4" width="24" height="94" rx="12" style="fill:url(#gr-shade-arm)"/>
+        <circle class="skin" cx="0" cy="98" r="12" style="fill:url(#gr-hand)"/>
       </g>
     </g>
     <g class="armR">
       <g transform="translate(138 180) rotate(-9)">
         <rect class="chikan" x="-12" y="-4" width="24" height="94" rx="12"/>
+        <rect class="nostroke" x="-12" y="-4" width="24" height="94" rx="12" style="fill:url(#gr-shade-arm)"/>
         <rect x="-11" y="80" width="22" height="7" rx="2" fill="#2E2A28"/>
         <circle cx="0" cy="83.5" r="4.6" fill="#D8D4CC"/>
-        <circle class="skin" cx="0" cy="98" r="12"/>
+        <circle class="skin" cx="0" cy="98" r="12" style="fill:url(#gr-hand)"/>
       </g>
     </g>
     <g class="head">
-      <ellipse class="skin" cx="52" cy="110" rx="9" ry="12"/>
-      <ellipse class="skin" cx="148" cy="110" rx="9" ry="12"/>
-      <ellipse class="skin" cx="100" cy="105" rx="50" ry="54"/>
-      <path class="beard" d="M51 110 C52 152 76 168 100 168 C124 168 148 152 149 110 C147 128 139 140 128 146 C118 151 109 152 100 152 C91 152 82 151 72 146 C61 140 53 128 51 110 Z"/>
-      <path class="beard nostroke" d="M85 131 C84 139 87 146 92 150 L108 150 C113 146 116 139 115 131 C110 141 90 141 85 131 Z"/>
-      <path class="hair" d="M51 104 C43 68 64 40 100 38 C136 36 158 62 149 104 C147 92 143 84 137 79 C130 74 120 70 108 69 C92 68 76 73 64 81 C57 87 53 95 51 104 Z"/>
-      <path class="line strand" d="M66 66 C82 52 110 47 134 56 M80 60 C96 54 114 54 128 60"/>
-      <path class="hair" d="M51 102 L51 116 L55.5 115 L55.5 99 Z"/>
-      <path class="hair" d="M149 102 L149 116 L144.5 115 L144.5 99 Z"/>
-      <ellipse class="blush" cx="69" cy="122" rx="8" ry="4.5"/><ellipse class="blush" cx="131" cy="122" rx="8" ry="4.5"/>
-      <path class="line" d="M72 88 C79 83 89 83 96 85" stroke-width="5.5"/>
-      <path class="line" d="M104 85 C111 83 121 83 128 88" stroke-width="5.5"/>
+      <!-- soft shadow the head casts on the neck -->
+      <ellipse class="nostroke" cx="100" cy="157" rx="15" ry="5.5" fill="#5A3322" opacity=".35"/>
+      <!-- ears -->
+      <path class="skin" d="M59.5 101 C51.5 95 46.5 103 48.5 113 C49.5 121 53.5 127 60.5 126 Z" style="fill:url(#gr-ear)"/>
+      <path class="skin" d="M140.5 101 C148.5 95 153.5 103 151.5 113 C150.5 121 146.5 127 139.5 126 Z" style="fill:url(#gr-ear)"/>
+      <path class="nostroke" d="M56.5 105 C52.5 107 52.5 115 56.5 120" style="fill:none;stroke:#8E5638 !important;stroke-width:1.6"/>
+      <path class="nostroke" d="M143.5 105 C147.5 107 147.5 115 143.5 120" style="fill:none;stroke:#8E5638 !important;stroke-width:1.6"/>
+      <!-- broad, full face: wide cheeks, rounded wide jaw -->
+      <path class="skin" d="M100 47 C124 47 141.5 61 144 87 C145.5 103 144 117 140 129 C134 147 119 161 100 161 C81 161 66 147 60 129 C56 117 54.5 103 56 87 C58.5 61 76 47 100 47 Z" style="fill:url(#gr-skin)"/>
+      <!-- cheek fullness + forehead sheen -->
+      <ellipse class="nostroke" cx="73" cy="117" rx="8" ry="5.5" fill="url(#gr-blush)"/>
+      <ellipse class="nostroke" cx="127" cy="117" rx="8" ry="5.5" fill="url(#gr-blush)"/>
+      <ellipse class="nostroke" cx="73" cy="114" rx="9" ry="5" fill="url(#gr-glow)"/>
+      <ellipse class="nostroke" cx="127" cy="114" rx="9" ry="5" fill="url(#gr-glow)"/>
+      <ellipse class="nostroke" cx="86" cy="71" rx="20" ry="8" fill="url(#gr-glow)"/>
+      <!-- short trimmed beard: low cheek line, denser on the chin -->
+      <path class="nostroke" d="M57 104 C56 116 57.5 124 61 130.5 C67 148 82 161.5 100 161.5 C118 161.5 133 148 139 130.5 C142.5 124 144 116 143 104 L140 105 C140 117 136.5 126.5 129.5 133.5 C125 139.5 119 140.5 114.5 140 C111 145.5 105 147.5 100 147.5 C95 147.5 89 145.5 85.5 140 C81 140 75 139 70.5 133.5 C63.5 126.5 60 117 60 105 Z" style="fill:url(#gr-beard)"/>
+      <path class="nostroke" d="M58.5 120 C60 129 63 136 67 142 C73.5 153 86 160.5 100 160.5 C114 160.5 126.5 153 133 142 C137 136 140 129 141.5 120 C138.5 129 133.5 136 126.5 139 C122 142 117 142 114 141 C110 147 105 149 100 149 C95 149 90 147 86 141 C83 142 78 141.5 73.5 139 C66.5 136 61.5 129 58.5 120 Z" fill="url(#gr-stubble)" opacity=".32"/>
+      <!-- thin moustache that runs down to the chin -->
+      <path class="nostroke" d="M85 135 C88.5 130.5 95 129.6 100 131.4 C105 129.6 111.5 130.5 115 135 C111.5 134.2 105.5 133.8 100 134.4 C94.5 133.8 88.5 134.2 85 135 Z" fill="#2A1C13" opacity=".62"/>
+      <path class="nostroke" d="M84.5 134.5 C83.5 137 84 139 85.5 140.5 L87.5 139.6 C86.6 138 86.4 136.4 86.8 134.6 Z M115.5 134.5 C116.5 137 116 139 114.5 140.5 L112.5 139.6 C113.4 138 113.6 136.4 113.2 134.6 Z" fill="#2A1C13" opacity=".45"/>
+      <!-- hair: tapered short sides, volume on top, side part on his right, swept up and across -->
+      <path class="nostroke" d="M57.5 104 C56 95 56.5 86 60 79 L63.5 80 C62 87 61.5 95 61.8 104 Z" style="fill:url(#gr-fade)"/>
+      <path class="nostroke" d="M142.5 104 C144 95 143.5 86 140.5 77 L137 79 C138.5 87 138.5 95 138.2 104 Z" style="fill:url(#gr-fade)"/>
+      <path class="hair" d="M57 82 C53.5 68 58 53 69 45.5 C72.5 41.5 76 38.5 81 37.5 C85 35 92 33.5 98 35 C103 31.5 111 31 117 33 C123 31 132 32.5 137 36 C144 37.5 150 42.5 152 49 C155.5 53 156 60 153.5 66 C152.5 71 150 75 145.5 77.5 C143.5 72.5 140 68 135 65 C126 59.5 113 57.5 100 58.5 C87 59.5 75 63.5 66.5 70 C61.5 73.5 59 77.5 57 82 Z" style="fill:url(#gr-hair)"/>
+      <path class="nostroke" d="M69 66 C70.5 57 75 49.5 82 44" style="fill:none;stroke:#6A5446 !important;stroke-width:1.5"/>
+      <path class="nostroke" d="M78 60.5 C92 50.5 114 46 134 51.5 M88 47 C102 40.5 122 39.5 140 45 M84 53 C100 44.5 122 42 142 49" style="fill:none;stroke:#6E5747 !important;stroke-width:1.2;stroke-opacity:.85"/>
+      <path class="nostroke" d="M74 64.5 C88 57 110 54 132 58.5" style="fill:none;stroke:#8C7360 !important;stroke-width:2.2;stroke-opacity:.6"/>
+      <!-- brows: dark, fairly straight -->
+      <path class="nostroke" d="M68.5 89.5 C73 83.5 85 81 95.5 83.5 L95 87.8 C85 86 75.5 87.6 70 92 Z" fill="#1E1511"/>
+      <path class="nostroke" d="M131.5 89.5 C127 83.5 115 81 104.5 83.5 L105 87.8 C115 86 124.5 87.6 130 92 Z" fill="#1E1511"/>
+      <!-- smiling eyes -->
       <g class="eyes">
-        <ellipse class="white" cx="85" cy="103" rx="9" ry="8.5"/>
-        <ellipse class="white" cx="115" cy="103" rx="9" ry="8.5"/>
-        <g class="pupils">
-          <circle class="pupil" cx="86" cy="104" r="5.4"/><circle class="shine" cx="88" cy="102" r="1.8"/>
-          <circle class="pupil" cx="116" cy="104" r="5.4"/><circle class="shine" cx="118" cy="102" r="1.8"/>
+        <path class="nostroke" d="M73.5 102 C76.5 94.5 91.5 94.5 95 101.5 C91 107 78 107.5 73.5 102 Z" fill="#FBF6F0"/>
+        <path class="nostroke" d="M126.5 102 C123.5 94.5 108.5 94.5 105 101.5 C109 107 122 107.5 126.5 102 Z" fill="#FBF6F0"/>
+        <g clip-path="url(#gr-eyeclip)">
+          <g class="pupils">
+            <circle class="nostroke" cx="85" cy="101" r="5.2" fill="#4A2C1C"/><circle class="nostroke" cx="85" cy="101" r="2.7" fill="#140C08"/>
+            <circle class="nostroke" cx="87" cy="99" r="1.6" fill="#fff"/>
+            <circle class="nostroke" cx="115" cy="101" r="5.2" fill="#4A2C1C"/><circle class="nostroke" cx="115" cy="101" r="2.7" fill="#140C08"/>
+            <circle class="nostroke" cx="117" cy="99" r="1.6" fill="#fff"/>
+          </g>
         </g>
-        <path class="line thin" d="M77 110 C82 113 89 113 93 110 M107 110 C111 113 118 113 123 110"/>
+        <path class="nostroke" d="M73 102.5 C76.5 94 92 94 95.5 101.5 M127 102.5 C123.5 94 108 94 104.5 101.5" style="fill:none;stroke:#1E1511 !important;stroke-width:2.4"/>
+        <path class="nostroke" d="M76 108.5 C81 111.5 88 111.5 93 108.5 M124 108.5 C119 111.5 112 111.5 107 108.5" style="fill:none;stroke:#9E6445 !important;stroke-width:1.2;stroke-opacity:.55"/>
       </g>
-      <rect class="glass" x="71" y="93" width="28" height="20" rx="6"/>
-      <rect class="glass" x="101" y="93" width="28" height="20" rx="6"/>
-      <path class="gframe" d="M99 101 C100 99 100 99 101 101 M71 99 L56 104 M129 99 L144 104"/>
-      <path class="line" d="M100 109 C96 117 97 121 104 120"/>
-      <path class="beard" d="M83 129 C91 123 109 123 117 129 C109 127 91 127 83 129 Z"/>
-      <path class="mouth" d="M87 132 C93 141 107 141 113 132 C107 135 93 135 87 132 Z"/>
-      <path class="teeth" d="M90 133.4 C96 136.4 104 136.4 110 133.4 C104 134.6 96 134.6 90 133.4 Z"/>
+      <!-- nose: rounded tip, soft shadow under it -->
+      <path class="nostroke" d="M97.5 100 C96.5 109 94.5 115 93.5 119.5" style="fill:none;stroke:#B47753 !important;stroke-width:1.6;stroke-opacity:.8"/>
+      <ellipse class="nostroke" cx="100" cy="125.5" rx="8.5" ry="2.6" fill="#8F5536" opacity=".35"/>
+      <path class="nostroke" d="M92.5 120 C91.5 124.5 95 126 97.5 124.5 C99 126.5 101 126.5 102.5 124.5 C105 126 108.5 124.5 107.5 120" style="fill:none;stroke:#8A5032 !important;stroke-width:1.8"/>
+      <ellipse class="nostroke" cx="101.5" cy="117.5" rx="4" ry="3" fill="url(#gr-glow)"/>
+      <!-- rimless glasses: lenses with no frame, thin silver bridge and temples -->
+      <path class="nostroke" d="M69.5 92 L98.5 92 C99.6 92 100 93 99.8 94.4 L98.6 106 C98 110.6 95 113.2 90.6 113.2 L77.6 113.2 C73.2 113.2 70.6 110.6 70 106.2 L68.8 94.4 C68.6 93 69 92 69.5 92 Z" style="fill:url(#gr-lens);stroke:#F4F1EC !important;stroke-opacity:.55;stroke-width:.9"/>
+      <path class="nostroke" d="M130.5 92 L101.5 92 C100.4 92 100 93 100.2 94.4 L101.4 106 C102 110.6 105 113.2 109.4 113.2 L122.4 113.2 C126.8 113.2 129.4 110.6 130 106.2 L131.2 94.4 C131.4 93 131 92 130.5 92 Z" style="fill:url(#gr-lens);stroke:#F4F1EC !important;stroke-opacity:.55;stroke-width:.9"/>
+      <path class="nostroke" d="M73 96 L80 96 L74.5 108 Z M104 96 L111 96 L105.5 108 Z" fill="#fff" opacity=".2"/>
+      <path class="nostroke" d="M98.6 94.6 C99.4 91.6 100.6 91.6 101.4 94.6" style="fill:none;stroke:#C9CCD2 !important;stroke-width:1.7"/>
+      <path class="nostroke" d="M69 94 L58.5 99 M131 94 L141.5 99" style="fill:none;stroke:#B9BDC4 !important;stroke-width:1.6"/>
+      <rect class="nostroke" x="67.4" y="92.2" width="3.2" height="3" rx=".8" fill="#D5D8DE"/>
+      <rect class="nostroke" x="129.4" y="92.2" width="3.2" height="3" rx=".8" fill="#D5D8DE"/>
+      <!-- wide, closed smile -->
+      <path class="nostroke" d="M91 139.6 C96 142.4 104 142.4 109 139.6 C104 141.4 96 141.4 91 139.6 Z" fill="#A86450"/>
+      <path class="nostroke" d="M85.5 135.8 C92 141.4 108 141.4 114.5 135.8" style="fill:none;stroke:#4A2418 !important;stroke-width:2"/>
+      <path class="nostroke" d="M85.5 135.8 C84.4 135.2 83.6 134.2 83.4 133 M114.5 135.8 C115.6 135.2 116.4 134.2 116.6 133" style="fill:none;stroke:#4A2418 !important;stroke-width:1.5"/>
     </g>
   </g>
 </svg>
