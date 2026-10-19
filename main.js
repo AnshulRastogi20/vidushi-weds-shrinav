@@ -63,7 +63,7 @@
     });
 
     $("#couple-photo").src = C.couplePhoto;
-    $("#deck").innerHTML = C.moments.map((src) => `<div class="ph"><img src="${src}" alt="" decoding="async"></div>`).join("");
+    $("#deck").innerHTML = C.moments.map((src) => `<figure class="ph"><img src="${src}" alt="" decoding="async"></figure>`).join("");
     if (!C.moments.length) $("#moments").hidden = true;
     $$(".arch img, .ph img").forEach((img) => img.addEventListener("error", () => img.parentElement.classList.add("is-empty"), { once: true }));
 
@@ -365,20 +365,23 @@
     gsap.from(portrait, { autoAlpha: 0, y: 60, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: portrait, start: "top 85%" } });
     gsap.fromTo("#couple-photo", { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: portrait, start: "top bottom", end: "bottom top", scrub: true } });
 
+    // the moments: a reel of arches that slides across as you scroll; the one in the middle comes forward
     const prints = $$(".ph");
     if (prints.length) {
-      const vw = () => Math.min(innerWidth, 900), mid = (prints.length - 1) / 2;
-      const scatterAt = [[-0.55, -0.42, -24], [0.6, -0.3, 18], [-0.62, 0.38, 14], [0.55, 0.45, -20], [0.02, 0.7, 8]];
-      prints.forEach((p, i) => {
-        const [sx, sy, sr] = scatterAt[i % scatterAt.length];
-        gsap.set(p, { x: () => sx * vw(), y: () => sy * innerHeight, rotation: sr, scale: 0.78, zIndex: 10 - Math.round(Math.abs(i - mid) * 2) });
-      });
-      const mtl = gsap.timeline({ scrollTrigger: { trigger: "#moments", start: "top top", end: "+=140%", pin: ".stage", scrub: 0.8, invalidateOnRefresh: true } });
-      prints.forEach((p, i) => {
-        const off = i - mid;
-        mtl.to(p, { x: () => off * 0.17 * Math.min(vw(), 560), y: () => Math.abs(off) * 0.012 * innerHeight, rotation: off * 7, scale: 1, ease: "power2.out", duration: 1 }, i * 0.14);
-      });
-      mtl.fromTo(".moments-title", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.1);
+      const deck = $("#deck"), reel = { p: 0 };
+      const render = () => {
+        const n = prints.length, step = prints[0].offsetWidth + parseFloat(getComputedStyle(deck).columnGap || 0), pos = reel.p * (n - 1);
+        gsap.set(deck, { x: -pos * step });
+        prints.forEach((el, i) => {
+          const d = i - pos, ad = Math.min(Math.abs(d), 1);
+          gsap.set(el, { scale: 1 - 0.16 * ad, rotationY: gsap.utils.clamp(-30, 30, -d * 22), opacity: 1 - 0.5 * ad, z: -120 * ad });
+          gsap.set(el.firstElementChild, { xPercent: gsap.utils.clamp(-6, 6, d * 6) });
+        });
+      };
+      gsap.timeline({ scrollTrigger: { trigger: "#moments", start: "top top", end: () => "+=" + innerHeight * (0.35 + 0.5 * (prints.length - 1)), pin: ".stage", scrub: 0.6, invalidateOnRefresh: true, onRefresh: render } })
+        .fromTo(".moments-title", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.15 }, 0)
+        .fromTo(reel, { p: 0 }, { p: 1, duration: 1, ease: "power1.inOut", onUpdate: render, immediateRender: false }, 0.1);
+      render();
     }
     buildSky();
     gsap.from(".ornament", { autoAlpha: 0, scale: 0.7, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".ornament", start: "top 90%" } });
@@ -456,7 +459,7 @@
   gsap.ticker.add((time, dtMs) => {
     if (!auto.on || performance.now() < auto.idleUntil || !unlocked) return;
     const max = document.documentElement.scrollHeight - innerHeight, now = scrollNow();
-    if (now >= max - 1) { setAuto(false); return; }
+    if (now >= max - 1) return; // at the end it just waits; scroll back up and it carries on
     if (auto.y < 0 || Math.abs(now - auto.y) > 4) auto.y = now;
     // a little quicker while a stage holds the screen, so the clips play at about their real speed
     const onStage = pins.some(({ st }) => now >= st.start && now < st.end);
@@ -466,7 +469,7 @@
   });
 
   /* ---- one script for the whole page: every movement is tied to a scroll position, so it runs backwards too ---- */
-  const STAGE_SCREENS = { engagement: 1.3, haldi: 1.25, wedding: 2.4 };
+  const STAGE_SCREENS = { engagement: 1.3, haldi: 1.25, wedding: 1.0 };
   const pins = [];
   let master = null, builtFor = "";
   function buildMaster() {
@@ -499,8 +502,8 @@
       const fin = gsap.timeline({ paused: true });
       const field = dustField([body("groom"), body("bride")], [arch, arch], [GROOM_LIGHT, BRIDE_LIGHT], innerWidth < 600 ? 80 : 130);
       fin.add(p.act.paused(false), 0)
-        .fromTo(field, { p: 0 }, { p: 1, duration: 2.6, ease: "none", immediateRender: false, onUpdate: field.render }, 1.0)
-        .fromTo(photo, { autoAlpha: 0, filter: "brightness(1.8) blur(14px)" }, { autoAlpha: 1, filter: "brightness(1) blur(0px)", duration: 1.6, immediateRender: false }, 2.4);
+        .fromTo(field, { p: 0 }, { p: 1, duration: 1.3, ease: "none", immediateRender: false, onUpdate: field.render }, 0.3)
+        .fromTo(photo, { autoAlpha: 0, filter: "brightness(1.6) blur(10px)" }, { autoAlpha: 1, filter: "brightness(1) blur(0px)", duration: 0.8, immediateRender: false }, 0.9);
       put(fin, ph.start, ph.end);
     }
     master = tl;
@@ -523,7 +526,7 @@
       const name = el.dataset.scene;
       pins.push({ name, st: ScrollTrigger.create({ trigger: el, start: "top top", end: () => "+=" + innerHeight * STAGE_SCREENS[name], pin: true, pinSpacing: true }) });
     });
-    pins.photo = ScrollTrigger.create({ trigger: "#couple", start: "top top", end: () => "+=" + innerHeight * 1.3, pin: true, pinSpacing: true });
+    pins.photo = ScrollTrigger.create({ trigger: "#couple", start: "top top", end: () => "+=" + innerHeight * 0.6, pin: true, pinSpacing: true });
   }
 
   /* ================= countdown ================= */

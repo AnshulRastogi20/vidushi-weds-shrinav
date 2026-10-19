@@ -21,14 +21,12 @@
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
     "haldi-act": { from: "haldi-a", to: "haldi-b" },
-    jaimala: { from: "jai-a", to: "jai-b" },
-    phera: { from: "phera-a", to: "phera-a" },
   };
-  const STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-b", "phera-a", "finale"];
+  const STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-b", "finale"];
   const PLATES = ["engagement", "haldi", "wedding"];
   // where the havan fire is, so it can flicker (fractions of the frame: x0, y0, x1, y1)
   const FIRE = [0.4, 0.6, 0.6, 0.82];
-  const FIRE_IN = { "jai-a": FIRE, "jai-b": FIRE, "phera-a": FIRE };
+  const FIRE_IN = { "jai-a": FIRE, "jai-b": FIRE };
 
   /* ---------- GL ---------- */
   const NOISE = `
@@ -72,16 +70,15 @@
       vec4 B = mixv > 0.0 ? samp(tB, life(frameUV(p, spreadB), stillB, fireB), sbsB) : vec4(0.0);
       vec2 q = (p - rect.xy) / rect.zw;
       vec3 gold = vec3(1.0, 0.8, 0.42);
-      // one pose turns into the next through a gold-edged shimmer
-      float n = fbm(q * vec2(7.0, 12.0)), t = mixv * 1.16 - 0.08;
-      vec4 c = mix(B, A, smoothstep(t - 0.02, t + 0.02, n));
-      float live = step(0.001, mixv) * step(mixv, 0.999);
-      c.rgb = mix(c.rgb, gold * c.a * 1.15, (1.0 - smoothstep(0.0, 0.05, abs(n - t))) * live * 0.85);
+      // one pose melts into the next like a film dissolve, with a warm glow at the crossing
+      float k = smoothstep(0.0, 1.0, mixv);
+      vec4 c = mix(A, B, k);
+      c.rgb += gold * sin(3.14159 * mixv) * 0.28 * c.a;
       // and they turn to gold dust all at once
       // fine grain, rising from the feet up, so it reads as gold dust rather than holes
-      float n2 = fbm(q * vec2(26.0, 46.0) + 3.7) * 0.7 + (1.0 - q.y) * 0.3, td = dis * 1.16 - 0.08;
-      float keep = smoothstep(td - 0.01, td + 0.01, n2);
-      float rim = (1.0 - smoothstep(0.0, 0.05, abs(n2 - td))) * step(0.001, dis) * step(dis, 0.999);
+      float n2 = fbm(q * vec2(70.0, 124.0) + 3.7) * 0.6 + (1.0 - q.y) * 0.4, td = dis * 1.16 - 0.08;
+      float keep = smoothstep(td - 0.008, td + 0.008, n2);
+      float rim = (1.0 - smoothstep(0.0, 0.03, abs(n2 - td))) * step(0.001, dis) * step(dis, 0.999);
       c.rgb = mix(c.rgb, gold * c.a * 1.15, rim * 0.9);
       c *= keep;
       c.rgb += gold * glow * c.a * 0.45;
@@ -212,14 +209,23 @@
       return { tex: stills[k], sbs: 0, still: 1, fire: FIRE_IN[k], boxes: stillBoxes[k], fallback: [spec.from, spec.to] };
     }
     const v = c.v, fps = c.meta.fps;
-    if (spec.loop && now) { if (v.paused) v.play().catch(() => {}); c.dirty = true; }
+    if (spec.loop) { if (v.playbackRate !== 1) v.playbackRate = 1; if (v.paused) v.play().catch(() => {}); c.dirty = true; }
     else {
-      if (!v.paused) v.pause();
-      const t = (clipFrame(c, f) + 0.5) / fps;
-      if (!v.seeking && Math.abs(v.currentTime - t) > 0.5 / fps) v.currentTime = t;
+      // scrolling forward the video simply plays (smooth, the browser's own decoding), a little faster or slower
+      // to keep up with the scroll; it only jumps when the scroll is far ahead or going backwards
+      const t = (f * (c.meta.frames - 1) + 0.5) / fps, ahead = t - v.currentTime;
+      if (ahead > 0.6 / fps && ahead < 1.5) {
+        const rate = Math.min(4, Math.max(0.3, ahead * 2.5));
+        if (Math.abs(v.playbackRate - rate) > 0.1) v.playbackRate = rate;
+        if (v.paused) v.play().catch(() => {});
+      } else {
+        if (!v.paused) v.pause();
+        if (Math.abs(ahead) > 0.6 / fps && !v.seeking && now - (c.lastSeek || 0) > 0.06) { v.currentTime = t; c.lastSeek = now; }
+      }
+      if (!v.paused) c.dirty = true;
     }
     if (c.dirty && v.readyState >= 2) { upload(c.tex, v, false); c.dirty = false; }
-    const fi = spec.loop ? Math.floor((v.currentTime * fps) % c.meta.frames) : clipFrame(c, f);
+    const fi = Math.min(c.meta.frames - 1, Math.floor((v.currentTime * fps) % c.meta.frames));
     return { tex: c.tex, sbs: 1, still: 0, fire: null, boxes: c.meta.boxes[fi] };
   }
   let drawnA = null, drawnB = null;
@@ -246,12 +252,14 @@
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
     // the two of them
-    let A = resolve(S.a, S.af, true), B = S.mix > 0 ? resolve(S.b, S.bf, true) : null, mix = S.mix;
+    let A = resolve(S.a, S.af, time), B = S.mix > 0 ? resolve(S.b, S.bf, time) : null, mix = S.mix;
     // a clip whose video isn't here yet: shimmer between its two key poses instead
     if (A && A.fallback && !B && !CLIPS[S.a].loop) {
       const [f0, f1] = A.fallback;
       A = resolve(f0); B = resolve(f1); mix = gsap.utils.clamp(0, 1, (S.af - 0.3) / 0.4);
     }
+    // a video that isn't on screen this frame stops decoding
+    Object.values(clips).forEach((c) => { if (c.v && !c.v.paused && c.name !== S.a && !(S.mix > 0 && c.name === S.b)) c.v.pause(); });
     drawnA = A; drawnB = B && mix > 0.5 ? B : null;
     if (!A || S.alpha <= 0.001 || S.dis >= 0.999) return;
     set(castP, (u) => {
@@ -343,13 +351,11 @@
       setIn(t.approach, "wedding", 1.1, 2.9);
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
-      // the garlands, then the sash is tied and they go once round the fire
-      caption(t.act, 0, 6.2, "जयमाला", "The garland exchange", "wedding");
-      play(t.act, "jaimala", 0.3, 6);
-      morph(t.act, "phera-a", 6.5, 1.1);
-      caption(t.act, 7.2, 14.6, "फेरे", "Around the sacred fire", "wedding");
-      play(t.act, "phera", 7.7, 7);
-      hold(t.act, 15);
+      // the garland exchange (a pose change until its clip is made)
+      caption(t.act, 0, 6.4, "जयमाला", "The garland exchange", "wedding");
+      morph(t.act, "jai-b", 2.2, 1.8);
+      t.act.to(S, { zoom: L.cover * 1.04, duration: 7, ease: "none" }, 0);
+      hold(t.act, 7);
       // from the mandap, hand in hand, toward the photograph
       setOut(t.leave, 0.4, 2.6);
       morph(t.leave, "finale", 0, 2);
@@ -403,7 +409,7 @@
     photo() {
       const approach = gsap.timeline({ paused: true }), act = gsap.timeline({ paused: true });
       approach.to(S, { glow: 0.25, duration: 1 }, 0);
-      act.to(S, { glow: 0.9, duration: 1 }, 0).to(S, { dis: 1, duration: 2.2, ease: "power1.in" }, 1.0).to(S, { glow: 0, duration: 0.4 }, 3.0).to({}, { duration: 1.2 }, 3.4);
+      act.to(S, { glow: 0.9, duration: 0.4 }, 0).to(S, { dis: 1, duration: 1.2, ease: "power1.in" }, 0.3).to(S, { glow: 0, duration: 0.3 }, 1.3).to({}, { duration: 0.6 }, 1.6);
       return { approach, act };
     },
     _state: S,

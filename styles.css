@@ -254,22 +254,25 @@ section { position: relative; }
   -webkit-mask: url("assets/art/monogram.svg") center / contain no-repeat; mask: url("assets/art/monogram.svg") center / contain no-repeat;
 }
 
-/* ---------- moments (pinned) ---------- */
-.moments { position: relative; }
-.stage { position: relative; height: 100vh; height: 100svh; display: grid; place-items: center; overflow: hidden; }
+/* ---------- moments (pinned): a reel of arches, the same shape as the portrait above ---------- */
+.moments { position: relative; z-index: -2; }
+.stage { position: relative; height: 100vh; height: 100svh; display: grid; place-items: center; overflow: hidden; perspective: 1200px; }
 .moments-title {
   position: absolute; top: 9vh; top: 9svh; left: 0; right: 0; z-index: 2; text-align: center;
   font-family: var(--script); font-weight: 700; font-size: clamp(30px, 8vw, 48px); line-height: 1;
 }
-.deck { position: relative; width: min(60vw, 300px); aspect-ratio: 4 / 5; margin-top: 8vh; margin-top: 8svh; }
-.ph {
-  position: absolute; inset: 0; padding: 9px 9px 34px; background: #FBF7EE;
-  box-shadow: 0 18px 40px rgba(20, 12, 30, .35), 0 2px 6px rgba(0,0,0,.15);
-  will-change: transform;
+.deck {
+  --w: min(70vw, 330px);
+  display: flex; align-items: center; gap: min(7vw, 44px); width: 100vw; margin-top: 7vh; margin-top: 7svh;
+  padding-inline: calc(50vw - var(--w) / 2); transform-style: preserve-3d; will-change: transform;
 }
-.ph img { width: 100%; height: 100%; object-fit: cover; }
-.ph.is-empty { background: #FBF7EE; }
-.ph.is-empty::after { inset: 32% 30% 40%; background: #2A1D1A; }
+.ph {
+  position: relative; flex: none; width: var(--w); aspect-ratio: 3 / 4.1; overflow: hidden; margin: 0;
+  border-radius: 999px 999px 6px 6px; background: var(--paper-3);
+  box-shadow: 0 0 0 6px var(--sky-top), 0 0 0 7px var(--line), 0 24px 50px rgba(10, 0, 4, .45);
+  will-change: transform, opacity;
+}
+.ph img { position: absolute; left: -10%; top: 0; width: 120%; max-width: none; height: 100%; object-fit: cover; }
 
 /* ---------- ceremony ---------- */
 .event { display: flex; flex-direction: column; align-items: center; padding: 22vh 22px 12vh; padding: 22svh 22px 12svh; text-align: center; }
