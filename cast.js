@@ -14,6 +14,8 @@
   if (!gl) { dispatchEvent(new Event("world:fail")); return; }
 
   const BASE = "/assets/cast/";
+  // browsers keep /assets for a week: bump this whenever a clip, still or plate is re-exported, so everyone gets the new one
+  const V = "?v=20261019c";
   // in the order they load. A clip falls back to its first and last key pose until (or unless) its video is ready
   const CLIPS = {
     meet: { from: "park", to: "meet" },
@@ -154,11 +156,11 @@
   let stillBoxes = {};
   const img = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
   async function loadStills() {
-    stillBoxes = (await (await fetch(BASE + "still/meta.json")).json()).boxes;
+    stillBoxes = (await (await fetch(BASE + "still/meta.json" + V)).json()).boxes;
     await Promise.all([
-      ...STILLS.map(async (n) => { const t = texture(); upload(t, await img(`${BASE}still/${n}.webp`), true); stills[n] = t; }),
+      ...STILLS.map(async (n) => { const t = texture(); upload(t, await img(`${BASE}still/${n}.webp${V}`), true); stills[n] = t; }),
       ...PLATES.map(async (n) => {
-        const [c, l, a] = await Promise.all(["", "-lines", "-amb"].map((k) => img(`${BASE}plate/${n}${k}.webp`)));
+        const [c, l, a] = await Promise.all(["", "-lines", "-amb"].map((k) => img(`${BASE}plate/${n}${k}.webp${V}`)));
         const tc = texture(), tl = texture(), ta = texture(); upload(tc, c, false); upload(tl, l, false); upload(ta, a, false);
         plates[n] = { c: tc, l: tl, a: ta };
       }),
@@ -169,7 +171,7 @@
     if (clips[name]) return clips[name].loading;
     const c = (clips[name] = { name, ready: false, tex: texture(), dirty: false, meta: null });
     c.loading = (async () => {
-      const [meta, blob] = await Promise.all([fetch(`${BASE}${name}.json`).then((r) => r.json()), fetch(`${BASE}${name}.mp4`).then((r) => r.blob())]);
+      const [meta, blob] = await Promise.all([fetch(`${BASE}${name}.json${V}`).then((r) => r.json()), fetch(`${BASE}${name}.mp4${V}`).then((r) => r.blob())]);
       const v = document.createElement("video");
       Object.assign(v, { muted: true, playsInline: true, preload: "auto", loop: !!CLIPS[name].loop, crossOrigin: "anonymous" });
       v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
@@ -236,11 +238,11 @@
     const fi = Math.min(c.meta.frames - 1, Math.floor((v.currentTime * fps) % c.meta.frames));
     return { tex: c.tex, sbs: 1, still: 0, fire: null, boxes: c.meta.boxes[fi] };
   }
-  // where the gap between her (left) and him (right) is in this frame, as a fraction of the frame width
+  // where to split her (left) from him (right) in this frame: the middle of the empty strip between them,
+  // measured from the matte by tools/ai/cast_cuts.py (frames where they touch are never split: see the scenes)
   function gapOf(L) {
     const b = L && L.boxes;
-    if (!b || !b.bride || !b.groom || b.bride[2] <= 0 || b.groom[2] <= 0) return 0.5;
-    return Math.min(0.9, Math.max(0.1, (b.bride[0] + b.bride[2] + b.groom[0]) / 2));
+    return b && typeof b.cut === "number" ? b.cut : 0.5;
   }
   let drawnA = null, drawnB = null;
   const NOFIRE = [0, 0, 0, 0];
@@ -340,7 +342,8 @@
       // they walk in from the sides as the garden sketches itself in; he opens the ring box
       setIn(t.approach, "engagement", 1.1, 2.9);
       play(t.approach, "eng-approach", 0, 4, "sine.inOut");
-      t.approach.fromTo(S, { sa: 1 }, { sa: 0, duration: 1.8, ease: "sine.inOut", immediateRender: false }, 0)
+      // back together before his hand with the box reaches across to her (18% into the clip)
+      t.approach.fromTo(S, { sa: 1 }, { sa: 0, duration: 0.95, ease: "sine.inOut", immediateRender: false }, 0)
         .to(S, { zoom: L.cover, duration: 3.6, ease: "power2.inOut" }, 0.3);
       // the rings
       caption(t.act, 0, 8.8, "सगाई", "The ring ceremony", "engagement");
