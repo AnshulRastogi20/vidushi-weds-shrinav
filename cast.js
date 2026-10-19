@@ -47,14 +47,15 @@
   const CAST = `precision mediump float;
     uniform vec2 res; uniform float dpr, time;
     uniform sampler2D tA, tB; uniform float sbsA, sbsB, stillA, stillB, spreadA, spreadB, mixv, dis, glow, alpha;
-    uniform vec4 rect, fireA, fireB;
+    uniform vec4 rect, fireA, fireB; uniform float cutA, cutB;
     ${NOISE}
-    // pushed apart, each half of the frame shows only its own person (she is on the left, he on the right)
-    vec2 frameUV(vec2 p, float spread) {
-      float cx = rect.x + rect.z * 0.5; bool left = p.x < cx;
+    // pushed apart, each side shows only its own person (she is on the left, he on the right); the split runs
+    // through the gap between them in this very frame, so a hand reaching across the middle is never sliced off
+    vec2 frameUV(vec2 p, float spread, float cut) {
+      float cx = rect.x + rect.z * cut; bool left = p.x < cx;
       p.x += left ? spread : -spread;
       vec2 uv = (p - rect.xy) / rect.zw;
-      if (spread > 0.5 && (left ? uv.x > 0.5 : uv.x < 0.5)) uv.x = -1.0;
+      if (spread > 0.5 && (left ? uv.x > cut : uv.x < cut)) uv.x = -1.0;
       return uv;
     }
     vec2 life(vec2 uv, float still, vec4 fire) {
@@ -70,8 +71,8 @@
     }
     void main() {
       vec2 p = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / dpr;
-      vec4 A = samp(tA, life(frameUV(p, spreadA), stillA, fireA), sbsA);
-      vec4 B = mixv > 0.0 ? samp(tB, life(frameUV(p, spreadB), stillB, fireB), sbsB) : vec4(0.0);
+      vec4 A = samp(tA, life(frameUV(p, spreadA, cutA), stillA, fireA), sbsA);
+      vec4 B = mixv > 0.0 ? samp(tB, life(frameUV(p, spreadB, cutB), stillB, fireB), sbsB) : vec4(0.0);
       vec2 q = (p - rect.xy) / rect.zw;
       vec3 gold = vec3(1.0, 0.8, 0.42);
       // one pose melts into the next like a film dissolve, with a warm glow at the crossing
@@ -235,6 +236,12 @@
     const fi = Math.min(c.meta.frames - 1, Math.floor((v.currentTime * fps) % c.meta.frames));
     return { tex: c.tex, sbs: 1, still: 0, fire: null, boxes: c.meta.boxes[fi] };
   }
+  // where the gap between her (left) and him (right) is in this frame, as a fraction of the frame width
+  function gapOf(L) {
+    const b = L && L.boxes;
+    if (!b || !b.bride || !b.groom || b.bride[2] <= 0 || b.groom[2] <= 0) return 0.5;
+    return Math.min(0.9, Math.max(0.1, (b.bride[0] + b.bride[2] + b.groom[0]) / 2));
+  }
   let drawnA = null, drawnB = null;
   const NOFIRE = [0, 0, 0, 0];
   function render(time) {
@@ -274,6 +281,7 @@
       gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, (B || A).tex); gl.uniform1i(u.tB, 1);
       gl.uniform1f(u.sbsA, A.sbs); gl.uniform1f(u.sbsB, (B || A).sbs); gl.uniform1f(u.stillA, A.still); gl.uniform1f(u.stillB, (B || A).still);
       gl.uniform1f(u.spreadA, S.sa * L.spread); gl.uniform1f(u.spreadB, S.sb * L.spread);
+      gl.uniform1f(u.cutA, gapOf(A)); gl.uniform1f(u.cutB, gapOf(B || A));
       gl.uniform1f(u.mixv, B ? mix : 0); gl.uniform1f(u.dis, S.dis); gl.uniform1f(u.glow, S.glow); gl.uniform1f(u.alpha, S.alpha);
       gl.uniform4fv(u.fireA, A.fire || NOFIRE); gl.uniform4fv(u.fireB, (B && B.fire) || NOFIRE);
     });
@@ -331,8 +339,8 @@
       const t = timelines();
       // they walk in from the sides as the garden sketches itself in; he opens the ring box
       setIn(t.approach, "engagement", 1.1, 2.9);
-      play(t.approach, "eng-approach", 0, 4, "power1.inOut");
-      t.approach.fromTo(S, { sa: 1 }, { sa: 0, duration: 1.6, ease: "power1.inOut", immediateRender: false }, 0)
+      play(t.approach, "eng-approach", 0, 4, "sine.inOut");
+      t.approach.fromTo(S, { sa: 1 }, { sa: 0, duration: 1.8, ease: "sine.inOut", immediateRender: false }, 0)
         .to(S, { zoom: L.cover, duration: 3.6, ease: "power2.inOut" }, 0.3);
       // the rings
       caption(t.act, 0, 8.8, "सगाई", "The ring ceremony", "engagement");

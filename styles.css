@@ -379,13 +379,11 @@ section { position: relative; }
 .ev-reply .ev-name { font-family: var(--caps); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
 .ev-reply .choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* R.S.V.P. and W.B.C.F., side by side like the printed card */
-.sign { display: grid; grid-template-columns: repeat(2, minmax(0, auto)); justify-content: center; gap: 0 clamp(22px, 8vw, 72px); margin-top: 10px; width: min(92vw, 560px); }
-.sign-col { text-align: left; }
-.sign-col + .sign-col { text-align: right; }
-.sign-h { font-family: var(--caps); font-weight: 700; font-size: 13px; letter-spacing: .22em; color: var(--line); margin-bottom: 8px; }
-.sign ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: clamp(14px, 3.9vw, 17px); line-height: 1.35; }
-@media (max-width: 360px) { .sign { grid-template-columns: 1fr; gap: 18px; } .sign-col, .sign-col + .sign-col { text-align: center; } }
+/* the closing names, all centred: who to reply to, then with best compliments from, then the family */
+.sign { display: grid; justify-items: center; gap: 26px; margin-top: 10px; width: min(92vw, 520px); text-align: center; }
+.sign-h { font-family: var(--script); font-style: italic; font-size: clamp(19px, 5vw, 23px); color: var(--line); margin-bottom: 8px; }
+.sign ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: clamp(15px, 4.2vw, 18px); line-height: 1.35; }
+.sign-family { font-weight: 700; font-size: clamp(20px, 5.6vw, 26px); letter-spacing: .02em; }
 .closing-tag { margin-top: 18px; font-family: var(--serif); font-weight: 700; font-size: 26px; color: var(--line); }
 
 /* ---------- the merge: halo, dimmed room, gold dust, letters that fill ---------- */
