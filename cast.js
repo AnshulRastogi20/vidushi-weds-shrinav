@@ -167,14 +167,20 @@
       v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
       v.src = URL.createObjectURL(blob);
       c.meta = meta; c.v = v;
-      v.addEventListener("seeked", () => (c.dirty = true));
-      await new Promise((res) => { v.addEventListener("loadeddata", res, { once: true }); v.load(); setTimeout(res, 8000); });
-      // a muted inline play() also wakes the decoder on iPhones
-      try { await v.play(); v.pause(); } catch (e) { /* stays on the stills */ }
-      c.ready = v.readyState >= 2; c.dirty = true;
+      // ready whenever the browser has a frame, even if that comes late (slow phones, or only after a tap on iPhones)
+      const check = () => { if (v.readyState >= 2) { c.ready = true; c.dirty = true; } };
+      ["loadeddata", "canplay", "seeked"].forEach((t) => v.addEventListener(t, check));
+      v.load();
+      wake(v);
+      check();
     })().catch((e) => console.warn("cast clip", name, e));
     return c.loading;
   }
+
+  // phones only decode a video after it has played once; a muted inline play is allowed, and after any tap always is
+  const isLoop = (v) => Object.values(clips).some((c) => c.v === v && CLIPS[c.name].loop && S.a === c.name);
+  function wake(v) { const p = v.play(); if (p && p.then) p.then(() => { if (!isLoop(v)) v.pause(); }).catch(() => {}); }
+  ["pointerdown", "touchend", "click"].forEach((t) => addEventListener(t, () => Object.values(clips).forEach((c) => c.v && !c.ready && wake(c.v)), { passive: true }));
 
   /* ---------- state (everything here is tweened by the scroll script) ---------- */
   const S = { a: "idle", af: 0, sa: 1, b: "", bf: 0, sb: 0, mix: 0, dis: 0, glow: 0, zoom: 1, alpha: 1, plate: "", pa: 0, sketch: 0, fill: 0 };
@@ -397,6 +403,7 @@
       return { approach, act };
     },
     _state: S,
+    _clips: clips,
   };
 
   layout();
@@ -406,7 +413,8 @@
   loadStills()
     .then(() => {
       window.World = World; dispatchEvent(new Event("world:ready"));
-      Object.keys(CLIPS).reduce((p, n) => p.then(() => loadClip(n)), Promise.resolve());
+      // the intro's two first, then the rest side by side
+      Promise.all([loadClip("meet"), loadClip("idle")]).finally(() => Object.keys(CLIPS).forEach(loadClip));
     })
     .catch((e) => { console.warn("cast", e); dispatchEvent(new Event("world:fail")); });
 })();
