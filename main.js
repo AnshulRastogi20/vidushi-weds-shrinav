@@ -125,7 +125,7 @@
   function openEnvelope() {
     playMusic(); // inside the tap, so phones allow sound
     askTilt();
-    setTimeout(() => { $("#gate")?.remove(); castReturn(); revealHero(true); unlock(); }, 11000);
+    setTimeout(() => { $("#gate")?.remove(); castReturn(); revealHero(true); unlock(); }, 12500);
     if (reduced) { $("#gate").remove(); world?.hide(); revealHero(true); unlock(); return; }
     const tl = gsap.timeline();
     tl.to("#hint", { autoAlpha: 0, duration: 0.15 }, 0)
@@ -150,7 +150,7 @@
     const lgS = $("#lg-s"), lgV = $("#lg-v");
     const tl = gsap.timeline();
     // they walk to each other first (a real clip), so everything after waits for them
-    const o = world ? 1.6 : 0;
+    const o = world ? 3.0 : 0;
     if (world) tl.add(world.meet(), 0);
     // the room dims, a warm light rises behind them, the logo's S and V wait above as faint gold
     tl.call(placeHalo, null, o + 0.8)

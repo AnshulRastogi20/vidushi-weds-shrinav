@@ -11,7 +11,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 K = ROOT / "tools/ai/out/k"
 OUT = ROOT / "assets/cast"
 W = 640; H = round(W * 16 / 9)
-STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"]
+STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"]
+# a still must never share a name with a clip (the page would show the still instead of playing the clip)
+SOURCE = {"meet-pose": "meet"}
 PLATES = {"engagement": "eng-plate", "haldi": "haldi-plate", "wedding": "wed-plate"}
 
 
@@ -22,7 +24,7 @@ def load(name):
 (OUT / "still").mkdir(parents=True, exist_ok=True); (OUT / "plate").mkdir(parents=True, exist_ok=True)
 meta = {}
 for n in STILLS:
-    rgba = key(load(f"{n}-green"))
+    rgba = key(load(f"{SOURCE.get(n, n)}-green"))
     meta[n] = split_boxes(rgba[..., 3])
     Image.fromarray((rgba * 255 + 0.5).astype(np.uint8)).save(OUT / "still" / f"{n}.webp", "WEBP", quality=80, alpha_quality=85, method=6)
 (OUT / "still" / "meta.json").write_text(json.dumps({"w": W, "h": H, "boxes": meta}, separators=(",", ":")))

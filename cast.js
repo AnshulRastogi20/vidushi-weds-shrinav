@@ -15,10 +15,10 @@
 
   const BASE = "/assets/cast/";
   // browsers keep /assets for a week: bump this whenever a clip, still or plate is re-exported, so everyone gets the new one
-  const V = "?v=20261019d";
+  const V = "?v=20261019e";
   // in the order they load. A clip falls back to its first and last key pose until (or unless) its video is ready
   const CLIPS = {
-    meet: { from: "park", to: "meet" },
+    meet: { from: "park", to: "meet-pose" },
     idle: { loop: true, from: "park", to: "park" },
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
@@ -26,7 +26,8 @@
     jai1: { from: "jai-a", to: "jai-m" },
     jai2: { from: "jai-m", to: "jai-b" },
   };
-  const STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"];
+  // never give a still the same name as a clip: the still would be shown in its place
+  const STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"];
   const PLATES = ["engagement", "haldi", "wedding"];
   // where the havan fire is, so it can flicker (fractions of the frame: x0, y0, x1, y1)
   const FIRE = [0.4, 0.6, 0.6, 0.82];
@@ -282,7 +283,9 @@
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, A.tex); gl.uniform1i(u.tA, 0);
       gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, (B || A).tex); gl.uniform1i(u.tB, 1);
       gl.uniform1f(u.sbsA, A.sbs); gl.uniform1f(u.sbsB, (B || A).sbs); gl.uniform1f(u.stillA, A.still); gl.uniform1f(u.stillB, (B || A).still);
-      gl.uniform1f(u.spreadA, S.sa * L.spread); gl.uniform1f(u.spreadB, S.sb * L.spread);
+      // a frame where they touch is never split, so no hand is ever cut
+      const touch = (X) => !!(X && X.boxes && X.boxes.touch);
+      gl.uniform1f(u.spreadA, touch(A) ? 0 : S.sa * L.spread); gl.uniform1f(u.spreadB, touch(B || A) ? 0 : S.sb * L.spread);
       gl.uniform1f(u.cutA, gapOf(A)); gl.uniform1f(u.cutB, gapOf(B || A));
       gl.uniform1f(u.mixv, B ? mix : 0); gl.uniform1f(u.dis, S.dis); gl.uniform1f(u.glow, S.glow); gl.uniform1f(u.alpha, S.alpha);
       gl.uniform4fv(u.fireA, A.fire || NOFIRE); gl.uniform4fv(u.fireB, (B && B.fire) || NOFIRE);
@@ -308,7 +311,7 @@
   function morph(tl, name, at, dur, spreadTo = 0, f = 0) {
     tl.set(S, { b: name, bf: f, sb: spreadTo }, at)
       .fromTo(S, { mix: 0 }, { mix: 1, duration: dur, ease: "power1.inOut", immediateRender: false }, at)
-      .set(S, { a: name, af: f, sa: spreadTo, mix: 0, b: "" }, at + dur);
+      .set(S, { a: name, af: f, sa: spreadTo, mix: 0, b: "", sb: 0 }, at + dur);
   }
   function setIn(tl, name, at, dur) {
     tl.set(S, { plate: name }, at)
@@ -404,9 +407,10 @@
     meet() {
       const tl = gsap.timeline();
       loadClip("meet");
-      tl.set(S, { a: "meet", af: 0 }, 0).to(S, { af: 1, duration: 3.2, ease: "power1.inOut" }, 0)
-        .to(S, { sa: 0, duration: 1.3, ease: "power1.inOut" }, 0).to(S, { zoom: 1, duration: 3.2, ease: "power1.inOut" }, 0)
-        .to(S, { glow: 0.85, duration: 0.8, ease: "power1.in" }, 2.6);
+      // the real walk (8 s of film) at a natural pace; together again long before their hands meet (52% in)
+      tl.set(S, { a: "meet", af: 0 }, 0).to(S, { af: 1, duration: 4.6, ease: "sine.inOut" }, 0)
+        .to(S, { sa: 0, duration: 1.6, ease: "sine.inOut" }, 0).to(S, { zoom: 1, duration: 4.6, ease: "sine.inOut" }, 0)
+        .to(S, { glow: 0.85, duration: 0.8, ease: "power1.in" }, 4.0);
       return tl;
     },
     // all of them, hair and all, turns to gold at once
