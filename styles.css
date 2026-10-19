@@ -425,9 +425,9 @@ section { position: relative; }
 }
 
 /* ---------- each event is a framed card: foil corners, double rule, jaali texture ---------- */
-/* tight top and bottom: as one scene ends the next card is already coming up */
-.event { padding: 9vh 38px 3vh; padding: 9svh 38px 3svh; }
-.event + .event { padding-top: 6vh; padding-top: 6svh; }
+/* each card opens with its scene, so little room above; the details that close it get room to breathe below */
+.event { padding: 5vh 38px 16vh; padding: 5svh 38px 16svh; }
+.event + .event { padding-top: 3vh; padding-top: 3svh; }
 .event::before {
   content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .09; background: var(--line);
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><g fill='none' stroke='black' stroke-width='.8'><path d='M22 2 L42 22 L22 42 L2 22 Z'/><circle cx='22' cy='22' r='6'/></g></svg>") repeat;
@@ -507,7 +507,7 @@ section { position: relative; }
 /* after the intro the couple (z-index 1) stand in front of the cards' colours, frames, corners and dividers;
    only the words (and Ganesha) stay in front of them */
 .ganesha, .shloka, .ev-tag, .ev-title, .details, .actions, .countdown, .portrait figcaption { position: relative; z-index: 2; }
-.ev-stage { position: relative; flex: none; width: 100vw; height: 100vh; height: 100svh; margin-bottom: 4vh; margin-bottom: 4svh; }
+.ev-stage { position: relative; flex: none; width: 100vw; height: 100vh; height: 100svh; margin-bottom: 8vh; margin-bottom: 8svh; }
 .scene-cap { position: fixed; left: 0; right: 0; top: 7vh; top: 7svh; z-index: 61; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; opacity: 0; visibility: hidden; }
 .cap-hi { font-family: var(--deva); font-size: clamp(44px, 13vw, 84px); line-height: 1.15;
   background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
