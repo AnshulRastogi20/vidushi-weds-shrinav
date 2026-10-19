@@ -196,8 +196,7 @@
     L.cover = phone ? Math.max(1, H / L.fh) : 1;
     // waiting at the sides they stand a little smaller, out in the corners, so the text and logo stay clear
     L.park = phone ? 0.74 : 0.9;
-    // pushed apart exactly to the screen edges, so the edge of the frame (where an arm can be cut) is never on screen
-    L.spread = (W - L.fw * L.park) / 2;
+    L.spread = phone ? (W - L.fw * L.park) / 2 * 0.92 : Math.min((W - L.fw * L.park) / 2 * 0.7, L.fw * 0.8);
     canvas.width = Math.round(W * L.dpr); canvas.height = Math.round(H * L.dpr);
   }
   // where the shared 9:16 frame is on screen right now (it grows from the bottom centre)
