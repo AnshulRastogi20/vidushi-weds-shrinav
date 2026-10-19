@@ -380,8 +380,8 @@
     park: resetPose,
     resetPose,
     layout,
-    // they live behind the page's text and in front of its colours
-    behindPage(on = true) { canvas.style.zIndex = on ? "-1" : ""; },
+    // they live inside the page: in front of its colours and ornaments, behind its words
+    behindPage(on = true) { canvas.style.zIndex = on ? "1" : ""; },
     canvas,
     // at the envelope: they shimmer in on either side of it
     gateIn() {

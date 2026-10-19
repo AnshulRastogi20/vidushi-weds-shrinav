@@ -520,6 +520,9 @@ section { position: relative; }
 
 /* ---------- the story: the couple in 3D above the page ---------- */
 .world { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
+/* after the intro the couple (z-index 1) stand in front of the cards' colours, frames, corners and dividers;
+   only the words (and Ganesha) stay in front of them */
+.ganesha, .shloka, .ev-tag, .ev-title, .details, .actions, .countdown { position: relative; z-index: 2; }
 .ev-stage { position: relative; flex: none; width: 100vw; height: 100vh; height: 100svh; margin-top: 2vh; margin-top: 2svh; }
 .scene-cap { position: fixed; left: 0; right: 0; top: 7vh; top: 7svh; z-index: 61; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; opacity: 0; visibility: hidden; }
 .cap-hi { font-family: var(--deva); font-size: clamp(44px, 13vw, 84px); line-height: 1.15;
