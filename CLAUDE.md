@@ -76,6 +76,7 @@ Key in `.env` (`GEMINI_API_KEY`, Google AI Studio, prepaid). Never print it; `.e
 - Key poses on flat green: `tools/ai/out/k/*-green.png` (park, meet, eng-a/b, haldi-a/b, jai-a/b, phera-a, finale, enter) + plates (`eng-plate`, `haldi-plate`, `wed-plate`). Prompts in `tools/ai/prompts/frames/`.
 - Clips: `tools/ai/clips.sh <name...>` (start/end pose per clip inside; prompts in `tools/ai/prompts/clips/` + `common.txt`). Veo allows ~4 jobs at once.
 - Export: `python3 tools/ai/cast_export.py <clip> --end k/<end-pose>.png` (key, trim, H.264 side-by-side alpha) and `python3 tools/ai/cast_stills.py` (stills + plates). Needs ffmpeg (Homebrew).
+- Add `?jaimala=old` to any link to see the earlier first half of the jaimala (`jai1-old`, Veo 3.1 Fast, cut at frame 150) in place of the current one (`jai1`, Veo 3.1, cut at 110); only that link loads it. The owner is choosing between them.
 - Done: meet, idle, eng-approach, eng-act, jai1 (Veo 3.1; jai1 exported with `--last 110`: after that his own garland fades away and pops back), haldi-act, jai2 (Veo 3.1 Fast, `MODEL=veo-3.1-fast-generate-preview tools/ai/clips.sh ...`). Rejected: a one-clip jaimala (they garlanded themselves), a Veo 3.1 jai2 (he loses the garland he wears; the Fast jai2 export in assets/cast is the good one, its source was overwritten), phera (scene removed on request). Still to make: in, namaste, eng-leave, haldi-approach, haldi-leave, wed-approach, finale (from jai-b, no end frame). Add each to `CLIPS` in cast.js and swap the matching `morph()` for `play()`.
 
 ## Testing tips

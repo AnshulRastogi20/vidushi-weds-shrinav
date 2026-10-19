@@ -15,7 +15,7 @@
 
   const BASE = "/assets/cast/";
   // browsers keep /assets for a week: bump this whenever a clip, still or plate is re-exported, so everyone gets the new one
-  const V = "?v=20261019e";
+  const V = "?v=20261020b";
   // in the order they load. A clip falls back to its first and last key pose until (or unless) its video is ready
   const CLIPS = {
     meet: { from: "park", to: "meet-pose" },
@@ -24,6 +24,7 @@
     "eng-act": { from: "eng-a", to: "eng-b" },
     "haldi-act": { from: "haldi-a", to: "haldi-b" },
     jai1: { from: "jai-a", to: "jai-m" },
+    "jai1-old": { from: "jai-a", to: "jai-m" },
     jai2: { from: "jai-m", to: "jai-b" },
   };
   // never give a still the same name as a clip: the still would be shown in its place
@@ -196,6 +197,9 @@
   function wake(v) { const p = v.play(); if (p && p.then) p.then(() => { if (!isLoop(v)) v.pause(); }).catch(() => {}); }
   ["pointerdown", "touchend", "click"].forEach((t) => addEventListener(t, () => Object.values(clips).forEach((c) => c.v && !c.ready && wake(c.v)), { passive: true }));
 
+  // ?jaimala=old: the earlier first half of the jaimala (Veo 3.1 Fast, longer), to compare with the current one
+  const OLD_JAIMALA = new URLSearchParams(location.search).get("jaimala") === "old";
+  if (!OLD_JAIMALA) delete CLIPS["jai1-old"];
   // the ॐ loader in main.js waits for every clip (and, through world:ready, the key poses and sets)
   window.CastPreload = { names: () => Object.keys(CLIPS), clip: (n) => loadClip(n) };
 
@@ -379,11 +383,19 @@
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
       // the jaimala: she garlands him, then he garlands her, and they fold their hands
-      caption(t.act, 0, 11.6, "जयमाला", "The garland exchange", "wedding");
-      play(t.act, "jai1", 0.3, 4.6);
-      morph(t.act, "jai2", 4.9, 0.35);
-      play(t.act, "jai2", 5.25, 6.4);
-      hold(t.act, 12);
+      if (OLD_JAIMALA) {
+        caption(t.act, 0, 12.4, "जयमाला", "The garland exchange", "wedding");
+        play(t.act, "jai1-old", 0.3, 5.4);
+        morph(t.act, "jai2", 5.8, 0.6);
+        play(t.act, "jai2", 6.4, 6.4);
+        hold(t.act, 13);
+      } else {
+        caption(t.act, 0, 11.6, "जयमाला", "The garland exchange", "wedding");
+        play(t.act, "jai1", 0.3, 4.6);
+        morph(t.act, "jai2", 4.9, 0.35);
+        play(t.act, "jai2", 5.25, 6.4);
+        hold(t.act, 12);
+      }
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
       return t;
     },
