@@ -184,6 +184,9 @@
       v.load();
       wake(v);
       check();
+      // done once its first frame is decoded and on the GPU, so its first use doesn't stall (capped: iPhones may wait for a tap)
+      await new Promise((res) => { if (v.readyState >= 2) res(); v.addEventListener("loadeddata", res, { once: true }); setTimeout(res, 6000); });
+      if (v.readyState >= 2) { upload(c.tex, v, false); c.ready = true; }
     })().catch((e) => console.warn("cast clip", name, e));
     return c.loading;
   }
@@ -192,6 +195,9 @@
   const isLoop = (v) => Object.values(clips).some((c) => c.v === v && CLIPS[c.name].loop && S.a === c.name);
   function wake(v) { const p = v.play(); if (p && p.then) p.then(() => { if (!isLoop(v)) v.pause(); }).catch(() => {}); }
   ["pointerdown", "touchend", "click"].forEach((t) => addEventListener(t, () => Object.values(clips).forEach((c) => c.v && !c.ready && wake(c.v)), { passive: true }));
+
+  // the ॐ loader in main.js waits for every clip (and, through world:ready, the key poses and sets)
+  window.CastPreload = { names: () => Object.keys(CLIPS), clip: (n) => loadClip(n) };
 
   /* ---------- state (everything here is tweened by the scroll script) ---------- */
   const S = { a: "idle", af: 0, sa: 1, b: "", bf: 0, sb: 0, mix: 0, dis: 0, glow: 0, zoom: 1, alpha: 1, plate: "", pa: 0, sketch: 0, fill: 0 };
@@ -445,8 +451,7 @@
   loadStills()
     .then(() => {
       window.World = World; dispatchEvent(new Event("world:ready"));
-      // the intro's two first, then the rest side by side
-      Promise.all([loadClip("meet"), loadClip("idle")]).finally(() => Object.keys(CLIPS).forEach(loadClip));
+      Object.keys(CLIPS).forEach(loadClip); // normally already started by the ॐ loader
     })
     .catch((e) => { console.warn("cast", e); dispatchEvent(new Event("world:fail")); });
 })();

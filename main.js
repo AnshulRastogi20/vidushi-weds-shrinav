@@ -588,9 +588,13 @@
     build(data);
 
     const loadImg = (src) => { const i = new Image(); i.src = src; return i.decode(); };
-    const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)), track(Promise.race([worldReady, wait(8000)]).then((w) => (world = w || null))),
+    // everything loads behind the ॐ: fonts, art, music, photos, and every animation (key poses, sets and all the
+    // clips), so nothing has to load or decode once the card is open. Capped so a very slow connection still opens.
+    const cast = window.CastPreload;
+    const work = [track(document.fonts.ready), track(inlineArt()), track(loadAudio(C.music)), track(Promise.race([worldReady, wait(20000)]).then((w) => (world = w || null))),
+      ...(cast ? cast.names().map((n) => track(cast.clip(n))) : []),
       ...[C.couplePhoto, ...$$(".lg").map((i) => i.getAttribute("src"))].map((s) => track(loadImg(s)))];
-    await Promise.race([Promise.all(work), wait(7000)]);
+    await Promise.race([Promise.all(work), wait(45000)]);
     await Promise.race([document.fonts.ready, wait(2000)]);
     const left = 1300 - (performance.now() - t0);
     if (left > 0) await wait(left);
