@@ -469,7 +469,7 @@
   });
 
   /* ---- one script for the whole page: every movement is tied to a scroll position, so it runs backwards too ---- */
-  const STAGE_SCREENS = { engagement: 1.3, haldi: 1.25, wedding: 1.0 };
+  const STAGE_SCREENS = { engagement: 1.3, haldi: 1.25, wedding: 2.0 };
   const pins = [];
   let master = null, builtFor = "";
   function buildMaster() {

@@ -61,7 +61,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("clip"); ap.add_argument("--end"); ap.add_argument("--fps", type=float, default=24)
     ap.add_argument("--width", type=int, default=640); ap.add_argument("--crf", type=int, default=24)
-    ap.add_argument("--first", type=int, default=0)
+    ap.add_argument("--first", type=int, default=0); ap.add_argument("--last", type=int, help="stop at this source frame")
     a = ap.parse_args()
     cap = cv2.VideoCapture(str(ROOT / "tools/ai/out/clips" / f"{a.clip}.mp4"))
     src_fps = cap.get(cv2.CAP_PROP_FPS)
@@ -80,6 +80,8 @@ def main():
         diffs = {i: float(np.abs(frames[i].astype(np.float32) - k).mean()) for i in tail}
         last = min(diffs, key=diffs.get)
         print(f"end match at frame {last} of {len(frames) - 1} (diff {diffs[last]:.1f})")
+    if a.last is not None:
+        last = min(last, a.last)
     span = frames[a.first:last + 1]
     n = max(2, round((len(span) - 1) / src_fps * a.fps) + 1)
     pick = [a.first + round(i * (len(span) - 1) / (n - 1)) for i in range(n)]

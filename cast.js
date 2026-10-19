@@ -21,12 +21,14 @@
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
     "haldi-act": { from: "haldi-a", to: "haldi-b" },
+    jai1: { from: "jai-a", to: "jai-m" },
+    jai2: { from: "jai-m", to: "jai-b" },
   };
-  const STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-b", "finale"];
+  const STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"];
   const PLATES = ["engagement", "haldi", "wedding"];
   // where the havan fire is, so it can flicker (fractions of the frame: x0, y0, x1, y1)
   const FIRE = [0.4, 0.6, 0.6, 0.82];
-  const FIRE_IN = { "jai-a": FIRE, "jai-b": FIRE };
+  const FIRE_IN = { "jai-a": FIRE, "jai-m": FIRE, "jai-b": FIRE };
 
   /* ---------- GL ---------- */
   const NOISE = `
@@ -61,8 +63,10 @@
     }
     vec4 samp(sampler2D t, vec2 uv, float sbs) {
       if (uv.x < 0.008 || uv.x > 0.992 || uv.y < 0.004 || uv.y > 0.996) return vec4(0.0);
-      if (sbs > 0.5) { vec3 c = texture2D(t, vec2(uv.x * 0.5, uv.y)).rgb; float a = texture2D(t, vec2(0.5 + uv.x * 0.5, uv.y)).r; return vec4(min(c, vec3(a)), a); }
-      return texture2D(t, uv);
+      // anything that touches the side of the frame fades out instead of ending in a hard line
+      float soft = smoothstep(0.008, 0.045, uv.x) * smoothstep(0.992, 0.955, uv.x);
+      if (sbs > 0.5) { vec3 c = texture2D(t, vec2(uv.x * 0.5, uv.y)).rgb; float a = texture2D(t, vec2(0.5 + uv.x * 0.5, uv.y)).r; return vec4(min(c, vec3(a)), a) * soft; }
+      return texture2D(t, uv) * soft;
     }
     void main() {
       vec2 p = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / dpr;
@@ -192,7 +196,8 @@
     L.cover = phone ? Math.max(1, H / L.fh) : 1;
     // waiting at the sides they stand a little smaller, out in the corners, so the text and logo stay clear
     L.park = phone ? 0.74 : 0.9;
-    L.spread = phone ? (W - L.fw * L.park) / 2 * 0.92 : Math.min((W - L.fw * L.park) / 2 * 0.7, L.fw * 0.8);
+    // pushed apart exactly to the screen edges, so the edge of the frame (where an arm can be cut) is never on screen
+    L.spread = (W - L.fw * L.park) / 2;
     canvas.width = Math.round(W * L.dpr); canvas.height = Math.round(H * L.dpr);
   }
   // where the shared 9:16 frame is on screen right now (it grows from the bottom centre)
@@ -351,11 +356,12 @@
       setIn(t.approach, "wedding", 1.1, 2.9);
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
-      // the garland exchange (a pose change until its clip is made)
-      caption(t.act, 0, 6.4, "जयमाला", "The garland exchange", "wedding");
-      morph(t.act, "jai-b", 2.2, 1.8);
-      t.act.to(S, { zoom: L.cover * 1.04, duration: 7, ease: "none" }, 0);
-      hold(t.act, 7);
+      // the jaimala: she garlands him, then he garlands her, and they fold their hands
+      caption(t.act, 0, 12.4, "जयमाला", "The garland exchange", "wedding");
+      play(t.act, "jai1", 0.3, 5.4);
+      morph(t.act, "jai2", 5.8, 0.6);
+      play(t.act, "jai2", 6.4, 6.4);
+      hold(t.act, 13);
       // from the mandap, hand in hand, toward the photograph
       setOut(t.leave, 0.4, 2.6);
       morph(t.leave, "finale", 0, 2);

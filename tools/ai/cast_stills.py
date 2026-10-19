@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 K = ROOT / "tools/ai/out/k"
 OUT = ROOT / "assets/cast"
 W = 640; H = round(W * 16 / 9)
-STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-b", "finale"]
+STILLS = ["park", "meet", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"]
 PLATES = {"engagement": "eng-plate", "haldi": "haldi-plate", "wedding": "wed-plate"}
 
 
