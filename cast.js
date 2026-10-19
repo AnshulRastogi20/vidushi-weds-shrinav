@@ -367,11 +367,11 @@
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
       // the jaimala: she garlands him, then he garlands her, and they fold their hands
-      caption(t.act, 0, 12.4, "जयमाला", "The garland exchange", "wedding");
-      play(t.act, "jai1", 0.3, 5.4);
-      morph(t.act, "jai2", 5.8, 0.6);
-      play(t.act, "jai2", 6.4, 6.4);
-      hold(t.act, 13);
+      caption(t.act, 0, 11.6, "जयमाला", "The garland exchange", "wedding");
+      play(t.act, "jai1", 0.3, 4.6);
+      morph(t.act, "jai2", 4.9, 0.35);
+      play(t.act, "jai2", 5.25, 6.4);
+      hold(t.act, 12);
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
       return t;
     },
