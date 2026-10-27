@@ -261,6 +261,8 @@ section { position: relative; }
 .bulb { fill: #FFD58A; opacity: .15; }
 .bulb.on { opacity: 1; filter: drop-shadow(0 0 3px #FFC766) drop-shadow(0 0 8px rgba(255, 190, 90, .7)); }
 .ev-title { width: min(88vw, 520px); margin-top: 38px; --sw: .3; }
+/* the venue's address wraps onto balanced lines in the middle, clear of the two of them at the sides */
+.ev-venue-line { max-width: min(58vw, 460px); margin-inline: auto; text-wrap: balance; }
 .title-text {
   margin: 0; font-family: var(--script); font-weight: 700; font-size: clamp(30px, 8vw, 56px); line-height: 1.2; padding: 0 .15em;
   background: var(--foil-grad); background-size: 220% 100%;

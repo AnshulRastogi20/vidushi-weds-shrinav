@@ -38,7 +38,7 @@
       "dateLine": "Saturday, 12th December 2026",
       "timeLine": "8 pm onwards",
       "venue": "Royal Heritage",
-      "venueLine": "Country Inn & Suites, Ghaziabad",
+      "venueLine": "Country Inn & Suites by Radisson, Ghaziabad",
       "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",
       "countdown": true
     },
@@ -52,8 +52,7 @@
       "dateLine": "Friday, 11th December 2026",
       "timeLine": "7 pm onwards",
       "venue": "Majestic",
-      "venueLine": "Country Inn & Suites, Ghaziabad",
-      "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad"
+      "venueLine": "Country Inn & Suites by Radisson, Ghaziabad"
     },
     "haldi": {
       "title": "Haldi Ceremony",
@@ -65,8 +64,7 @@
       "dateLine": "Saturday, 12th December 2026",
       "timeLine": "11 am onwards",
       "venue": "Crystal",
-      "venueLine": "Country Inn & Suites, Ghaziabad",
-      "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad"
+      "venueLine": "Country Inn & Suites by Radisson, Ghaziabad"
     }
   },
   "links": {

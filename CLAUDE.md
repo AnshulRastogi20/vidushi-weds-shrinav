@@ -17,7 +17,7 @@ Use this server, not a plain static server: it also routes `/celebrate`, `/famil
 3. Tap: the thread falls, the envelope opens (<2s), music starts (the tap is what unlocks audio).
 4. They walk to each other and take hands (the `meet` clip), glow and dissolve into gold (all of them at once): his dust fills the **S**, hers the **V** of the logo. The logo assembles: hashtag, ornament, elephants, gold ring, flowers, balloons.
 5. The gold comes back out of the S and V and they stand near the bottom corners, alive (the looping `idle` clip). From here they live *inside* the page: the canvas sits in front of the card colours and ornaments and behind the words.
-6. Everything after this is one scroll-driven script (`buildMaster` in main.js): timeline time = scroll position, so scrolling up rewinds it exactly and manual scroll and auto-scroll behave the same. The page also drifts down on its own (auto-scroll button under the music button). Only real scrolling hands over (a tap doesn't), and it picks up again 1 s after the guest stops; it rests 2 s with each event's details centred (`holds` in buildMaster).
+6. Everything after this is one scroll-driven script (`buildMaster` in main.js): timeline time = scroll position, so scrolling up rewinds it exactly and manual scroll and auto-scroll behave the same. The page also drifts down on its own (auto-scroll button under the music button). Only real scrolling hands over (a tap doesn't), and it picks up again 1 s after the guest stops; it rests 5 s with each event's details centred (`restSpots()`, measured live).
 7. Ganesh blessing, then per event: FIRST its scene (they come to the middle, the set, an AI-painted plate, draws itself in gold pencil and fills with colour, the stage pins while they act, then they go back to the sides), THEN that event's details. So the wedding scene sits between the haldi details and the wedding details. Engagement = walk in, ring box, rings exchanged (real clips); Haldi = before / haldi on each other's cheeks; Wedding = the jaimala: she garlands him, then he garlands her (no phera: removed on request). Arriving and leaving a set is still a gold shimmer between poses until those clips are made (see AI pipeline).
 8. From the mandap they walk hand in hand to the middle and dissolve into gold that lands in the photo arch; the real couple photo appears. Then the closing: "With best compliments from" centred, then two columns like the printed card (`rsvp` names left, `wbcf` names right), the family line (`family`) centred under both, then the hashtag.
 
@@ -93,5 +93,6 @@ npx vercel deploy --prod --yes
 The production project and domain belong to the owner. Anyone else deploys to their own Vercel account.
 
 ## Open items
+- Venue line everywhere: "Country Inn & Suites by Radisson, Ghaziabad". "Get directions" only on the wedding card (only it has `mapsQuery`).
 - Engagement (11 Dec, 7 pm, Majestic) and Haldi (12 Dec, 11 am, Crystal) are set; their end times (11 pm, 2 pm) are estimates. "Add to calendar" was removed on request.
 - Reported: not working on an iPhone (device/app not yet identified). Investigate in Safari / WhatsApp in-app browser first.

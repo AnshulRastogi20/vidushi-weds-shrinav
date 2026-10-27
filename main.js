@@ -428,7 +428,7 @@
   }
 
   /* ---- the page drifts on its own; a touch hands over to the guest, and it carries on after a pause ---- */
-  const auto = { on: false, idleUntil: 0, y: -1, set: -1 };
+  const auto = { on: false, idleUntil: 0, y: -1, set: -1, rested: new Set() };
   const autoBtn = $("#auto");
   const scrollNow = () => (lenis ? lenis.scroll : scrollY);
   function setAuto(on) {
@@ -451,15 +451,27 @@
     // a little quicker while a stage holds the screen, so the clips play at about their real speed
     const onStage = pins.some(({ st }) => now >= st.start && now < st.end);
     auto.y = Math.min(max, auto.y + innerHeight * (onStage ? 0.16 : 0.1) * (dtMs / 1000));
-    // after each scene, the drift rests for 2 s with that event's details in the middle of the screen
-    const rest = holds.find((y) => now < y && auto.y >= y);
-    if (rest !== undefined) { auto.y = rest; auto.idleUntil = performance.now() + 2000; }
+    // after each scene, the drift rests for 5 s with that event's details in the middle of the screen
+    // (each spot once per pass: it re-arms when the guest scrolls back above it)
+    restSpots().forEach((y, i) => {
+      if (now < y - innerHeight * 0.5) auto.rested.delete(i);
+      else if (!auto.rested.has(i) && auto.y >= y && now < y + innerHeight * 0.3) { auto.rested.add(i); auto.y = y; auto.idleUntil = performance.now() + 5000; }
+    });
     auto.set = Math.round(auto.y);
     if (lenis) lenis.scrollTo(auto.y, { immediate: true, force: true }); else scrollTo(0, auto.y);
   });
 
   /* ---- one script for the whole page: every movement is tied to a scroll position, so it runs backwards too ---- */
-  let holds = [];
+  // where the drift rests: each event's details (title down to the button or countdown) centred on screen.
+  // Measured live, because phones re-lay the page out (address bar, pins) after the script is built.
+  function restSpots() {
+    return $$("#events .event").map((sec) => {
+      const a = $(".ev-tag", sec), z = $(".countdown:not([hidden])", sec) || $(".actions:not([hidden])", sec) || $(".details", sec);
+      if (!a || !z) return null;
+      const t = a.getBoundingClientRect().top + scrollNow(), b = z.getBoundingClientRect().bottom + scrollNow();
+      return Math.round(b - t < innerHeight * 0.9 ? (t + b) / 2 - innerHeight / 2 : t - innerHeight * 0.06);
+    }).filter((y) => y != null);
+  }
   const STAGE_SCREENS = { engagement: 1.3, haldi: 1.25, wedding: 2.0 };
   const pins = [];
   let master = null, builtFor = "";
@@ -501,13 +513,6 @@
         .fromTo(cap, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, immediateRender: false }, 1.3);
       put(fin, ph.start, ph.end);
     }
-    // where the page rests during the drift: each event's details (title to button/countdown) centred on screen
-    holds = $$("#events .event").map((sec) => {
-      const a = $(".ev-tag", sec), z = $(".countdown:not([hidden])", sec) || $(".actions", sec) || $(".details", sec);
-      if (!a || !z) return null;
-      const t = top(a), b = top(z) + z.offsetHeight;
-      return Math.round(b - t < innerHeight * 0.9 ? (t + b) / 2 - innerHeight / 2 : t - innerHeight * 0.06);
-    }).filter((y) => y != null);
     master = tl;
     // timeline time = scroll position: down plays it, up rewinds it, and a fling just eases there
     tl.time(scrollNow() * K);
