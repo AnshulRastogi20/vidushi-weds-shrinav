@@ -139,7 +139,7 @@ button { font: inherit; color: inherit; }
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 0 28px; text-align: center; color: var(--ink);
 }
-.env-address .to { font-family: var(--caps); font-size: 13px; letter-spacing: .28em; text-transform: uppercase; color: #7A6252; }
+.env-address .to { font-family: var(--script); font-size: clamp(19px, 5vw, 24px); line-height: 1.2; color: #7A6252; }
 .env-address .guest { font-family: var(--script); font-size: clamp(24px, 6.6vw, 34px); line-height: 1.25; }
 .env-hint {
   position: absolute; left: 0; right: 0; top: calc(79% - 110px); z-index: 4;
@@ -290,11 +290,11 @@ section { position: relative; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(226, 179, 92, .3); }
 
 /* ---------- countdown ---------- */
-.countdown { width: 100%; margin-top: 9vh; margin-top: 9svh; text-align: center; }
-.clock { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 520px; margin: 18px auto 0; }
+.countdown { width: 100%; margin-top: 4vh; margin-top: 4svh; text-align: center; }
+.clock { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 520px; margin: 10px auto 0; }
 .clock div { display: flex; flex-direction: column; align-items: center; }
 .clock div + div { border-left: 1px solid rgba(226, 179, 92, .35); }
-.clock b { font-weight: 400; font-size: clamp(38px, 11vw, 64px); line-height: 1.1; font-variant-numeric: tabular-nums lining-nums; }
+.clock b { font-weight: 400; font-size: clamp(34px, 10vw, 60px); line-height: 1.1; font-variant-numeric: tabular-nums lining-nums; }
 .clock span { font-family: var(--caps); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--fg-soft); }
 
 /* ---------- rsvp ---------- */
@@ -337,7 +337,7 @@ section { position: relative; }
 .linkish { margin-top: 18px; background: none; border: 0; padding: 6px; cursor: pointer; color: var(--gold); text-decoration: underline; text-underline-offset: 4px; font-family: var(--serif); font-size: 16px; }
 
 /* ---------- closing ---------- */
-.closing { display: flex; flex-direction: column; align-items: center; padding: 6vh 20px max(14vh, 90px); padding: 6svh 20px max(14svh, 90px); text-align: center; }
+.closing { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; min-height: 100svh; padding: 6vh 20px; padding: 6svh 20px; text-align: center; }
 .ornament { width: min(56vw, 230px); aspect-ratio: 161 / 57; }
 .mono-small { width: 64px; aspect-ratio: 225 / 236; margin-top: 30px; opacity: .8; }
 
@@ -424,7 +424,9 @@ section { position: relative; }
 
 /* ---------- each event is a framed card: foil corners, double rule, jaali texture ---------- */
 /* each card opens with its scene, so little room above; the details that close it get room to breathe below */
-.event { padding: 5vh 38px 16vh; padding: 5svh 38px 16svh; }
+.event { padding: 5vh 38px 0; padding: 5svh 38px 0; }
+/* the details fill one screen with their text centred, so when the drift rests the card sits square in the middle */
+.ev-body { width: 100%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3vh 0; padding: 3svh 0; }
 .event + .event { padding-top: 3vh; padding-top: 3svh; }
 .event::before {
   content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .09; background: var(--line);
@@ -505,8 +507,9 @@ section { position: relative; }
 /* after the intro the couple (z-index 1) stand in front of the cards' colours, frames, corners and dividers;
    only the words (and Ganesha) stay in front of them */
 .ganesha, .shloka, .ev-tag, .ev-title, .details, .actions, .countdown, .portrait figcaption { position: relative; z-index: 2; }
-.ev-stage { position: relative; flex: none; width: 100vw; height: 100vh; height: 100svh; margin-bottom: 8vh; margin-bottom: 8svh; }
+.ev-stage { position: relative; flex: none; width: 100vw; height: 100vh; height: 100svh; }
 .scene-cap { position: fixed; left: 0; right: 0; top: 7vh; top: 7svh; z-index: 61; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; opacity: 0; visibility: hidden; }
+.cap-hi:lang(en) { font-family: var(--serif); font-weight: 700; font-size: clamp(28px, 8vw, 54px); line-height: 1.15; }
 .cap-hi { font-family: var(--deva); font-size: clamp(44px, 13vw, 84px); line-height: 1.15;
   background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
   animation: foil-shine 5s ease-in-out infinite alternate; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .35)); }
@@ -521,3 +524,18 @@ section { position: relative; }
 .auto[aria-pressed="true"] .auto-off, .auto[aria-pressed="false"] .auto-on { display: none; }
 .scene-cap[data-tone="haldi"] .cap-hi { --foil-grad: linear-gradient(100deg, #6A0830 0%, #B0125B 18%, #F06A9E 34%, #9C0F4E 50%, #E0457B 66%, #7A0B3D 84%, #6A0830 100%); filter: drop-shadow(0 1px 6px rgba(255, 240, 200, .6)); }
 .scene-cap[data-tone="haldi"] .cap-en { color: #8A0E45; text-shadow: 0 1px 4px rgba(255, 240, 200, .8); }
+
+/* short phones: tighten the wedding card so its details and countdown fit on one screen */
+@media (max-height: 700px) {
+  .ev-body .ev-title { margin-top: 6px; }
+  .ev-body .details { margin-top: 14px; }
+  .ev-body .divider.small { margin: 14px auto; }
+  .ev-body .actions { margin-top: 18px; }
+  .countdown { margin-top: 3vh; margin-top: 3svh; }
+}
+/* very short phones (iPhone SE): smaller clock so the countdown stays on screen with the details */
+@media (max-height: 600px) {
+  .ev-body { padding: 1vh 0; padding: 1svh 0; }
+  .clock b { font-size: 30px; }
+  .countdown .label { margin-bottom: 0; }
+}

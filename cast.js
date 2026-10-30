@@ -337,7 +337,9 @@
   const capBox = document.getElementById("scene-caps");
   function caption(tl, at, out, hi, en, tone) {
     const el = document.createElement("div"); el.className = "scene-cap"; el.dataset.tone = tone;
-    el.innerHTML = `<span class="cap-hi" lang="hi">${hi}</span><span class="cap-en">${en}</span>`; capBox.appendChild(el);
+    // the big line can be Hindi (Devanagari) or English; the small line is optional
+    const lang = /[\u0900-\u097F]/.test(hi) ? "hi" : "en";
+    el.innerHTML = `<span class="cap-hi" lang="${lang}">${hi}</span>${en ? `<span class="cap-en">${en}</span>` : ""}`; capBox.appendChild(el);
     tl.fromTo(el, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, immediateRender: false }, at).to(el, { autoAlpha: 0, y: -8, duration: 0.5 }, out);
   }
   // back to the sides, alive, waiting for the next card
@@ -359,7 +361,7 @@
       t.approach.fromTo(S, { sa: 1 }, { sa: 0, duration: 0.95, ease: "sine.inOut", immediateRender: false }, 0)
         .to(S, { zoom: L.cover, duration: 3.6, ease: "power2.inOut" }, 0.3);
       // the rings
-      caption(t.act, 0, 8.8, "सगाई", "The ring ceremony", "engagement");
+      caption(t.act, 0, 8.8, "Two Rings, One Promise", "", "engagement");
       play(t.act, "eng-act", 0.4, 8.6);
       hold(t.act, 9.6);
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
