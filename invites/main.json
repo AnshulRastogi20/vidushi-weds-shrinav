@@ -33,14 +33,23 @@
    "short": "Wedding",
    "sky": "crimson",
    "lights": "bulbs",
-   "start": "2026-12-12T20:00:00+05:30",
+   "start": "2026-12-12T19:00:00+05:30",
    "end": "2026-12-13T02:00:00+05:30",
    "dateLine": "Saturday, 12th December 2026",
-   "timeLine": "8 pm onwards",
    "venue": "Royal Heritage",
    "venueLine": "Country Inn & Suites by Radisson, Ghaziabad",
    "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",
-   "countdown": true
+   "countdown": true,
+   "schedule": [
+    [
+     "Procession of Baraat",
+     "7:00 PM"
+    ],
+    [
+     "Dinner",
+     "8:00 PM"
+    ]
+   ]
   }
  ]
 }

@@ -261,6 +261,11 @@ section { position: relative; }
 .bulb { fill: #FFD58A; opacity: .15; }
 .bulb.on { opacity: 1; filter: drop-shadow(0 0 3px #FFC766) drop-shadow(0 0 8px rgba(255, 190, 90, .7)); }
 .ev-title { width: min(88vw, 520px); margin-top: 38px; --sw: .3; }
+/* the wedding programme: "Procession of Baraat ...... 7:00 PM", centred and clear of the two of them */
+.ev-schedule { list-style: none; margin: 6px auto 0; padding: 0; width: min(60vw, 340px); display: grid; gap: 4px; }
+.ev-schedule li { display: flex; align-items: baseline; gap: 8px; font-size: clamp(14px, 3.9vw, 17px); }
+.ev-schedule i { flex: 1; min-width: 12px; border-bottom: 1.5px dotted color-mix(in srgb, var(--fg) 45%, transparent); transform: translateY(-4px); }
+.ev-schedule b { font-weight: 700; white-space: nowrap; }
 /* the venue's address wraps onto balanced lines in the middle, clear of the two of them at the sides */
 .ev-venue-line { max-width: min(58vw, 460px); margin-inline: auto; text-wrap: balance; }
 .title-text {
@@ -410,16 +415,6 @@ section { position: relative; }
   background: var(--cg); -webkit-background-clip: text; background-clip: text; color: transparent;
   clip-path: inset(calc((1 - var(--f)) * 100%) 0 0 0);
 }
-
-/* ---------- balloons ---------- */
-.balloons { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
-.balloon { position: absolute; top: 0; }
-.balloon svg, .tied svg { display: block; width: 100%; height: auto; overflow: visible; }
-.bunch { position: absolute; bottom: 2vh; bottom: 2svh; width: 120px; height: 230px; }
-.bunch-l { left: 2vw; } .bunch-r { right: 2vw; bottom: calc(2vh + 64px); bottom: calc(2svh + 64px); }
-.tied { position: absolute; left: 50%; bottom: 0; width: 54px; margin-left: -27px; transform-origin: 50% 100%; transform: rotate(var(--r)); }
-.tied:nth-child(2) { width: 62px; margin-left: -31px; bottom: 14px; }
-@media (min-width: 760px) { .bunch { width: 160px; height: 300px; } .tied { width: 70px; margin-left: -35px; } .tied:nth-child(2) { width: 80px; margin-left: -40px; } }
 
 /* haldi: rani-pink foil and type on turmeric */
 .event[data-sky="sun"] {

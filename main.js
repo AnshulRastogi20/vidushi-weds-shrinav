@@ -57,6 +57,11 @@
       else title.innerHTML = `<p class="title-text">${ev.title}</p>`;
       const fill = (sel, v) => { const el = $(sel, sec); if (v) el.textContent = v; else el.hidden = true; };
       fill(".ev-date", ev.dateLine); fill(".ev-time", ev.timeLine); fill(".ev-venue", ev.venue); fill(".ev-venue-line", ev.venueLine);
+      // a programme (the wedding: baraat, then dinner) as dotted rows like the printed card
+      if (ev.schedule && ev.schedule.length) {
+        const ul = $(".ev-schedule", sec); ul.hidden = false;
+        ul.innerHTML = ev.schedule.map(([what, when]) => `<li><span>${what}</span><i aria-hidden="true"></i><b>${when}</b></li>`).join("");
+      }
       const maps = $(".ev-maps", sec);
       if (ev.mapsQuery) maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ev.mapsQuery); else maps.hidden = true;
       if (!ev.mapsQuery) $(".actions", sec).hidden = true;
@@ -227,38 +232,6 @@
     if (!pending) { motes = []; running = false; gsap.ticker.remove(drawDust); ctx.clearRect(0, 0, innerWidth, innerHeight); }
   }
 
-  /* ---- balloons: a release when the hashtag lands, then two bunches stay ---- */
-  const BALLOONS = { gold: ["#F8DA8C", "#C48A28"], peony: ["#F7B0C2", "#D8456B"], coral: ["#F9B59A", "#E0674A"], ivory: ["#FFFBF0", "#DCCBA6"], leaf: ["#B9D69E", "#5E8C4A"] };
-  $("svg defs").insertAdjacentHTML("beforeend", Object.entries(BALLOONS).map(([k, [hi, lo]]) =>
-    `<radialGradient id="bl-${k}" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="${hi}"/><stop offset=".55" stop-color="${lo}"/><stop offset="1" stop-color="${lo}" stop-opacity=".92"/></radialGradient>`).join(""));
-  const balloonSvg = (k) => `<svg viewBox="0 0 60 150" aria-hidden="true">
-      <path d="M30 4 C48 4 58 20 58 38 C58 60 42 76 30 80 C18 76 2 60 2 38 C2 20 12 4 30 4 Z" fill="url(#bl-${k})"/>
-      <ellipse cx="19" cy="23" rx="5" ry="10" fill="#fff" opacity=".5" transform="rotate(-24 19 23)"/>
-      <path d="M26.5 79 L33.5 79 L30 85 Z" fill="${BALLOONS[k][1]}"/>
-      <path d="M30 85 C25 100 35 112 30 126 C26 136 33 142 30 150" fill="none" stroke="#9A8A72" stroke-width="1.1"/></svg>`;
-  function releaseBalloons() {
-    const box = $("#balloons"), H = $("#hero").offsetHeight, keys = Object.keys(BALLOONS);
-    const n = innerWidth < 600 ? 12 : 18;
-    for (let i = 0; i < n; i++) {
-      const b = document.createElement("div"), size = gsap.utils.random(38, 78);
-      b.className = "balloon"; b.innerHTML = balloonSvg(keys[i % keys.length]);
-      Object.assign(b.style, { left: `${gsap.utils.random(2, 92)}%`, width: `${size}px`, opacity: size < 50 ? 0.75 : 1 });
-      box.appendChild(b);
-      const dur = gsap.utils.random(5.5, 8.5) * (size < 50 ? 1.25 : 1);
-      gsap.fromTo(b, { y: H + 40 }, { y: -size * 3 - 40, duration: dur, delay: gsap.utils.random(0, 1.4), ease: "none", onComplete: () => b.remove() });
-      gsap.fromTo($("svg", b), { x: -14, rotation: -5 }, { x: 14, rotation: 5, duration: gsap.utils.random(1.6, 2.4), yoyo: true, repeat: -1, ease: "sine.inOut" });
-    }
-    // two bunches stay tied at the bottom corners
-    [["bunch-l", ["peony", "gold", "ivory"]], ["bunch-r", ["leaf", "coral", "gold"]]].forEach(([cls, ks]) => {
-      const bunch = document.createElement("div");
-      bunch.className = `bunch ${cls}`;
-      bunch.innerHTML = ks.map((k, i) => `<div class="tied" style="--r:${(i - 1) * 14}deg">${balloonSvg(k)}</div>`).join("");
-      box.appendChild(bunch);
-      gsap.from(bunch, { y: 200, autoAlpha: 0, duration: 1.6, ease: "power3.out", delay: 0.6 });
-      $$(".tied svg", bunch).forEach((t, i) => gsap.to(t, { rotation: i % 2 ? 4 : -4, y: -6, duration: 2 + i * 0.4, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 100%" }));
-    });
-  }
-
   /* ================= hero + scroll ================= */
   const LOGO_HIDDEN = () => {
     gsap.set(".lg-s, .lg-v", { clipPath: "inset(74% 0% 0% 0%)" });
@@ -285,7 +258,6 @@
       .set(".lg-wreath", { autoAlpha: 1, "--a": "0deg" }, 1.9)
       .to(".lg-wreath", { "--a": "380deg", duration: 1.6, ease: "power2.inOut" }, 1.9)
       .fromTo(".lg-wreath", { scale: 0.97, filter: "blur(4px)" }, { scale: 1, filter: "blur(0px)", duration: 1.6, ease: "power2.out" }, 1.9)
-      .call(releaseBalloons, null, 2.6)
       .fromTo(".bell", { yPercent: -110 }, { yPercent: 0, duration: 1.3, ease: "back.out(1.4)", stagger: 0.12 }, 2.4)
       .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 3.2)
       .fromTo(".cue", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 3.8);
