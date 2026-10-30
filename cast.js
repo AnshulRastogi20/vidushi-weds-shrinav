@@ -69,9 +69,8 @@
     vec4 samp(sampler2D t, vec2 uv, float sbs) {
       if (uv.x < 0.008 || uv.x > 0.992 || uv.y < 0.004 || uv.y > 0.996) return vec4(0.0);
       // anything that touches the side of the frame fades out instead of ending in a hard line
-      float soft = smoothstep(0.008, 0.045, uv.x) * smoothstep(0.992, 0.955, uv.x);
-      if (sbs > 0.5) { vec3 c = texture2D(t, vec2(uv.x * 0.5, uv.y)).rgb; float a = texture2D(t, vec2(0.5 + uv.x * 0.5, uv.y)).r; return vec4(min(c, vec3(a)), a) * soft; }
-      return texture2D(t, uv) * soft;
+      if (sbs > 0.5) { vec3 c = texture2D(t, vec2(uv.x * 0.5, uv.y)).rgb; float a = texture2D(t, vec2(0.5 + uv.x * 0.5, uv.y)).r; return vec4(min(c, vec3(a)), a); }
+      return texture2D(t, uv);
     }
     void main() {
       vec2 p = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / dpr;
@@ -85,11 +84,13 @@
       c.rgb += gold * sin(3.14159 * mixv) * 0.28 * c.a;
       // and they turn to gold dust all at once
       // fine grain, rising from the feet up, so it reads as gold dust rather than holes
-      float n2 = fbm(q * vec2(70.0, 124.0) + 3.7) * 0.6 + (1.0 - q.y) * 0.4, td = dis * 1.16 - 0.08;
-      float keep = smoothstep(td - 0.008, td + 0.008, n2);
-      float rim = (1.0 - smoothstep(0.0, 0.03, abs(n2 - td))) * step(0.001, dis) * step(dis, 0.999);
-      c.rgb = mix(c.rgb, gold * c.a * 1.15, rim * 0.9);
-      c *= keep;
+      if (dis > 0.001 && c.a > 0.0) {
+        float n2 = fbm(q * vec2(70.0, 124.0) + 3.7) * 0.6 + (1.0 - q.y) * 0.4, td = dis * 1.16 - 0.08;
+        float keep = smoothstep(td - 0.008, td + 0.008, n2);
+        float rim = (1.0 - smoothstep(0.0, 0.03, abs(n2 - td))) * step(dis, 0.999);
+        c.rgb = mix(c.rgb, gold * c.a * 1.15, rim * 0.9);
+        c *= keep;
+      }
       c.rgb += gold * glow * c.a * 0.45;
       // premultiplied colour may never be brighter than its alpha: Chrome clips it, Safari (every iPhone) shows garbage
       c.rgb = min(c.rgb, vec3(c.a));
@@ -186,7 +187,8 @@
       wake(v);
       check();
       // done once its first frame is decoded and on the GPU, so its first use doesn't stall (capped: iPhones may wait for a tap)
-      await new Promise((res) => { if (v.readyState >= 2) res(); v.addEventListener("loadeddata", res, { once: true }); setTimeout(res, 6000); });
+      if ("requestVideoFrameCallback" in v) { c.rvfc = true; const tick = () => { c.dirty = true; v.requestVideoFrameCallback(tick); }; v.requestVideoFrameCallback(tick); }
+      await new Promise((res) => { if (v.readyState >= 4) res(); v.addEventListener("canplaythrough", res, { once: true }); setTimeout(res, 15000); });
       if (v.readyState >= 2) { upload(c.tex, v, false); c.ready = true; }
     })().catch((e) => console.warn("cast clip", name, e));
     return c.loading;
@@ -208,7 +210,7 @@
   const L = { W: 0, H: 0, fw: 0, fh: 0, cover: 1, park: 1, spread: 0, dpr: 1 };
   function layout() {
     const W = innerWidth, H = innerHeight, phone = W / H < 0.75;
-    L.W = W; L.H = H; L.dpr = Math.min(devicePixelRatio || 1, 2);
+    L.W = W; L.H = H; L.dpr = Math.min(devicePixelRatio || 1, 1.5);
     L.fw = phone ? W : Math.min(W, H * 0.98 * 9 / 16); L.fh = L.fw * 16 / 9;
     L.cover = phone ? Math.max(1, H / L.fh) : 1;
     // waiting at the sides they stand a little smaller, out in the corners, so the text and logo stay clear
@@ -230,7 +232,7 @@
       return { tex: stills[k], sbs: 0, still: 1, fire: FIRE_IN[k], boxes: stillBoxes[k], fallback: [spec.from, spec.to] };
     }
     const v = c.v, fps = c.meta.fps;
-    if (spec.loop) { if (v.playbackRate !== 1) v.playbackRate = 1; if (v.paused) v.play().catch(() => {}); c.dirty = true; }
+    if (spec.loop) { if (v.playbackRate !== 1) v.playbackRate = 1; if (v.paused) v.play().catch(() => {}); if (!c.rvfc) c.dirty = true; }
     else {
       // scrolling forward the video simply plays (smooth, the browser's own decoding), a little faster or slower
       // to keep up with the scroll; it only jumps when the scroll is far ahead or going backwards
@@ -243,7 +245,7 @@
         if (!v.paused) v.pause();
         if (Math.abs(ahead) > 0.6 / fps && !v.seeking && now - (c.lastSeek || 0) > 0.06) { v.currentTime = t; c.lastSeek = now; }
       }
-      if (!v.paused) c.dirty = true;
+      if (!v.paused && !c.rvfc) c.dirty = true;
     }
     if (c.dirty && v.readyState >= 2) { upload(c.tex, v, false); c.dirty = false; }
     const fi = Math.min(c.meta.frames - 1, Math.floor((v.currentTime * fps) % c.meta.frames));
@@ -361,7 +363,7 @@
       t.approach.fromTo(S, { sa: 1 }, { sa: 0, duration: 0.95, ease: "sine.inOut", immediateRender: false }, 0)
         .to(S, { zoom: L.cover, duration: 3.6, ease: "power2.inOut" }, 0.3);
       // the rings
-      caption(t.act, 0, 8.8, "Two Rings, One Promise", "", "engagement");
+      caption(t.act, 0, 8.8, "सगाई", "The ring ceremony", "engagement");
       play(t.act, "eng-act", 0.4, 8.6);
       hold(t.act, 9.6);
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);

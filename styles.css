@@ -426,14 +426,14 @@ section { position: relative; }
 /* each card opens with its scene, so little room above; the details that close it get room to breathe below */
 .event { padding: 5vh 38px 0; padding: 5svh 38px 0; }
 /* the details fill one screen with their text centred, so when the drift rests the card sits square in the middle */
-.ev-body { width: 100%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3vh 0; padding: 3svh 0; }
+.ev-body { position: relative; align-self: stretch; margin-inline: -38px; padding-inline: 38px; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3vh 0; padding: 3svh 0; }
 .event + .event { padding-top: 3vh; padding-top: 3svh; }
 .event::before {
   content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .09; background: var(--line);
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><g fill='none' stroke='black' stroke-width='.8'><path d='M22 2 L42 22 L22 42 L2 22 Z'/><circle cx='22' cy='22' r='6'/></g></svg>") repeat;
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><g fill='none' stroke='black' stroke-width='.8'><path d='M22 2 L42 22 L22 42 L2 22 Z'/><circle cx='22' cy='22' r='6'/></g></svg>") repeat;
 }
-.event::after {
+.ev-body::after {
   content: ""; position: absolute; inset: 14px; z-index: -2; pointer-events: none; border-radius: 12px;
   border: 1px solid color-mix(in srgb, var(--gold) 65%, transparent);
   outline: 1px solid color-mix(in srgb, var(--gold) 45%, transparent); outline-offset: -8px;
