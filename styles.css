@@ -201,6 +201,12 @@ section { position: relative; }
 .shloka .ln:first-child { font-size: .9em; letter-spacing: .04em; color: var(--fg-soft); }
 .divider { width: min(70vw, 300px); aspect-ratio: 178 / 17; margin-top: 34px; }
 .divider.small { width: min(46vw, 180px); margin: 26px auto; }
+/* under the shloka: Shrinav Rastogi (S/o ...) WEDS Vidushi Vatsa (D/o ...) */
+.couple-names { position: relative; z-index: 2; margin-top: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cn-name { margin: 0; font-family: var(--script); font-weight: 700; font-size: clamp(26px, 7vw, 40px); line-height: 1.15;
+  background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .2em; }
+.cn-parents { margin: 4px 0 0; font-style: italic; font-size: clamp(14px, 3.8vw, 18px); color: var(--fg-soft); }
+.cn-weds { margin: 18px 0 14px; font-family: var(--caps); font-size: 13px; letter-spacing: .42em; text-transform: uppercase; color: var(--line); }
 
 /* ---------- invitation ---------- */
 .invite { padding: 6vh 16px 14vh; padding: 6svh 16px 14svh; }
@@ -539,6 +545,10 @@ section { position: relative; }
   .logo { width: min(60vw, 46vh, 620px); width: min(60vw, 46svh, 620px); }
   .hero-date { font-size: 13px; letter-spacing: .24em; gap: 10px; }
   .hero-place { font-size: 15px; }
+  .couple-names { max-width: 44vw; margin-inline: auto; margin-top: 22px; }
+  .cn-name { font-size: 22px; }
+  .cn-parents { font-size: 12px; text-wrap: balance; }
+  .cn-weds { font-size: 11px; margin: 12px 0 10px; }
   .shloka { max-width: 44vw; margin-inline: auto; font-size: 15px; line-height: 1.6; text-wrap: balance; }
   .ev-body > .ev-tag, .ev-body > .ev-title, .ev-body > .details, .ev-body > .actions { max-width: 44vw; text-wrap: balance; }
   .ev-tag { font-size: 13px; }

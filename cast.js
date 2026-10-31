@@ -232,6 +232,16 @@
       return { tex: stills[k], sbs: 0, still: 1, fire: FIRE_IN[k], boxes: stillBoxes[k], fallback: [spec.from, spec.to] };
     }
     const v = c.v, fps = c.meta.fps;
+    // video export (tools: frame-by-frame render with a stepped clock): never play, always show the exact frame
+    if (window.__RENDER) {
+      const dur = c.meta.frames / fps;
+      const t = spec.loop ? ((now % dur) + dur) % dur : (f * (c.meta.frames - 1) + 0.5) / fps;
+      if (!v.paused) v.pause();
+      if (Math.abs(v.currentTime - t) > 0.4 / fps && !v.seeking) v.currentTime = t;
+      if (!v.seeking && v.readyState >= 2) upload(c.tex, v, false);
+      const fi = Math.min(c.meta.frames - 1, Math.floor(v.currentTime * fps));
+      return { tex: c.tex, sbs: 1, still: 0, fire: null, boxes: c.meta.boxes[fi] };
+    }
     if (spec.loop) { if (v.playbackRate !== 1) v.playbackRate = 1; if (v.paused) v.play().catch(() => {}); if (!c.rvfc) c.dirty = true; }
     else {
       // scrolling forward the video simply plays (smooth, the browser's own decoding), a little faster or slower
@@ -457,6 +467,7 @@
       return { approach, act };
     },
     _state: S,
+    _render: (t) => render(t),
     _clips: clips,
   };
 
