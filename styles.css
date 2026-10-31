@@ -12,6 +12,8 @@
   --gold: #E2B35C;
   /* premium foil: dark base, warm gold, two light bands, antique edge */
   --foil-grad: linear-gradient(100deg, #7A5A1E 0%, #BF953F 16%, #FCF6BA 32%, #B38728 48%, #FBF5B7 64%, #AA771C 82%, #7A5A1E 100%);
+  /* the same foil, minus its palest stops: for gold words on light paper, where the pale stops disappear */
+  --foil-deep: linear-gradient(100deg, #5E4210 0%, #8C6418 18%, #B8862C 34%, #7A5512 50%, #A87A24 66%, #6B4A12 84%, #5E4210 100%);
   --btn-ink: #1A1206;
 
   /* live, tweened by scroll */
@@ -137,7 +139,7 @@ button { font: inherit; color: inherit; }
 /* the heading at the top of the envelope */
 .env-title { position: absolute; left: 0; right: 0; top: 7%; margin: 0; text-align: center; font-family: var(--script); font-weight: 400;
   font-size: clamp(40px, 11.4vw, 58px); line-height: 1.1;
-  background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  background: var(--foil-deep); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 .env-address {
   position: absolute; left: 0; right: 0; top: 24%;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
@@ -208,8 +210,8 @@ section { position: relative; }
 /* under the shloka: Shrinav Rastogi (S/o ...) WEDS Vidushi Vatsa (D/o ...) */
 .couple-names { position: relative; z-index: 2; margin-top: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .cn-name { margin: 0; font-family: var(--script); font-weight: 400; font-size: clamp(34px, 9vw, 52px); line-height: 1.15;
-  background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .2em; }
-.cn-parents { margin: 4px 0 0; font-style: italic; font-size: clamp(14px, 3.8vw, 18px); color: var(--fg-soft); }
+  background: var(--foil-deep); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .2em; }
+.cn-parents { margin: 4px 0 0; font-style: italic; font-size: clamp(15px, 4vw, 19px); color: color-mix(in srgb, var(--fg) 85%, transparent); }
 .cn-weds { margin: 20px 0 16px; font-family: var(--caps); font-weight: 700; font-size: clamp(18px, 4.8vw, 24px); letter-spacing: .38em; text-transform: uppercase; color: var(--line); }
 
 /* ---------- invitation ---------- */
