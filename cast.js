@@ -23,9 +23,6 @@
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
     "haldi-act": { from: "haldi-a", to: "haldi-b" },
-    jai1: { from: "jai-a", to: "jai-m" },
-    "jai1-old": { from: "jai-a", to: "jai-m" },
-    jai2: { from: "jai-m", to: "jai-b" },
   };
   // never give a still the same name as a clip: the still would be shown in its place
   const STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"];
@@ -51,7 +48,7 @@
   const CAST = `precision mediump float;
     uniform vec2 res; uniform float dpr, time;
     uniform sampler2D tA, tB; uniform float sbsA, sbsB, stillA, stillB, spreadA, spreadB, mixv, dis, glow, alpha;
-    uniform vec4 rect, fireA, fireB; uniform float cutA, cutB;
+    uniform vec4 rect, fireA, fireB; uniform float cutA, cutB, turn, stand;
     ${NOISE}
     // pushed apart, each side shows only its own person (she is on the left, he on the right); the split runs
     // through the gap between them in this very frame, so a hand reaching across the middle is never sliced off
@@ -72,12 +69,31 @@
       if (sbs > 0.5) { vec3 c = texture2D(t, vec2(uv.x * 0.5, uv.y)).rgb; float a = texture2D(t, vec2(0.5 + uv.x * 0.5, uv.y)).r; return vec4(min(c, vec3(a)), a); }
       return texture2D(t, uv);
     }
+    const vec2 AXIS = vec2(0.52, 0.62); // between the two of them, at waist height (fractions of the frame)
+    vec2 turned(vec2 p, float th) {
+      if (abs(th) < 0.0005) return p;
+      float c = cos(th), s0 = sin(th);
+      float flip = c < 0.0 ? -1.0 : 1.0; c = abs(c);          // the back is the front, mirrored
+      float cx = rect.x + rect.z * AXIS.x, cy = rect.y + rect.w * AXIS.y, D = rect.z * 2.4;
+      float sx = p.x - cx, den = D * c - sx * s0 * flip;
+      if (den <= 1.0) return vec2(-1e5);
+      float x = sx * D / den;
+      float y = (p.y - cy) * (D + x * s0 * flip) / D;
+      return vec2(cx + x * flip, cy + y);
+    }
     void main() {
-      vec2 p = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / dpr;
+      vec2 p0 = vec2(gl_FragCoord.x, res.y - gl_FragCoord.y) / dpr;
+      vec2 p = turned(p0, turn);
       vec4 A = samp(tA, life(frameUV(p, spreadA, cutA), stillA, fireA), sbsA);
       vec4 B = mixv > 0.0 ? samp(tB, life(frameUV(p, spreadB, cutB), stillB, fireB), sbsB) : vec4(0.0);
       vec2 q = (p - rect.xy) / rect.zw;
       vec3 gold = vec3(1.0, 0.8, 0.42);
+      // light rakes across them as they turn, and a flash of gold hides the moment they are edge-on
+      if (abs(turn) > 0.0005) {
+        float ct = cos(turn), edge = 1.0 - smoothstep(0.0, 0.3, abs(ct));
+        A.rgb *= 0.88 + 0.22 * abs(ct) + 0.12 * sin(turn) * (q.x - AXIS.x) * 4.0;
+        A.rgb += gold * edge * 0.75 * A.a;
+      }
       // one pose melts into the next like a film dissolve, with a warm glow at the crossing
       float k = smoothstep(0.0, 1.0, mixv);
       vec4 c = mix(A, B, k);
@@ -93,6 +109,28 @@
       }
       c.rgb += gold * glow * c.a * 0.45;
       // premultiplied colour may never be brighter than its alpha: Chrome clips it, Safari (every iPhone) shows garbage
+      if (stand > 0.001) {
+        vec2 sp = (p0 - rect.xy) / rect.zw - vec2(AXIS.x, 0.875);
+        vec2 e = sp / vec2(0.36, 0.045);
+        float r = length(e), top = sp.y < 0.0 ? 1.0 : 0.0;
+        float disc = 1.0 - smoothstep(0.96, 1.0, r);
+        float rim = smoothstep(0.82, 0.96, r) * disc;
+        float ang = atan(e.y, e.x), shine = pow(max(0.0, cos(ang - turn * 1.0 - 1.2)), 6.0);
+        vec3 face = mix(vec3(0.34, 0.07, 0.07), vec3(0.6, 0.18, 0.12), 1.0 - r) * (0.8 + 0.2 * top);
+        vec3 col = mix(face, gold * (0.75 + 0.6 * shine), rim) + gold * shine * disc * 0.25;
+        float glowR = (1.0 - smoothstep(0.9, 1.9, r)) * 0.35;
+        vec4 ped = vec4(col * disc + gold * glowR * (1.0 - disc), max(disc, glowR * 0.6)) * stand;
+        // the side of the disc, a little below its face
+        vec2 e2 = (sp - vec2(0.0, 0.018)) / vec2(0.36, 0.045);
+        float side = (1.0 - smoothstep(0.96, 1.0, length(e2))) * (1.0 - disc) * stand;
+        ped += vec4(vec3(0.42, 0.26, 0.08) * side, side);
+        c = c + ped * (1.0 - c.a);
+        // edge-on, a column of gold light stands where they were
+        float edge = abs(turn) > 0.0005 ? 1.0 - smoothstep(0.0, 0.32, abs(cos(turn))) : 0.0;
+        vec2 bq = (p0 - rect.xy) / rect.zw;
+        float beam = edge * exp(-abs(bq.x - AXIS.x) * 26.0) * smoothstep(0.3, 0.45, bq.y) * (1.0 - smoothstep(0.84, 0.88, bq.y));
+        c += vec4(gold * beam * 1.1, beam * 0.9) * stand;
+      }
       c.rgb = min(c.rgb, vec3(c.a));
       gl_FragColor = c * alpha;
     }`;
@@ -200,13 +238,11 @@
   ["pointerdown", "touchend", "click"].forEach((t) => addEventListener(t, () => Object.values(clips).forEach((c) => c.v && !c.ready && wake(c.v)), { passive: true }));
 
   // ?jaimala=old: the earlier first half of the jaimala (Veo 3.1 Fast, longer), to compare with the current one
-  const OLD_JAIMALA = new URLSearchParams(location.search).get("jaimala") === "old";
-  if (!OLD_JAIMALA) delete CLIPS["jai1-old"];
   // the ॐ loader in main.js waits for every clip (and, through world:ready, the key poses and sets)
   window.CastPreload = { names: () => Object.keys(CLIPS), clip: (n) => loadClip(n) };
 
   /* ---------- state (everything here is tweened by the scroll script) ---------- */
-  const S = { a: "idle", af: 0, sa: 1, b: "", bf: 0, sb: 0, mix: 0, dis: 0, glow: 0, zoom: 1, alpha: 1, plate: "", pa: 0, sketch: 0, fill: 0 };
+  const S = { a: "idle", af: 0, sa: 1, b: "", bf: 0, sb: 0, mix: 0, dis: 0, glow: 0, zoom: 1, alpha: 1, plate: "", pa: 0, sketch: 0, fill: 0, turn: 0, stand: 0 };
   const L = { W: 0, H: 0, fw: 0, fh: 0, cover: 1, park: 1, spread: 0, dpr: 1 };
   function layout() {
     const W = innerWidth, H = innerHeight, phone = W / H < 0.75;
@@ -299,6 +335,7 @@
       const touch = (X) => !!(X && X.boxes && X.boxes.touch);
       gl.uniform1f(u.spreadA, touch(A) ? 0 : S.sa * L.spread); gl.uniform1f(u.spreadB, touch(B || A) ? 0 : S.sb * L.spread);
       gl.uniform1f(u.cutA, gapOf(A)); gl.uniform1f(u.cutB, gapOf(B || A));
+      gl.uniform1f(u.turn, S.turn); gl.uniform1f(u.stand, S.stand);
       gl.uniform1f(u.mixv, B ? mix : 0); gl.uniform1f(u.dis, S.dis); gl.uniform1f(u.glow, S.glow); gl.uniform1f(u.alpha, S.alpha);
       gl.uniform4fv(u.fireA, A.fire || NOFIRE); gl.uniform4fv(u.fireB, (B && B.fire) || NOFIRE);
     });
@@ -386,27 +423,20 @@
       setIn(t.approach, "wedding", 1.1, 2.9);
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
-      // the jaimala: she garlands him, then he garlands her, and they fold their hands
-      if (OLD_JAIMALA) {
-        caption(t.act, 0, 12.4, "जयमाला", "The garland exchange", "wedding");
-        play(t.act, "jai1-old", 0.3, 5.4);
-        morph(t.act, "jai2", 5.8, 0.6);
-        play(t.act, "jai2", 6.4, 6.4);
-        hold(t.act, 13);
-      } else {
-        caption(t.act, 0, 11.6, "जयमाला", "The garland exchange", "wedding");
-        play(t.act, "jai1", 0.3, 4.6);
-        morph(t.act, "jai2", 4.9, 0.35);
-        play(t.act, "jai2", 5.25, 6.4);
-        hold(t.act, 12);
-      }
+      // the jaimala as a show piece: garlands in hand, they turn once on a gold stand, like a jewel in a showcase
+      caption(t.act, 0, 11.4, "जयमाला", "The garland exchange", "wedding");
+      t.act.to(S, { pa: 0, duration: 1.2, ease: "power1.inOut" }, 0)
+        .fromTo(S, { stand: 0 }, { stand: 1, duration: 1.2, ease: "power2.out", immediateRender: false }, 0.2)
+        .fromTo(S, { turn: 0 }, { turn: Math.PI * 2, duration: 9, ease: "sine.inOut", immediateRender: false }, 1.2);
+      hold(t.act, 12);
+      t.leave.to(S, { stand: 0, duration: 1, ease: "power1.in" }, 0);
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
       return t;
     },
   };
 
   function resetPose() {
-    Object.assign(S, { a: "idle", af: 0, sa: 1, b: "", bf: 0, sb: 0, mix: 0, dis: 0, glow: 0, zoom: L.park, alpha: 1, plate: "", pa: 0, sketch: 0, fill: 0 });
+    Object.assign(S, { a: "idle", af: 0, sa: 1, b: "", bf: 0, sb: 0, mix: 0, dis: 0, glow: 0, zoom: L.park, alpha: 1, plate: "", pa: 0, sketch: 0, fill: 0, turn: 0, stand: 0 });
     capBox.innerHTML = "";
   }
 
