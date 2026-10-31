@@ -23,6 +23,7 @@
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
     "haldi-act": { from: "haldi-a", to: "haldi-b" },
+    turntable: { from: "jai-a", to: "jai-a" }, // Gemini Omni Flash: one real 3D turn on a stand, first frame = last frame
   };
   // never give a still the same name as a clip: the still would be shown in its place
   const STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"];
@@ -48,7 +49,7 @@
   const CAST = `precision mediump float;
     uniform vec2 res; uniform float dpr, time;
     uniform sampler2D tA, tB; uniform float sbsA, sbsB, stillA, stillB, spreadA, spreadB, mixv, dis, glow, alpha;
-    uniform vec4 rect, fireA, fireB; uniform float cutA, cutB, turn, stand;
+    uniform vec4 rect, fireA, fireB; uniform float cutA, cutB, turn, stand, spin;
     ${NOISE}
     // pushed apart, each side shows only its own person (she is on the left, he on the right); the split runs
     // through the gap between them in this very frame, so a hand reaching across the middle is never sliced off
@@ -115,7 +116,7 @@
         float r = length(e), top = sp.y < 0.0 ? 1.0 : 0.0;
         float disc = 1.0 - smoothstep(0.96, 1.0, r);
         float rim = smoothstep(0.82, 0.96, r) * disc;
-        float ang = atan(e.y, e.x), shine = pow(max(0.0, cos(ang - turn * 1.0 - 1.2)), 6.0);
+        float ang = atan(e.y, e.x), shine = pow(max(0.0, cos(ang - (turn + spin) - 1.2)), 6.0);
         vec3 face = mix(vec3(0.34, 0.07, 0.07), vec3(0.6, 0.18, 0.12), 1.0 - r) * (0.8 + 0.2 * top);
         vec3 col = mix(face, gold * (0.75 + 0.6 * shine), rim) + gold * shine * disc * 0.25;
         float glowR = (1.0 - smoothstep(0.9, 1.9, r)) * 0.35;
@@ -346,6 +347,7 @@
       gl.uniform1f(u.spreadA, touch(A) ? 0 : S.sa * L.spread); gl.uniform1f(u.spreadB, touch(B || A) ? 0 : S.sb * L.spread);
       gl.uniform1f(u.cutA, gapOf(A)); gl.uniform1f(u.cutB, gapOf(B || A));
       gl.uniform1f(u.turn, S.turn); gl.uniform1f(u.stand, S.stand);
+      gl.uniform1f(u.spin, S.a === "turntable" ? S.af * 6.2832 : 0);
       gl.uniform1f(u.mixv, B ? mix : 0); gl.uniform1f(u.dis, S.dis); gl.uniform1f(u.glow, S.glow); gl.uniform1f(u.alpha, S.alpha);
       gl.uniform4fv(u.fireA, A.fire || NOFIRE); gl.uniform4fv(u.fireB, (B && B.fire) || NOFIRE);
     });
@@ -433,11 +435,11 @@
       setIn(t.approach, "wedding", 1.1, 2.9);
       morph(t.approach, "jai-a", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
-      // the jaimala as a show piece: garlands in hand, they turn once on a gold stand, like a jewel in a showcase
+      // the jaimala as a show piece: garlands in hand, they turn once (real 3D, a filmed turntable) on a gold stand
       caption(t.act, 0, 11.4, "जयमाला", "The garland exchange", "wedding");
       t.act.to(S, { pa: 0, duration: 1.2, ease: "power1.inOut" }, 0)
-        .fromTo(S, { stand: 0 }, { stand: 1, duration: 1.2, ease: "power2.out", immediateRender: false }, 0.2)
-        .fromTo(S, { turn: 0 }, { turn: Math.PI * 2, duration: 9, ease: "sine.inOut", immediateRender: false }, 1.2);
+        .fromTo(S, { stand: 0 }, { stand: 1, duration: 1.2, ease: "power2.out", immediateRender: false }, 0.2);
+      play(t.act, "turntable", 1.2, 9.6);
       hold(t.act, 12);
       t.leave.to(S, { stand: 0, duration: 1, ease: "power1.in" }, 0);
       setOut(t.leave, 0, 3); backToSides(t.leave, 0, 3);
