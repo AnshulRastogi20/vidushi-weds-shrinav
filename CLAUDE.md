@@ -29,6 +29,7 @@ Use this server, not a plain static server: it also routes `/celebrate`, `/famil
 | `cast.js` | The couple and the sets: plays the keyed clips / key poses / set plates in one shared 9:16 frame on `#world` (WebGL), and every scene's choreography. Exposes `window.World` |
 | `assets/cast/` | `<clip>.mp4` (colour left half, matte right half) + `<clip>.json`, `still/*.webp` key poses, `plate/*.webp` sets (+ `-lines` pencil, `-amb` blur). Built by `tools/ai/` |
 | `styles.css` | Page styles. `toon.css` = character styles |
+| `fonts.js` | Royal font options. Guests see the current font; `?font=<key>` on any link (cinzel, cormorant, playfair, marcellus, bodoni, vibes, decorative) shows the whole card in that font. Palette page: `mock/_review/fonts/` (local only). When the owner picks one, make it the default in styles.css (`--script`, `--serif`, `--caps`) and the Google Fonts link in index.html |
 | `assets/art/` | Card ornaments (SVG, lifted from the printed card PDF by `tools/extract_art.py`) + rigged characters `groom.svg`, `bride.svg` |
 | `assets/logo/` | The couple's real logo split into transparent layers (`tools/split_logo.py`): wreath, ornament, hashtag, mono-s, mono-v, elephant-l/r. Stacked they recreate the exact logo |
 | `assets/audio/` | `achutam-keshavam.mp3` (in use), `theme.mp3` (old shehnai). See CREDITS.txt |
@@ -58,7 +59,8 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 - **Gold is always the multi-stop foil gradient** (`--foil-grad` in styles.css), never a flat gold colour. Flat gold looked cheap.
 - **Each event card owns its colours** via `.event[data-sky="night|sun|crimson"]`. The global sky (`STATES` / `VIA` in main.js) only changes in the gaps between cards. Never let a card show a half-blended background behind its text.
 - Event looks: Engagement `night` (#0D1030 -> #241C47, stars, gold), Haldi `sun` (#FFD45A -> #F0A010, rani-pink text and pink foil), Wedding `crimson` (#2B0408 -> #7A0E1C, gold).
-- Font is plain Calibri / Carlito for now (Devanagari stays Tiro). Typography will be revisited.
+- Font is plain Calibri / Carlito for now (Devanagari stays Tiro). The owner is choosing a royal font from `fonts.js` (see Files).
+- No "Date" label on the event cards and no "Scroll" cue on the hero (removed on request).
 - RSVP form was removed on request.
 - Mobile touch: Lenis smooth scroll runs only on `(hover: hover) and (pointer: fine)`; phones use native scrolling. Envelope flap/thread/knot have `pointer-events: none` so only `#open` takes the tap. Every `svh` size has a `vh` fallback before it.
 
@@ -68,7 +70,7 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 - On wide screens the two halves of the frame are pushed apart while they wait at the sides; the split runs through the empty strip between them in each frame (`cut`/`touch` per frame, written by `python3 tools/ai/cast_cuts.py` from the finished mattes; rerun it after any export, then bump `V` at the top of cast.js: browsers cache `/assets` for a week, so a re-exported file under the same name is otherwise never fetched again). index.html loads styles.css, toon.css, cast.js and main.js with the same `?v=`: bump those together when shipping a change that must reach everyone at once (WhatsApp's in-app browser caches hard). A clip must be fully back together (`sa` = 0) before its first `touch` frame: meet touches at 52%, eng-approach at 18%.
 - Every scene is three paused timelines (`approach`, `act`, `leave`) that main.js places on the master timeline by scroll position. Only use tweens (and `fromTo`/`set`) on the state object `S`, never one-off state changes, or scrolling back will not undo them. `play()` scrubs a clip by tween progress; `morph()` turns one pose/clip into another through the gold shimmer.
 - Vanishing is a dissolve in the cast shader (`S.dis`), fine gold grain rising from the feet, so everything goes at once.
-- Layering: `#world` canvas is z-index 1 after the intro: in front of the page colours (sky, card backgrounds, the photo and moments sections) and the ornaments (frames, corners, dividers), behind the words, which get `position: relative; z-index: 2` (Ganesha, shloka, event tag/title/details/actions/countdown, the photo's caption). The shaders clamp premultiplied colour to alpha: Safari shows garbage colours otherwise.
+- Layering: `#world` canvas is z-index 3 after the intro: the two of them are in front of EVERYTHING (owner's rule). On phones the words are set smaller and kept in the clear column between them (`@media (max-width: 600px)` block at the end of styles.css; the gap is about 165px at hand height). Never shrink the characters to make room. The shaders clamp premultiplied colour to alpha: Safari shows garbage colours otherwise.
 
 ## AI pipeline (characters)
 Key in `.env` (`GEMINI_API_KEY`, Google AI Studio, prepaid). Never print it; `.env` is git-excluded and in `.vercelignore`.

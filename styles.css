@@ -193,13 +193,6 @@ section { position: relative; }
 .hero-event { margin-top: 2.4vh; margin-top: 2.4svh; font-family: var(--caps); font-size: 15px; letter-spacing: .34em; text-transform: uppercase; color: var(--fg); }
 .hero-date i { width: 4px; height: 4px; transform: rotate(45deg); background: var(--line); }
 .hero-place { margin-top: 6px; font-style: italic; color: var(--fg-soft); }
-.cue {
-  position: absolute; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-family: var(--caps); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--fg-soft);
-}
-.cue i { width: 1px; height: 38px; background: linear-gradient(var(--line), transparent); animation: drip 2.2s ease-in-out infinite; transform-origin: top; }
-@keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
 /* ---------- blessing ---------- */
 .blessing { display: flex; flex-direction: column; align-items: center; padding: 14vh 24px 4vh; padding: 14svh 24px 4svh; text-align: center; }
@@ -538,4 +531,28 @@ section { position: relative; }
   .ev-body { padding: 1vh 0; padding: 1svh 0; }
   .clock b { font-size: 30px; }
   .countdown .label { margin-bottom: 0; }
+}
+
+/* Phones: the two of them stand in front of everything, at the sides, at full size. Everything else is set a size
+   smaller and kept in the clear column between them (about 165px wide where their hands are), so nothing collides. */
+@media (max-width: 600px) {
+  .logo { width: min(60vw, 46vh, 620px); width: min(60vw, 46svh, 620px); }
+  .hero-date { font-size: 13px; letter-spacing: .24em; gap: 10px; }
+  .hero-place { font-size: 15px; }
+  .shloka { max-width: 44vw; margin-inline: auto; font-size: 15px; line-height: 1.6; text-wrap: balance; }
+  .ev-body > .ev-tag, .ev-body > .ev-title, .ev-body > .details, .ev-body > .actions { max-width: 44vw; text-wrap: balance; }
+  .ev-tag { font-size: 13px; }
+  .ev-title .title-text { font-size: 26px; line-height: 1.12; }
+  .block .big { font-size: 16px; line-height: 1.3; }
+  .ev-time, .ev-venue-line { font-size: 13px; line-height: 1.45; max-width: none; }
+  .label { font-size: 10px; letter-spacing: .26em; }
+  .divider.small { width: 34vw; }
+  .ev-schedule { width: 44vw; gap: 2px; }
+  .ev-schedule li { font-size: 12px; flex-wrap: wrap; justify-content: center; column-gap: 6px; }
+  .ev-schedule i { display: none; }
+  .btn { font-size: 11px; padding: 10px 16px; letter-spacing: .16em; }
+  .countdown { max-width: 46vw; margin-inline: auto; }
+  .countdown .label { font-size: 9px; letter-spacing: .18em; }
+  .clock b { font-size: 22px; }
+  .clock span { font-size: 7px; letter-spacing: .06em; }
 }

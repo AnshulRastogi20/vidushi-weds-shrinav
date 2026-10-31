@@ -236,13 +236,13 @@
   const LOGO_HIDDEN = () => {
     gsap.set(".lg-s, .lg-v", { clipPath: "inset(74% 0% 0% 0%)" });
     gsap.set(".lg-hashtag", { clipPath: "inset(0% 72% 0% 0%)", autoAlpha: 0 });
-    gsap.set(".lg-ornament, .lg-el, .lg-wreath, .hero-date, .hero-place, .cue", { autoAlpha: 0 });
+    gsap.set(".lg-ornament, .lg-el, .lg-wreath, .hero-date, .hero-place", { autoAlpha: 0 });
   };
   function revealHero(instant) {
     const tl = gsap.timeline();
     if (instant) {
       gsap.set(".lg-s, .lg-v, .lg-hashtag", { clipPath: "inset(0% 0% 0% 0%)", autoAlpha: 1 });
-      gsap.set(".lg-ornament, .lg-el, .lg-wreath, .hero-date, .hero-place, .cue", { autoAlpha: 1 });
+      gsap.set(".lg-ornament, .lg-el, .lg-wreath, .hero-date, .hero-place", { autoAlpha: 1 });
       gsap.set(".lg-wreath", { "--a": "360deg" });
       return tl;
     }
@@ -259,8 +259,7 @@
       .to(".lg-wreath", { "--a": "380deg", duration: 1.6, ease: "power2.inOut" }, 1.9)
       .fromTo(".lg-wreath", { scale: 0.97, filter: "blur(4px)" }, { scale: 1, filter: "blur(0px)", duration: 1.6, ease: "power2.out" }, 1.9)
       .fromTo(".bell", { yPercent: -110 }, { yPercent: 0, duration: 1.3, ease: "back.out(1.4)", stagger: 0.12 }, 2.4)
-      .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 3.2)
-      .fromTo(".cue", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 3.8);
+      .fromTo(".hero-date, .hero-place", { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 }, 3.2);
     $$(".bell").forEach((b, i) => {
       gsap.fromTo(b, { rotation: i ? 2.2 : -2.2 }, { rotation: i ? -2.2 : 2.2, duration: 2.4 + i * 0.35, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.2, transformOrigin: "50% 0" });
     });
@@ -460,7 +459,7 @@
     // (the blessing has no clip of its own yet, so it doesn't hold anything back: the first walk-in gets its full stretch)
     let floor = 0;
     pins.forEach(({ name, st }) => {
-      const s = world.scene(name), aFrom = Math.max(floor, st.start - innerHeight * 0.85);
+      const s = world.scene(name), aFrom = Math.max(floor, st.start - innerHeight * (innerWidth < 600 ? 0.62 : 0.85)); // phones: wait until the text above has mostly gone, so they never walk across it
       put(s.approach, aFrom, st.start);
       put(s.act, st.start, st.end);
       put(s.leave, st.end, st.end + innerHeight * 0.6);
