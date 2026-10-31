@@ -56,7 +56,7 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 
 ## Locked decisions (do not undo without the owner asking)
 - **Never redraw or retype the logo or hashtag.** The hero animates the real logo layers only. Hashtag spelling: `#RViShCameTrue`.
-- **Gold is always the multi-stop foil gradient** (`--foil-grad` in styles.css), never a flat gold colour. Flat gold looked cheap. Gold words on light paper (envelope heading, the couple's names) use `--foil-deep`, the same foil without its palest stops, which vanish on cream.
+- **Gold is always the multi-stop foil gradient** (`--foil-grad` in styles.css), never a flat gold colour. Flat gold looked cheap. Big words on light paper (envelope heading, the couple's names) use `--foil-deep`, a maroon multi-stop foil (owner's choice), because pale gold vanishes on cream.
 - **Each event card owns its colours** via `.event[data-sky="night|sun|crimson"]`. The global sky (`STATES` / `VIA` in main.js) only changes in the gaps between cards. Never let a card show a half-blended background behind its text.
 - Event looks: Engagement `night` (#0D1030 -> #241C47, stars, gold), Haldi `sun` (#FFD45A -> #F0A010, rani-pink text and pink foil), Wedding `crimson` (#2B0408 -> #7A0E1C, gold).
 - Font (chosen 2026-11-01): Great Vibes for titles and names (`--script`), Cormorant Garamond for text (`--serif`), Cinzel for small caps (`--caps`); Devanagari stays Tiro. `?font=<key>` (fonts.js) still previews the other options.

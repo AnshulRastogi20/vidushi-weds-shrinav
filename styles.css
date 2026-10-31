@@ -12,8 +12,8 @@
   --gold: #E2B35C;
   /* premium foil: dark base, warm gold, two light bands, antique edge */
   --foil-grad: linear-gradient(100deg, #7A5A1E 0%, #BF953F 16%, #FCF6BA 32%, #B38728 48%, #FBF5B7 64%, #AA771C 82%, #7A5A1E 100%);
-  /* the same foil, minus its palest stops: for gold words on light paper, where the pale stops disappear */
-  --foil-deep: linear-gradient(100deg, #5E4210 0%, #8C6418 18%, #B8862C 34%, #7A5512 50%, #A87A24 66%, #6B4A12 84%, #5E4210 100%);
+  /* maroon foil for the big words on light paper (the pale gold stops disappear on cream) */
+  --foil-deep: linear-gradient(100deg, #4A0710 0%, #7A0E1C 18%, #A8283C 34%, #6B0A18 50%, #96203A 66%, #5A0812 84%, #4A0710 100%);
   --btn-ink: #1A1206;
 
   /* live, tweened by scroll */
