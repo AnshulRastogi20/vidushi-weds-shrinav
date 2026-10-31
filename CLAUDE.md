@@ -60,7 +60,7 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 - **Each event card owns its colours** via `.event[data-sky="night|sun|crimson"]`. The global sky (`STATES` / `VIA` in main.js) only changes in the gaps between cards. Never let a card show a half-blended background behind its text.
 - Event looks: Engagement `night` (#0D1030 -> #241C47, stars, gold), Haldi `sun` (#FFD45A -> #F0A010, rani-pink text and pink foil), Wedding `crimson` (#2B0408 -> #7A0E1C, gold).
 - Font is plain Calibri / Carlito for now (Devanagari stays Tiro). The owner is choosing a royal font from `fonts.js` (see Files).
-- No "Date" label on the event cards and no "Scroll" cue on the hero (removed on request).
+- No "Date" label and no #RViShCameTrue tag on the event cards (the hashtag is only on the opening logo and the closing), no "Scroll" cue on the hero, "Tap to open" sits at the bottom of the envelope (all on request).
 - RSVP form was removed on request.
 - Mobile touch: Lenis smooth scroll runs only on `(hover: hover) and (pointer: fine)`; phones use native scrolling. Envelope flap/thread/knot have `pointer-events: none` so only `#open` takes the tap. Every `svh` size has a `vh` fallback before it.
 
