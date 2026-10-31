@@ -74,6 +74,7 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 
 ## AI pipeline (characters)
 Key in `.env` (`GEMINI_API_KEY`, Google AI Studio, prepaid). Never print it; `.env` is git-excluded and in `.vercelignore`.
+- Google shut Veo 3.1 down on 2026-10-22. New clips: `python3 tools/ai/omni.py <name> <prompt> --start <pose.png> [--end <pose.png>] [--ref <sheet.png> ...] --res 1080p` (Gemini Omni 1.1 Flash, Interactions API, about $0.10/s at 720p, $0.15/s at 1080p; say in the prompt which image is first frame, last frame, reference; passing the locked character sheets as references keeps backs and sides on-model). Then export as before.
 - `tools/ai/gemini.py image|video ...`: Gemini 3 Pro Image stills, Veo 3.1 clips (start + end frame; `lastFrame` is honoured about 8 frames before the clip ends, so exports trim to the best match).
 - Key poses on flat green: `tools/ai/out/k/*-green.png` (park, meet, eng-a/b, haldi-a/b, jai-a/b, phera-a, finale, enter) + plates (`eng-plate`, `haldi-plate`, `wed-plate`). Prompts in `tools/ai/prompts/frames/`.
 - Clips: `tools/ai/clips.sh <name...>` (start/end pose per clip inside; prompts in `tools/ai/prompts/clips/` + `common.txt`). Veo allows ~4 jobs at once.
