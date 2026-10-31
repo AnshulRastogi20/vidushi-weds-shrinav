@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 K = ROOT / "tools/ai/out/k"
 OUT = ROOT / "assets/cast"
 W = 640; H = round(W * 16 / 9)
-STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"]
+STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "jai-face", "finale"]
 # a still must never share a name with a clip (the page would show the still instead of playing the clip)
 SOURCE = {"meet-pose": "meet"}
 PLATES = {"engagement": "eng-plate", "haldi": "haldi-plate", "wedding": "wed-plate"}

@@ -15,7 +15,7 @@
 
   const BASE = "/assets/cast/";
   // browsers keep /assets for a week: bump this whenever a clip, still or plate is re-exported, so everyone gets the new one
-  const V = "?v=20261020b";
+  const V = "?v=20261101t";
   // in the order they load. A clip falls back to its first and last key pose until (or unless) its video is ready
   const CLIPS = {
     meet: { from: "park", to: "meet-pose" },
@@ -23,10 +23,10 @@
     "eng-approach": { from: "park", to: "eng-a" },
     "eng-act": { from: "eng-a", to: "eng-b" },
     "haldi-act": { from: "haldi-a", to: "haldi-b" },
-    turntable: { from: "jai-a", to: "jai-a" }, // Gemini Omni Flash: one real 3D turn on a stand, first frame = last frame
+    turntable: { from: "jai-face", to: "jai-face" }, // Gemini Omni Flash: one real 3D turn on a stand, first frame = last frame
   };
   // never give a still the same name as a clip: the still would be shown in its place
-  const STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "finale"];
+  const STILLS = ["park", "meet-pose", "eng-a", "eng-b", "haldi-a", "haldi-b", "jai-a", "jai-m", "jai-b", "jai-face", "finale"];
   const PLATES = ["engagement", "haldi", "wedding"];
   // where the havan fire is, so it can flicker (fractions of the frame: x0, y0, x1, y1)
   const FIRE = [0.4, 0.6, 0.6, 0.82];
@@ -70,7 +70,7 @@
       if (sbs > 0.5) { vec3 c = texture2D(t, vec2(uv.x * 0.5, uv.y)).rgb; float a = texture2D(t, vec2(0.5 + uv.x * 0.5, uv.y)).r; return vec4(min(c, vec3(a)), a); }
       return texture2D(t, uv);
     }
-    const vec2 AXIS = vec2(0.52, 0.62); // between the two of them, at waist height (fractions of the frame)
+    const vec2 AXIS = vec2(0.50, 0.60); // between the two of them, at waist height (fractions of the frame)
     vec2 turned(vec2 p, float th) {
       if (abs(th) < 0.0005) return p;
       float c = cos(th), s0 = sin(th);
@@ -111,7 +111,7 @@
       c.rgb += gold * glow * c.a * 0.45;
       // premultiplied colour may never be brighter than its alpha: Chrome clips it, Safari (every iPhone) shows garbage
       if (stand > 0.001) {
-        vec2 sp = (p0 - rect.xy) / rect.zw - vec2(AXIS.x, 0.875);
+        vec2 sp = (p0 - rect.xy) / rect.zw - vec2(AXIS.x, 0.855);
         vec2 e = sp / vec2(0.36, 0.045);
         float r = length(e), top = sp.y < 0.0 ? 1.0 : 0.0;
         float disc = 1.0 - smoothstep(0.96, 1.0, r);
@@ -433,7 +433,7 @@
     wedding() {
       const t = timelines();
       setIn(t.approach, "wedding", 1.1, 2.9);
-      morph(t.approach, "jai-a", 0.6, 2.4);
+      morph(t.approach, "jai-face", 0.6, 2.4);
       t.approach.to(S, { zoom: L.cover, duration: 3.4, ease: "power2.inOut" }, 0.3);
       // the jaimala as a show piece: garlands in hand, they turn once (real 3D, a filmed turntable) on a gold stand
       caption(t.act, 0, 11.4, "जयमाला", "The garland exchange", "wedding");
