@@ -5,7 +5,7 @@
 window.FONT_OPTIONS = {
   current: { name: "Current (Calibri)", families: [], script: 'Calibri, "Carlito", sans-serif', serif: 'Calibri, "Carlito", sans-serif', caps: 'Calibri, "Carlito", sans-serif' },
   cinzel: { name: "Cinzel + Cormorant", families: ["Cinzel:wght@500;700", "Cormorant+Garamond:ital,wght@0,500;0,700;1,500"],
-    script: '"Cinzel", serif', serif: '"Cormorant Garamond", serif', caps: '"Cinzel", serif', bodySize: 1.12 },
+    script: '"Cinzel", serif', serif: '"Cormorant Garamond", serif', caps: '"Cinzel", serif', bodySize: 1.12, phoneTitle: 22 },
   cormorant: { name: "Cormorant Royale", families: ["Cormorant+Garamond:ital,wght@0,500;0,700;1,500;1,700", "Cormorant+SC:wght@600"],
     script: '"Cormorant Garamond", serif', serif: '"Cormorant Garamond", serif', caps: '"Cormorant SC", serif', bodySize: 1.14 },
   playfair: { name: "Playfair + Lora", families: ["Playfair+Display:ital,wght@0,700;1,500", "Lora:ital,wght@0,400;0,600;1,400", "Cinzel:wght@500"],
@@ -35,6 +35,8 @@ window.applyFontOption = (key, root = document.documentElement) => {
   const css = [];
   if (o.bodySize) css.push(`body { font-size: ${17 * o.bodySize}px; }`);
   if (o.titleWeight) css.push(`.title-text, .who, .env-address .guest, .sign-h { font-weight: ${o.titleWeight}; }`);
+  // phones: a wide face gets a smaller event title, so "Engagement" fits the clear column between the two of them
+  if (o.phoneTitle) css.push(`@media (max-width: 600px) { .ev-title .title-text { font-size: ${o.phoneTitle}px !important; } }`);
   if (o.titleSize) {
     const s = o.titleSize;
     css.push(`.title-text { font-size: calc(clamp(30px, 8vw, 56px) * ${s}); } .who { font-size: calc(clamp(28px, 7.5vw, 38px) * ${s}); }`,

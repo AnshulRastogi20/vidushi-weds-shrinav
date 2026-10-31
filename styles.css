@@ -262,7 +262,7 @@ section { position: relative; }
 /* the venue's address wraps onto balanced lines in the middle, clear of the two of them at the sides */
 .ev-venue-line { max-width: min(58vw, 460px); margin-inline: auto; text-wrap: balance; }
 .title-text {
-  margin: 0; font-family: var(--script); font-weight: 700; font-size: clamp(30px, 8vw, 56px); line-height: 1.2; padding: 0 .15em;
+  margin: 0; font-family: var(--script); font-weight: 700; font-size: clamp(30px, 8vw, 56px); line-height: 1.2; padding: 0 .3em;
   background: var(--foil-grad); background-size: 220% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
   animation: foil-shine 5s ease-in-out infinite alternate;
