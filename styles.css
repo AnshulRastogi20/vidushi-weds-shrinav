@@ -24,10 +24,10 @@
   --horizon: 0;
   --grain: .5;
 
-  /* plain Calibri for now (Carlito is its metric twin for phones without Calibri) */
-  --serif: Calibri, "Carlito", "Segoe UI", system-ui, sans-serif;
-  --caps: var(--serif);
-  --script: var(--serif);
+  /* the owner's choice (2026-11-01): Great Vibes for titles and names, Cormorant Garamond for text, Cinzel for small caps */
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --caps: "Cinzel", "Cormorant Garamond", serif;
+  --script: "Great Vibes", "Cormorant Garamond", cursive;
   --deva: "Tiro Devanagari Hindi", "Noto Serif Devanagari", serif;
 }
 
@@ -40,7 +40,7 @@ body {
   background: var(--paper);
   color: var(--fg);
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.55;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -135,16 +135,16 @@ button { font: inherit; color: inherit; }
 .knot .knot-c { fill: #B3202E; stroke: #E8B04A; stroke-width: 2.5; }
 .open-hit { position: absolute; inset: 0; z-index: 5; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 /* the heading at the top of the envelope */
-.env-title { position: absolute; left: 0; right: 0; top: 7%; margin: 0; text-align: center; font-family: var(--script); font-weight: 700;
-  font-size: clamp(30px, 8.6vw, 44px); line-height: 1.1;
+.env-title { position: absolute; left: 0; right: 0; top: 7%; margin: 0; text-align: center; font-family: var(--script); font-weight: 400;
+  font-size: clamp(40px, 11.4vw, 58px); line-height: 1.1;
   background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 .env-address {
   position: absolute; left: 0; right: 0; top: 24%;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 0 28px; text-align: center; color: var(--ink);
 }
-.env-address .to { font-family: var(--script); font-size: clamp(19px, 5vw, 24px); line-height: 1.2; color: #7A6252; }
-.env-address .guest { font-family: var(--script); font-size: clamp(24px, 6.6vw, 34px); line-height: 1.25; }
+.env-address .to { font-family: var(--script); font-size: clamp(26px, 7vw, 32px); line-height: 1.2; color: #7A6252; }
+.env-address .guest { font-family: var(--script); font-size: clamp(34px, 9.4vw, 46px); line-height: 1.25; }
 .env-hint {
   position: absolute; left: 0; right: 0; top: auto; bottom: 5vh; bottom: 5svh; z-index: 4;
   text-align: center; font-family: var(--caps); font-weight: 700; font-size: 14px; letter-spacing: .3em; text-transform: uppercase; color: #7A6252;
@@ -207,7 +207,7 @@ section { position: relative; }
 .divider.small { width: min(46vw, 180px); margin: 26px auto; }
 /* under the shloka: Shrinav Rastogi (S/o ...) WEDS Vidushi Vatsa (D/o ...) */
 .couple-names { position: relative; z-index: 2; margin-top: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.cn-name { margin: 0; font-family: var(--script); font-weight: 700; font-size: clamp(26px, 7vw, 40px); line-height: 1.15;
+.cn-name { margin: 0; font-family: var(--script); font-weight: 400; font-size: clamp(34px, 9vw, 52px); line-height: 1.15;
   background: var(--foil-grad); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .2em; }
 .cn-parents { margin: 4px 0 0; font-style: italic; font-size: clamp(14px, 3.8vw, 18px); color: var(--fg-soft); }
 .cn-weds { margin: 20px 0 16px; font-family: var(--caps); font-weight: 700; font-size: clamp(18px, 4.8vw, 24px); letter-spacing: .38em; text-transform: uppercase; color: var(--line); }
@@ -245,7 +245,7 @@ section { position: relative; }
 }
 .arch img { position: absolute; left: 0; top: -8%; width: 100%; height: 116%; object-fit: cover; }
 .portrait figcaption { margin-top: 26px; text-align: center; }
-.who { font-family: var(--script); font-weight: 700; font-size: clamp(28px, 7.5vw, 38px); line-height: 1.1; }
+.who { font-family: var(--script); font-weight: 400; font-size: clamp(36px, 9.8vw, 50px); line-height: 1.1; }
 .who i { font-style: normal; font-size: .7em; padding: 0 .1em; }
 
 /* a missing photo shows the monogram on card stock instead of a broken image */
@@ -270,9 +270,9 @@ section { position: relative; }
 .ev-schedule i { flex: 1; min-width: 12px; border-bottom: 1.5px dotted color-mix(in srgb, var(--fg) 45%, transparent); transform: translateY(-4px); }
 .ev-schedule b { font-weight: 700; white-space: nowrap; }
 /* the venue's address wraps onto balanced lines in the middle, clear of the two of them at the sides */
-.ev-venue-line { max-width: min(58vw, 460px); margin-inline: auto; text-wrap: balance; }
+.ev-venue-line { max-width: min(58vw, 460px); margin-inline: auto; white-space: pre-line; }
 .title-text {
-  margin: 0; font-family: var(--script); font-weight: 700; font-size: clamp(30px, 8vw, 56px); line-height: 1.2; padding: 0 .3em;
+  margin: 0; font-family: var(--script); font-weight: 400; font-size: clamp(39px, 10.4vw, 73px); line-height: 1.2; padding: 0 .3em;
   background: var(--foil-grad); background-size: 220% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
   animation: foil-shine 5s ease-in-out infinite alternate;
@@ -394,7 +394,7 @@ section { position: relative; }
 .sign { display: grid; grid-template-columns: repeat(2, minmax(0, auto)); justify-content: center; gap: 22px clamp(22px, 8vw, 72px); margin-top: 10px; width: min(94vw, 600px); }
 .sign-col { text-align: left; }
 .sign-col + .sign-col { text-align: right; }
-.sign-h { grid-column: 1 / -1; text-align: center; font-family: var(--script); font-style: italic; font-size: clamp(18px, 5vw, 23px); line-height: 1.2; color: var(--line); margin-bottom: -10px; }
+.sign-h { grid-column: 1 / -1; text-align: center; font-family: var(--script); font-size: clamp(26px, 7vw, 32px); line-height: 1.2; color: var(--line); margin-bottom: -10px; }
 .sign ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: clamp(14px, 3.9vw, 18px); line-height: 1.35; }
 .sign-family { grid-column: 1 / -1; text-align: center; font-weight: 700; font-size: clamp(20px, 5.6vw, 26px); letter-spacing: .02em; }
 .closing-tag { margin-top: 18px; font-family: var(--serif); font-weight: 700; font-size: 26px; color: var(--line); }
@@ -550,15 +550,16 @@ section { position: relative; }
   .hero-date { font-size: 13px; letter-spacing: .24em; gap: 10px; }
   .hero-place { font-size: 15px; }
   .couple-names { max-width: 40vw; margin-inline: auto; margin-top: 22px; }
-  .cn-name { font-size: 20px; }
+  .cn-name { font-size: 27px; }
   .cn-parents { font-size: 12px; text-wrap: balance; }
   .cn-weds { font-size: 17px; margin: 14px 0 12px; }
   .shloka { max-width: 44vw; margin-inline: auto; font-size: 15px; line-height: 1.6; text-wrap: balance; }
   .ev-body > .ev-tag, .ev-body > .ev-title, .ev-body > .details, .ev-body > .actions { max-width: 44vw; text-wrap: balance; }
   .ev-tag { font-size: 13px; }
-  .ev-title .title-text { font-size: 26px; line-height: 1.12; }
+  .ev-title .title-text { font-size: 34px; line-height: 1.12; }
   .block .big { font-size: 16px; line-height: 1.3; }
-  .ev-time, .ev-venue-line { font-size: 13px; line-height: 1.45; max-width: none; }
+  .ev-time, .ev-venue-line { font-size: 14px; line-height: 1.45; max-width: none; }
+  .ev-venue-line { text-wrap: nowrap; }
   .label { font-size: 10px; letter-spacing: .26em; }
   .divider.small { width: 34vw; }
   .ev-schedule { width: 44vw; gap: 2px; }

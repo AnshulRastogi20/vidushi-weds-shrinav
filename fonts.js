@@ -3,7 +3,8 @@
    Each option sets the three font roles in styles.css: --script (titles, names, envelope), --serif (body text),
    --caps (small labels and the date line). Devanagari always stays Tiro. */
 window.FONT_OPTIONS = {
-  current: { name: "Current (Calibri)", families: [], script: 'Calibri, "Carlito", sans-serif', serif: 'Calibri, "Carlito", sans-serif', caps: 'Calibri, "Carlito", sans-serif' },
+  current: { name: "Chosen: Great Vibes", families: [], script: '"Great Vibes", cursive', serif: '"Cormorant Garamond", serif', caps: '"Cinzel", serif' },
+  calibri: { name: "Old (Calibri)", families: ["Carlito:ital,wght@0,400;0,700;1,400"], script: '"Carlito", Calibri, sans-serif', serif: '"Carlito", Calibri, sans-serif', caps: '"Carlito", Calibri, sans-serif', bodySize: 0.9, titleWeight: 700, titleSize: 0.77 },
   cinzel: { name: "Cinzel + Cormorant", families: ["Cinzel:wght@500;700", "Cormorant+Garamond:ital,wght@0,500;0,700;1,500"],
     script: '"Cinzel", serif', serif: '"Cormorant Garamond", serif', caps: '"Cinzel", serif', bodySize: 1.12, phoneTitle: 22 },
   cormorant: { name: "Cormorant Royale", families: ["Cormorant+Garamond:ital,wght@0,500;0,700;1,500;1,700", "Cormorant+SC:wght@600"],

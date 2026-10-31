@@ -38,7 +38,7 @@
    "dateLine": "Friday, 11th December 2026",
    "timeLine": "7 pm onwards",
    "venue": "Majestic",
-   "venueLine": "Country Inn & Suites by Radisson, Ghaziabad"
+   "venueLine": "Country Inn & Suites\nBy Radisson, Ghaziabad"
   },
   {
    "key": "haldi",
@@ -51,7 +51,7 @@
    "dateLine": "Saturday, 12th December 2026",
    "timeLine": "11 am onwards",
    "venue": "Crystal",
-   "venueLine": "Country Inn & Suites by Radisson, Ghaziabad"
+   "venueLine": "Country Inn & Suites\nBy Radisson, Ghaziabad"
   },
   {
    "key": "wedding",
@@ -63,7 +63,7 @@
    "end": "2026-12-13T02:00:00+05:30",
    "dateLine": "Saturday, 12th December 2026",
    "venue": "Royal Heritage",
-   "venueLine": "Country Inn & Suites by Radisson, Ghaziabad",
+   "venueLine": "Country Inn & Suites\nBy Radisson, Ghaziabad",
    "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",
    "countdown": true,
    "schedule": [

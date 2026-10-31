@@ -59,7 +59,7 @@ Each link loads only its own `invites/<id>.json`, so a guest's browser never rec
 - **Gold is always the multi-stop foil gradient** (`--foil-grad` in styles.css), never a flat gold colour. Flat gold looked cheap.
 - **Each event card owns its colours** via `.event[data-sky="night|sun|crimson"]`. The global sky (`STATES` / `VIA` in main.js) only changes in the gaps between cards. Never let a card show a half-blended background behind its text.
 - Event looks: Engagement `night` (#0D1030 -> #241C47, stars, gold), Haldi `sun` (#FFD45A -> #F0A010, rani-pink text and pink foil), Wedding `crimson` (#2B0408 -> #7A0E1C, gold).
-- Font is plain Calibri / Carlito for now (Devanagari stays Tiro). The owner is choosing a royal font from `fonts.js` (see Files).
+- Font (chosen 2026-11-01): Great Vibes for titles and names (`--script`), Cormorant Garamond for text (`--serif`), Cinzel for small caps (`--caps`); Devanagari stays Tiro. `?font=<key>` (fonts.js) still previews the other options.
 - No "Date" label and no #RViShCameTrue tag on the event cards (the hashtag is only on the opening logo and the closing), no "Scroll" cue on the hero, "Tap to open" sits at the bottom of the envelope (all on request).
 - RSVP form was removed on request.
 - Mobile touch: Lenis smooth scroll runs only on `(hover: hover) and (pointer: fine)`; phones use native scrolling. Envelope flap/thread/knot have `pointer-events: none` so only `#open` takes the tap. Every `svh` size has a `vh` fallback before it.
@@ -97,6 +97,6 @@ The production project and domain belong to the owner. Anyone else deploys to th
 
 ## Open items
 - Wedding programme (from the printed card): `schedule` in invites.json, Procession of Baraat 7:00 PM, Dinner 8:00 PM; the countdown counts to 7 pm.
-- Venue line everywhere: "Country Inn & Suites by Radisson, Ghaziabad". "Get directions" only on the wedding card (only it has `mapsQuery`).
+- Venue line everywhere, on two lines: "Country Inn & Suites" / "By Radisson, Ghaziabad" (`\n` in `venueLine`, shown with `white-space: pre-line`). "Get directions" only on the wedding card (only it has `mapsQuery`).
 - Engagement (11 Dec, 7 pm, Majestic) and Haldi (12 Dec, 11 am, Crystal) are set; their end times (11 pm, 2 pm) are estimates. "Add to calendar" was removed on request.
 - Reported: not working on an iPhone (device/app not yet identified). Investigate in Safari / WhatsApp in-app browser first.
