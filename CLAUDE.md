@@ -13,7 +13,7 @@ Use this server, not a plain static server: it also routes `/celebrate`, `/famil
 
 ## What happens on the page (in order)
 1. ॐ preloader while EVERYTHING loads: fonts, art, logo layers, photos, music, and every animation (key poses, sets, all clips decoded to their first frame), so nothing loads or stutters later. Capped at 45 s so a slow connection still opens.
-2. Envelope ("To" / "Our family and friends", or "To" + the `?to=` name) tied with a mauli thread. The couple (AI-animated, `cast.js`) shimmer in on either side of it.
+2. Envelope ("Wedding Invitation" in gold at the top, then "To" / "Our family and friends", or "To" + the `?to=` name) tied with a mauli thread. The couple (AI-animated, `cast.js`) shimmer in on either side of it.
 3. Tap: the thread falls, the envelope opens (<2s), music starts (the tap is what unlocks audio).
 4. They walk to each other and take hands (the `meet` clip), glow and dissolve into gold (all of them at once): his dust fills the **S**, hers the **V** of the logo. The logo assembles: hashtag, ornament, elephants, gold ring, flowers (no balloons: removed on request).
 5. The gold comes back out of the S and V and they stand near the bottom corners, alive (the looping `idle` clip). From here they live *inside* the page: the canvas sits in front of the card colours and ornaments and behind the words.
