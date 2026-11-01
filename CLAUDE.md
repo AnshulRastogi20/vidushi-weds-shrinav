@@ -3,7 +3,7 @@
 Static site, no build step. Plain HTML/CSS/JS + GSAP. Mobile first (most guests open it from WhatsApp on a phone), must also work on laptops with mouse wheel.
 
 - Live: https://rvishcametrue.us (also https://shrinav-weds-vidushi.vercel.app). Vercel deploys every push to `master`.
-- Stack: GSAP 3.12.5 + ScrollTrigger (cdnjs), Lenis (unpkg, desktop only), plain WebGL for the characters (`cast.js`), Google Fonts (Carlito, Tiro Devanagari Hindi). No npm dependencies.
+- Stack: GSAP 3.12.5 + ScrollTrigger (cdnjs), Lenis (unpkg, desktop only), plain WebGL for the characters (`cast.js`), fonts self-hosted in `assets/fonts/` (Great Vibes, Cormorant Garamond, Cinzel, Tiro Devanagari Hindi; copies of Google Fonts, latin + devanagari subsets). No npm dependencies.
 
 ## Run it
 ```bash
