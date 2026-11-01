@@ -35,7 +35,7 @@
    "lights": "bulbs",
    "start": "2026-12-11T19:00:00+05:30",
    "end": "2026-12-11T23:00:00+05:30",
-   "dateLine": "Friday, 11th December 2026",
+   "dateLine": "11th December 2026\nFriday",
    "timeLine": "7 pm onwards",
    "venue": "Majestic",
    "venueLine": "Country Inn & Suites\nBy Radisson, Ghaziabad"
@@ -48,7 +48,7 @@
    "lights": "marigold",
    "start": "2026-12-12T11:00:00+05:30",
    "end": "2026-12-12T14:00:00+05:30",
-   "dateLine": "Saturday, 12th December 2026",
+   "dateLine": "12th December 2026\nSaturday",
    "timeLine": "11 am onwards",
    "venue": "Crystal",
    "venueLine": "Country Inn & Suites\nBy Radisson, Ghaziabad"
@@ -61,7 +61,7 @@
    "lights": "bulbs",
    "start": "2026-12-12T19:00:00+05:30",
    "end": "2026-12-13T02:00:00+05:30",
-   "dateLine": "Saturday, 12th December 2026",
+   "dateLine": "12th December 2026\nSaturday",
    "venue": "Royal Heritage",
    "venueLine": "Country Inn & Suites\nBy Radisson, Ghaziabad",
    "mapsQuery": "Country Inn & Suites by Radisson Sahibabad Ghaziabad",

@@ -271,11 +271,13 @@ section { position: relative; }
 .ev-title { width: min(88vw, 520px); margin-top: 38px; --sw: .3; }
 /* the wedding programme: "Procession of Baraat ...... 7:00 PM", centred and clear of the two of them */
 .ev-schedule { list-style: none; margin: 6px auto 0; padding: 0; width: min(60vw, 340px); display: grid; gap: 4px; }
-.ev-schedule li { display: flex; align-items: baseline; gap: 8px; font-size: clamp(14px, 3.9vw, 17px); }
+.ev-schedule li { display: flex; align-items: baseline; gap: 8px; font-size: clamp(17px, 4.6vw, 20px); }
 .ev-schedule i { flex: 1; min-width: 12px; border-bottom: 1.5px dotted color-mix(in srgb, var(--fg) 45%, transparent); transform: translateY(-4px); }
 .ev-schedule b { font-weight: 700; white-space: nowrap; }
 /* the venue's address wraps onto balanced lines in the middle, clear of the two of them at the sides */
 .ev-venue-line { max-width: min(58vw, 460px); margin-inline: auto; white-space: pre-line; }
+/* the date: "12th December 2026", then the weekday on the next line */
+.ev-date { white-space: pre-line; }
 .title-text {
   margin: 0; font-family: var(--script); font-weight: 400; font-size: clamp(39px, 10.4vw, 73px); line-height: 1.2; padding: 0 .3em;
   background: var(--foil-grad); background-size: 220% 100%;
@@ -569,7 +571,7 @@ section { position: relative; }
   .label { font-size: 10px; letter-spacing: .26em; }
   .divider.small { width: 34vw; }
   .ev-schedule { width: 44vw; gap: 2px; }
-  .ev-schedule li { font-size: 12px; flex-wrap: wrap; justify-content: center; column-gap: 6px; }
+  .ev-schedule li { font-size: 16px; flex-wrap: wrap; justify-content: center; column-gap: 6px; line-height: 1.35; }
   .ev-schedule i { display: none; }
   .btn { font-size: 11px; padding: 10px 16px; letter-spacing: .16em; }
   .countdown { max-width: 46vw; margin-inline: auto; }

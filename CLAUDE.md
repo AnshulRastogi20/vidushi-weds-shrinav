@@ -97,6 +97,7 @@ The production project and domain belong to the owner. Anyone else deploys to th
 
 ## Open items
 - Wedding programme (from the printed card): `schedule` in invites.json, Procession of Baraat 7:00 PM, Dinner 8:00 PM; the countdown counts to 7 pm.
+- Date on every card: "12th December 2026" then the weekday on the next line (`\n` in `dateLine`).
 - Venue line everywhere, on two lines: "Country Inn & Suites" / "By Radisson, Ghaziabad" (`\n` in `venueLine`, shown with `white-space: pre-line`). "Get directions" only on the wedding card (only it has `mapsQuery`).
 - Engagement (11 Dec, 7 pm, Majestic) and Haldi (12 Dec, 11 am, Crystal) are set; their end times (11 pm, 2 pm) are estimates. "Add to calendar" was removed on request.
 - Reported: not working on an iPhone (device/app not yet identified). Investigate in Safari / WhatsApp in-app browser first.
