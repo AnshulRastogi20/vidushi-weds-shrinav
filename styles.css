@@ -208,10 +208,12 @@ section { position: relative; }
 .divider { width: min(70vw, 300px); aspect-ratio: 178 / 17; margin-top: 34px; }
 .divider.small { width: min(46vw, 180px); margin: 26px auto; }
 /* under the shloka: Shrinav Rastogi (S/o ...) WEDS Vidushi Vatsa (D/o ...) */
-.couple-names { position: relative; z-index: 2; margin-top: 30px; display: flex; flex-direction: column; align-items: center; text-align: center;
-  padding: 18px 26px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 246, 230, .82), rgba(255, 246, 230, .55) 62%, rgba(255, 246, 230, 0)); }
-.couple-names .cn-parents { color: #5A3A2E; }
-.couple-names .cn-weds { color: #7A0E1C; }
+.couple-names { position: relative; z-index: 2; margin-top: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+/* a soft cream glow hugging the letters keeps the maroon readable on the white paper and on the darker sky that follows */
+/* the names follow the sky: maroon foil on the white paper, turning into gold foil as the sky darkens (--cn-k, 0 to 1, set by main.js) */
+.couple-names .cn-name { background: linear-gradient(100deg, color-mix(in srgb, #4A0710, #7A5A1E calc(var(--cn-k, 0) * 100%)) 0%, color-mix(in srgb, #7A0E1C, #BF953F calc(var(--cn-k, 0) * 100%)) 16%, color-mix(in srgb, #A8283C, #FCF6BA calc(var(--cn-k, 0) * 100%)) 32%, color-mix(in srgb, #6B0A18, #B38728 calc(var(--cn-k, 0) * 100%)) 48%, color-mix(in srgb, #96203A, #FBF5B7 calc(var(--cn-k, 0) * 100%)) 64%, color-mix(in srgb, #5A0812, #AA771C calc(var(--cn-k, 0) * 100%)) 82%, color-mix(in srgb, #4A0710, #7A5A1E calc(var(--cn-k, 0) * 100%)) 100%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.couple-names .cn-parents { color: color-mix(in srgb, #5A3A2E, #F1E2C8 calc(var(--cn-k, 0) * 100%)); }
+.couple-names .cn-weds { color: color-mix(in srgb, #7A0E1C, #E2B35C calc(var(--cn-k, 0) * 100%)); }
 .cn-name { margin: 0; font-family: var(--script); font-weight: 400; font-size: clamp(34px, 9vw, 52px); line-height: 1.15;
   background: var(--foil-deep); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .2em; }
 .cn-parents { margin: 4px 0 0; font-style: italic; font-size: clamp(15px, 4vw, 19px); color: color-mix(in srgb, var(--fg) 85%, transparent); }
@@ -559,7 +561,6 @@ section { position: relative; }
   .couple-names { max-width: 40vw; margin-inline: auto; margin-top: 22px; }
   .cn-name { font-size: 27px; }
   .cn-parents { font-size: 13px; text-wrap: balance; }
-  .couple-names { padding: 14px 18px; }
   .cn-weds { font-size: 17px; margin: 14px 0 12px; }
   .shloka { max-width: 44vw; margin-inline: auto; font-size: 15px; line-height: 1.6; text-wrap: balance; }
   .ev-body > .ev-tag, .ev-body > .ev-title, .ev-body > .details, .ev-body > .actions { max-width: 44vw; text-wrap: balance; }
@@ -570,8 +571,8 @@ section { position: relative; }
   .ev-venue-line { text-wrap: nowrap; }
   .label { font-size: 10px; letter-spacing: .26em; }
   .divider.small { width: 34vw; }
-  .ev-schedule { width: 44vw; gap: 2px; }
-  .ev-schedule li { font-size: 16px; flex-wrap: wrap; justify-content: center; column-gap: 6px; line-height: 1.35; }
+  .ev-schedule { width: auto; max-width: 70vw; gap: 2px; }
+  .ev-schedule li { font-size: 15px; white-space: nowrap; justify-content: center; column-gap: 8px; line-height: 1.4; }
   .ev-schedule i { display: none; }
   .btn { font-size: 11px; padding: 10px 16px; letter-spacing: .16em; }
   .countdown { max-width: 46vw; margin-inline: auto; }

@@ -319,6 +319,10 @@
       });
       prev = next;
     });
+    // the couple's names under the shloka turn from maroon to gold over the same stretch where the sky goes dark
+    const first = $(".event");
+    if (first) ScrollTrigger.create({ trigger: first, start: "top 100%", end: "top 40%", scrub: true,
+      onUpdate: (st) => root.style.setProperty("--cn-k", st.progress.toFixed(3)), onRefresh: (st) => root.style.setProperty("--cn-k", st.progress.toFixed(3)) });
   }
 
   function buildScroll() {
